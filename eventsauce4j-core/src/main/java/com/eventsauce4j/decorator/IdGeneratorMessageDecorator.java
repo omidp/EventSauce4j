@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class IdGeneratorMessageDecorator implements MessageDecorator {
 
-	public static String ID = "id";
+	public static final String ID = "id";
 
 	@Override
 	public Message decorate(Message message) {

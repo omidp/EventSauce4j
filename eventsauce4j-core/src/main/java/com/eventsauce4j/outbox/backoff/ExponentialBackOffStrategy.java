@@ -45,11 +45,10 @@ public class ExponentialBackOffStrategy implements BackOffStrategy {
 	@Override
 	public void backoff(int retries, Throwable t, Runnable action) {
 		if (maxTries != -1 && retries > maxTries) {
-			//TODO: throw backoff exception
-			throw new RuntimeException(t);
+			throw new BackOffStrategyException(t);
 		}
 
-		long delay = (long) Math.round(initialDelayMs * Math.pow(base, retries - 1));
+		long delay = Math.round(initialDelayMs * Math.pow(base, retries - 1));
 		delay = Math.min(maxDelayMs, delay);
 		delay = jitter.jitter(delay);
 
@@ -57,7 +56,7 @@ public class ExponentialBackOffStrategy implements BackOffStrategy {
 			sleeper.sleep(delay);
 		} catch (InterruptedException ie) {
 			Thread.currentThread().interrupt();
-			throw new RuntimeException(ie); // propagate interruption
+			throw new BackOffStrategyException(ie); // propagate interruption
 		}
 		action.run();
 	}

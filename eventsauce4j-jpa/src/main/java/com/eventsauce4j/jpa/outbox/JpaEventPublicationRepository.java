@@ -34,7 +34,6 @@ import java.time.Clock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author Omid Pourhadi
@@ -70,7 +69,7 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 				select ep from JpaEventPublication ep
 				where ep.completionDate is null
 				""", JpaEventPublication.class).setMaxResults(batchSize).getResultList()
-			.stream().map(this::convert).collect(Collectors.toList());
+			.stream().map(this::convert).toList();
 	}
 
 	@Override

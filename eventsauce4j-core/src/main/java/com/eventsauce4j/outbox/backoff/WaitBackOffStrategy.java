@@ -40,7 +40,6 @@ public class WaitBackOffStrategy implements BackOffStrategy {
 	@Override
 	public void backoff(int retries, Throwable t, Runnable action) {
 		if (maxTries != -1 && retries > maxTries) {
-			//TODO: throw backoff exception
 			throw new BackOffStrategyException(t);
 		}
 

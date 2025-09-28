@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class EventMessageConsumer implements ApplicationListener<EventMessage> {
 
-	private Map<Type, EventConsumer> eventConsumers = new HashMap<>();
+	private Map<Type, EventConsumer<?>> eventConsumers = new HashMap<>();
 
 	@Override
 	public void onApplicationEvent(EventMessage event) {
@@ -46,7 +46,7 @@ public class EventMessageConsumer implements ApplicationListener<EventMessage> {
 		return false;
 	}
 
-	public void setEventConsumers(Map<Type, EventConsumer> eventConsumers) {
+	public void setEventConsumers(Map<Type, EventConsumer<?>> eventConsumers) {
 		this.eventConsumers = eventConsumers;
 	}
 }

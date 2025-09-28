@@ -49,13 +49,8 @@ import static com.eventsauce4j.config.EventSauce4jConfig.SYNCHRONOUS_MESSAGE_DIS
 public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitializingSingleton, ApplicationContextAware, PriorityOrdered {
 
 	private List<MessageConsumer> consumers = new ArrayList<>();
-	private Map<Type, EventConsumer> eventConsumers = new HashMap<>();
+	private Map<Type, EventConsumer<?>> eventConsumers = new HashMap<>();
 	private ApplicationContext applicationContext;
-
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
-	}
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -72,7 +67,7 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 					ParameterizedType paramType = (ParameterizedType) genericInterface;
 					if (paramType.getRawType().getTypeName().equals(EventConsumer.class.getName())) {
 						Type actualType = paramType.getActualTypeArguments()[0];
-						eventConsumers.put(actualType, (EventConsumer) bean);
+						eventConsumers.put(actualType, (EventConsumer<?>) bean);
 					}
 				}
 			}

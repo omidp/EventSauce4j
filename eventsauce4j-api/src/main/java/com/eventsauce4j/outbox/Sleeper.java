@@ -24,8 +24,9 @@ import java.util.concurrent.TimeUnit;
  * @author Omid Pourhadi
  */
 public interface Sleeper {
-    void sleep(long delayMs) throws InterruptedException;
-    static Sleeper create(){
-        return delayMs -> TimeUnit.MILLISECONDS.sleep(delayMs);
-    }
+	void sleep(long delayMs) throws InterruptedException;
+
+	static Sleeper create() {
+		return TimeUnit.MILLISECONDS::sleep;
+	}
 }
