@@ -21,5 +21,5 @@ package com.eventsauce4j;
 /**
  * @author Omid Pourhadi
  */
-public interface SerializablePayload {
+public interface DomainEvent {
 }
