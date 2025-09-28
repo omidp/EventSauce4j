@@ -9,11 +9,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<groupId>com.eventsauce4j</groupId>
-	<artifactId>eventsauce4j-jpa</artifactId>
+	<artifactId>eventsauce4j-jackson</artifactId>
 	<version>${parent.version}</version>
-	<name>eventsauce4j-jpa</name>
+	<name>eventsauce4j-jackson</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-jpa</description>
+	<description>eventsauce4j-jackson</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -23,38 +23,16 @@
 
 	<dependencies>
 
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>com.eventsauce4j</groupId>
 			<artifactId>eventsauce4j-api</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-jackson</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>jakarta.persistence</groupId>
-			<artifactId>jakarta.persistence-api</artifactId>
-			<version>3.1.0</version>
 		</dependency>
 
 	</dependencies>
