@@ -24,7 +24,7 @@ import com.eventsauce4j.event.EventPublication;
 /**
  * @author Omid Pourhadi
  */
-public interface DeadLetterQueue {
+public interface DeadLetter {
 
 	void process(EventPublication eventPublication);
 

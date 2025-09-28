@@ -20,7 +20,7 @@ package com.eventsauce4j.jpa.outbox.dlq;
 
 import com.eventsauce4j.event.EventPublication;
 import com.eventsauce4j.message.MessageSerializer;
-import com.eventsauce4j.outbox.dlq.DeadLetterQueue;
+import com.eventsauce4j.outbox.dlq.DeadLetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.persistence.EntityManager;
@@ -28,14 +28,14 @@ import jakarta.persistence.EntityManager;
 /**
  * @author Omid Pourhadi
  */
-public class JpaDeadLetterQueue implements DeadLetterQueue {
+public class JpaDeadLetter implements DeadLetter {
 
 	private final EntityManager entityManager;
 	private final MessageSerializer messageSerializer;
 	private final JsonMapper jsonMapper = new JsonMapper();
 
 
-	public JpaDeadLetterQueue(EntityManager entityManager, MessageSerializer messageSerializer) {
+	public JpaDeadLetter(EntityManager entityManager, MessageSerializer messageSerializer) {
 		this.entityManager = entityManager;
 		this.messageSerializer = messageSerializer;
 	}

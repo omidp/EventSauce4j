@@ -24,7 +24,7 @@ import com.eventsauce4j.outbox.EventPublicationRepository;
 import com.eventsauce4j.outbox.OutboxRelay;
 import com.eventsauce4j.outbox.backoff.BackOffStrategy;
 import com.eventsauce4j.outbox.backoff.BackOffStrategyException;
-import com.eventsauce4j.outbox.dlq.DeadLetterQueue;
+import com.eventsauce4j.outbox.dlq.DeadLetter;
 import com.eventsauce4j.outbox.relay.RelayCommitStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,15 +45,15 @@ public class DatabaseOutboxRelay implements OutboxRelay {
 	private final MessageDispatcher messageDispatcher;
 	private final BackOffStrategy backOffStrategy;
 	private final RelayCommitStrategy relayCommitStrategy;
-	private final DeadLetterQueue deadLetterQueue;
+	private final DeadLetter deadLetter;
 	private int tries;
 
-	public DatabaseOutboxRelay(EventPublicationRepository eventPublicationRepository, MessageDispatcher messageDispatcher, BackOffStrategy backOffStrategy, RelayCommitStrategy relayCommitStrategy, DeadLetterQueue deadLetterQueue) {
+	public DatabaseOutboxRelay(EventPublicationRepository eventPublicationRepository, MessageDispatcher messageDispatcher, BackOffStrategy backOffStrategy, RelayCommitStrategy relayCommitStrategy, DeadLetter deadLetter) {
 		this.eventPublicationRepository = eventPublicationRepository;
 		this.messageDispatcher = messageDispatcher;
 		this.backOffStrategy = backOffStrategy;
 		this.relayCommitStrategy = relayCommitStrategy;
-		this.deadLetterQueue = deadLetterQueue;
+		this.deadLetter = deadLetter;
 		this.tries = 0;
 	}
 
@@ -77,13 +77,13 @@ public class DatabaseOutboxRelay implements OutboxRelay {
 		try {
 			tries++;
 			messageDispatcher.dispatch(eventMessage.getMessage());
-		} catch (Throwable t) {
+		} catch (Exception t) {
 			//retires
 			try {
 				backOffStrategy.backoff(tries, t, () -> execute(eventMessage));
 			} catch (BackOffStrategyException ex) {
 				log.info("Unable to consume event with id {} after retries.", eventMessage.getIdentifier());
-				deadLetterQueue.process(eventMessage);
+				deadLetter.process(eventMessage);
 			}
 		}
 	}

@@ -28,7 +28,7 @@ import com.eventsauce4j.dispatcher.SynchronousMessageDispatcher;
 import com.eventsauce4j.event.EventDispatcher;
 import com.eventsauce4j.jackson.JacksonMessageConverter;
 import com.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
-import com.eventsauce4j.jpa.outbox.dlq.JpaDeadLetterQueue;
+import com.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
 import com.eventsauce4j.jpa.outbox.lock.DatabaseOutboxLock;
 import com.eventsauce4j.jpa.outbox.relay.DatabaseOutboxRelay;
 import com.eventsauce4j.message.MessageDecorator;
@@ -36,7 +36,7 @@ import com.eventsauce4j.message.MessageDispatcher;
 import com.eventsauce4j.outbox.EventPublicationRepository;
 import com.eventsauce4j.outbox.OutboxRelay;
 import com.eventsauce4j.outbox.backoff.WaitBackOffStrategy;
-import com.eventsauce4j.outbox.dlq.DeadLetterQueue;
+import com.eventsauce4j.outbox.dlq.DeadLetter;
 import com.eventsauce4j.outbox.lock.OutboxLock;
 import com.eventsauce4j.outbox.relay.MarkMessagesConsumedOnCommit;
 import jakarta.persistence.EntityManager;
@@ -106,8 +106,8 @@ public class EventSauce4jConfig {
 	}
 
 	@Bean
-	DeadLetterQueue deadLetterQueue(EntityManager entityManager) {
-		return new JpaDeadLetterQueue(entityManager, new JacksonMessageConverter());
+	DeadLetter deadLetterQueue(EntityManager entityManager) {
+		return new JpaDeadLetter(entityManager, new JacksonMessageConverter());
 	}
 
 	@Bean

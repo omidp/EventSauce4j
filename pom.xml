@@ -111,6 +111,7 @@
 		<module>eventsauce4j-config</module>
 		<module>eventsauce4j-integration-test</module>
 		<module>eventsauce4j-junit</module>
+		<module>eventsauce4j-example</module>
 	</modules>
 	<profiles>
 		<profile>

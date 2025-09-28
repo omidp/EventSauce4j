@@ -79,7 +79,5 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 
 	@Override
 	public void destroy() throws Exception {
-		OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, "outboxLock");
-		outboxLock.releaseLock();
 	}
 }
