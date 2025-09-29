@@ -1,7 +1,7 @@
-package com.eventsauce4j.example;
+package io.eventsauce4j.example;
 
-import com.eventsauce4j.domain.event.OrderRefunded;
-import com.eventsauce4j.event.EventDispatcher;
+import io.eventsauce4j.domain.event.OrderRefunded;
+import io.eventsauce4j.api.event.EventDispatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

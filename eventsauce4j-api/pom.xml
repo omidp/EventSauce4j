@@ -4,11 +4,11 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.eventsauce4j</groupId>
+		<groupId>io.eventsauce4j</groupId>
 		<artifactId>eventsauce4j</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>com.eventsauce4j</groupId>
+	<groupId>io.eventsauce4j</groupId>
 	<artifactId>eventsauce4j-api</artifactId>
 	<version>${parent.version}</version>
 	<name>eventsauce4j-api</name>

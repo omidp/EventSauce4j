@@ -8,7 +8,7 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.eventsauce4j</groupId>
+	<groupId>io.eventsauce4j</groupId>
 	<artifactId>eventsauce4j-example</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>eventsauce4j-example</name>
@@ -51,7 +51,7 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.eventsauce4j</groupId>
+			<groupId>io.eventsauce4j</groupId>
 			<artifactId>eventsauce4j-config</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

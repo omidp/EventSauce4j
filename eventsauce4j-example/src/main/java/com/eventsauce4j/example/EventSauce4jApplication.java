@@ -1,8 +1,8 @@
-package com.eventsauce4j.example;
+package io.eventsauce4j.example;
 
-import com.eventsauce4j.config.EnableEventSauce4j;
-import com.eventsauce4j.domain.event.OrderStarted;
-import com.eventsauce4j.event.EventDispatcher;
+import io.eventsauce4j.config.EnableEventSauce4j;
+import io.eventsauce4j.domain.event.OrderStarted;
+import io.eventsauce4j.api.event.EventDispatcher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableEventSauce4j
-@EntityScan(basePackages = "com.eventsauce4j.jpa")
+@EntityScan(basePackages = "io.eventsauce4j.jpa")
 public class EventSauce4jApplication {
 
 	public static void main(String[] args) {

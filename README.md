@@ -59,7 +59,7 @@ Add the following dependency to your pom.xml:
 
 ```
 <dependency>
-  <groupId>com.eventsauce4j</groupId>
+  <groupId>io.eventsauce4j</groupId>
   <artifactId>eventsauce4j-config</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 </dependency>

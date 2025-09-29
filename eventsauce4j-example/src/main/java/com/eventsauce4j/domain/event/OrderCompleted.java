@@ -1,4 +1,4 @@
-package com.eventsauce4j.domain.event;
+package io.eventsauce4j.domain.event;
 
 import java.util.UUID;
 

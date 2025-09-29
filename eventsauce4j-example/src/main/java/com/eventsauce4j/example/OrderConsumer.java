@@ -1,13 +1,13 @@
-package com.eventsauce4j.example;
+package io.eventsauce4j.example;
 
-import com.eventsauce4j.annotation.Consumer;
-import com.eventsauce4j.domain.event.OrderCompleted;
-import com.eventsauce4j.domain.event.OrderRefunded;
-import com.eventsauce4j.domain.event.OrderStarted;
-import com.eventsauce4j.event.EventConsumer;
-import com.eventsauce4j.event.EventDispatcher;
-import com.eventsauce4j.message.Message;
-import com.eventsauce4j.message.MessageConsumer;
+import io.eventsauce4j.core.annotation.Consumer;
+import io.eventsauce4j.domain.event.OrderCompleted;
+import io.eventsauce4j.domain.event.OrderRefunded;
+import io.eventsauce4j.domain.event.OrderStarted;
+import io.eventsauce4j.api.event.EventConsumer;
+import io.eventsauce4j.api.event.EventDispatcher;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.message.MessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
