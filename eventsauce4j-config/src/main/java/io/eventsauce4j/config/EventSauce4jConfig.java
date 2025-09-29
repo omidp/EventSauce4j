@@ -18,45 +18,33 @@
 
 package io.eventsauce4j.config;
 
-import io.eventsauce4j.core.consumer.EventMessageConsumer;
-import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
-import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
-import io.eventsauce4j.core.dispatcher.MessageDispatcherChain;
-import io.eventsauce4j.core.dispatcher.OutboxMessageDispatcher;
-import io.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
-import io.eventsauce4j.core.dispatcher.SynchronousMessageDispatcher;
 import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.jackson.JacksonMessageConverter;
-import io.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
-import io.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
-import io.eventsauce4j.jpa.outbox.lock.DatabaseOutboxLock;
-import io.eventsauce4j.jpa.outbox.relay.DatabaseOutboxRelay;
 import io.eventsauce4j.api.message.MessageDecorator;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.eventsauce4j.api.outbox.OutboxRelay;
-import io.eventsauce4j.core.outbox.backoff.WaitBackOffStrategy;
-import io.eventsauce4j.api.outbox.dlq.DeadLetter;
-import io.eventsauce4j.api.outbox.lock.OutboxLock;
-import io.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
-import jakarta.persistence.EntityManager;
+import io.eventsauce4j.core.consumer.EventMessageConsumer;
+import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
+import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.eventsauce4j.core.dispatcher.OutboxMessageDispatcher;
+import io.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
+import io.eventsauce4j.core.dispatcher.SynchronousMessageDispatcher;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-
-import java.time.Duration;
-import java.util.List;
 
 /**
  * @author Omid Pourhadi
  */
 @Configuration
+@EnableConfigurationProperties({EventSauce4jCustomConfiguration.class})
 public class EventSauce4jConfig {
 
 	public static final String SYNCHRONOUS_MESSAGE_DISPATCHER_NAME = "synchronousMessageDispatcher";
 	public static final String SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME = "synchronousEventMessageDispatcher";
-	public static final String OUTBOX_MESSAGE_DISPATCHER = "outboxMessageDispatcher";
 	public static final String EVENT_MESSAGE_CONSUMER = "eventMessageConsumer";
+	public static final String OUTBOX_RELAY = "outboxRelay";
+	public static final String OUTBOX_LOCK = "outboxLock";
 
 	@Bean(name = SYNCHRONOUS_MESSAGE_DISPATCHER_NAME)
 	MessageDispatcher synchronousMessageDispatcher() {
@@ -68,14 +56,13 @@ public class EventSauce4jConfig {
 		return new SynchronousEventMessageDispatcher();
 	}
 
-	@Bean(name = OUTBOX_MESSAGE_DISPATCHER)
-	MessageDispatcher outboxMessageDispatcher(EventPublicationRepository eventPublicationRepository) {
-		return new OutboxMessageDispatcher(eventPublicationRepository);
-	}
-
 	@Bean
-	EventPublicationRepository eventPublicationRepository(EntityManager entityManager) {
-		return new JpaEventPublicationRepository(new JacksonMessageConverter(), entityManager);
+	EventDispatcher eventDispatcher(MessageDecorator messageDecorator,
+									ApplicationContext applicationContext) {
+		return new SynchronousEventDispatcher(
+			new OutboxMessageDispatcher(() -> applicationContext.getBean(EventPublicationRepository.class)),
+			messageDecorator
+		);
 	}
 
 	@Bean
@@ -83,37 +70,12 @@ public class EventSauce4jConfig {
 		return new IdGeneratorMessageDecorator();
 	}
 
-	@Bean
-	@DependsOn(SYNCHRONOUS_MESSAGE_DISPATCHER_NAME)
-	EventDispatcher eventDispatcher(EntityManager em, MessageDecorator messageDecorator) {
-		return new SynchronousEventDispatcher(outboxMessageDispatcher(eventPublicationRepository(em)), messageDecorator);
-	}
 
 	@Bean(name = EVENT_MESSAGE_CONSUMER)
 	EventMessageConsumer eventMessageConsumer() {
 		return new EventMessageConsumer();
 	}
 
-	@Bean
-	OutboxRelay outboxRelay(EntityManager em) {
-		return new DatabaseOutboxRelay(
-			eventPublicationRepository(em),
-			new MessageDispatcherChain(List.of(synchronousMessageDispatcher(), synchronousEventMessageDispatcher())),
-			new WaitBackOffStrategy(3, Duration.ofSeconds(5)),
-			new MarkMessagesConsumedOnCommit(),
-			deadLetterQueue(em)
-		);
-	}
-
-	@Bean
-	DeadLetter deadLetterQueue(EntityManager entityManager) {
-		return new JpaDeadLetter(entityManager, new JacksonMessageConverter());
-	}
-
-	@Bean
-	OutboxLock outboxLock(EntityManager entityManager) {
-		return new DatabaseOutboxLock(entityManager);
-	}
 
 	@Bean
 	EventSauce4jInitializer eventSauce4jInitializer() {

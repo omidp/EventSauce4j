@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({EventSauce4jConfig.class, OutboxSchedulingConfig.class})
+@Import({EventSauce4jConfig.class, EventSauce4jJpaAutoConfiguration.class, OutboxSchedulingConfig.class})
 public @interface EnableEventSauce4j {
 
 }

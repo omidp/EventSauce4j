@@ -32,6 +32,9 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_LOCK;
+import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_RELAY;
+
 /**
  * @author Omid Pourhadi
  */
@@ -47,8 +50,9 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		OutboxRelay outboxRelay = applicationContext.getBean(OutboxRelay.class, "outboxRelay");
-		OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, "outboxLock");
+		OutboxRelay outboxRelay = applicationContext.getBean(OutboxRelay.class, OUTBOX_RELAY);
+		OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, OUTBOX_LOCK);
+		EventSauce4jCustomConfiguration eventSauce4jCustomConfiguration = applicationContext.getBean(EventSauce4jCustomConfiguration.class);
 		taskRegistrar.setScheduler(outboxTaskExecutor());
 		taskRegistrar.addTriggerTask(
 			() -> {
@@ -58,7 +62,7 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 						outboxRelay.publish();
 					}
 				} finally {
-					if (lockAcquired){
+					if (lockAcquired) {
 						outboxLock.releaseLock();
 					}
 				}
@@ -67,7 +71,7 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 				if (triggerContext.lastCompletion() == null) {
 					return triggerContext.getClock().instant();
 				}
-				return triggerContext.lastCompletion().plusSeconds(5);
+				return triggerContext.lastCompletion().plusSeconds(eventSauce4jCustomConfiguration.getOutboxDelayInterval());
 			}
 		);
 	}

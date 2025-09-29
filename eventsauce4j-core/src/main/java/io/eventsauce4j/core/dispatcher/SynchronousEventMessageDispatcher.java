@@ -29,7 +29,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
  */
 public class SynchronousEventMessageDispatcher implements MessageDispatcher, ApplicationEventPublisherAware {
 
-	ApplicationEventPublisher applicationEventPublisher;
+	private ApplicationEventPublisher applicationEventPublisher;
 
 	@Override
 	public void dispatch(Message message) {

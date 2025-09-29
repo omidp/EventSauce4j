@@ -24,22 +24,24 @@ import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
 
+import java.time.Instant;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * @author Omid Pourhadi
  */
 public class OutboxMessageDispatcher implements MessageDispatcher {
 
-	private final EventPublicationRepository eventPublicationRepository;
+	private final Supplier<EventPublicationRepository> eventPublicationRepository;
 
-	public OutboxMessageDispatcher(EventPublicationRepository eventPublicationRepository) {
+	public OutboxMessageDispatcher(Supplier<EventPublicationRepository> eventPublicationRepository) {
 		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
 	@Override
 	public void dispatch(Message message) {
-		eventPublicationRepository.persist(new DefaultEventPublication(message, getHeaderId(message)));
+		eventPublicationRepository.get().persist(new DefaultEventPublication(message, getHeaderId(message), Instant.now()));
 	}
 
 	UUID getHeaderId(Message message) {

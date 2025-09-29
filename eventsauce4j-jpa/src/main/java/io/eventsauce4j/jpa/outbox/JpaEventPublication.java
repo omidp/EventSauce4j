@@ -46,7 +46,7 @@ public class JpaEventPublication {
 	protected int completionAttempts;
 	protected Status status;
 
-	public JpaEventPublication() {
+	private JpaEventPublication() {
 	}
 
 	public JpaEventPublication(UUID id, Instant publicationDate, String listenerId, String serializedEvent, Class<?> eventType, String headers) {
@@ -56,10 +56,6 @@ public class JpaEventPublication {
 		this.serializedEvent = serializedEvent;
 		this.eventType = eventType;
 		this.headers = headers;
-	}
-
-	public static JpaEventPublication of(String serializedEvent, Class<?> eventType, String headers) {
-		return new JpaEventPublication(UUID.randomUUID(), Instant.now(), "", serializedEvent, eventType, headers);
 	}
 
 	public String getHeaders() {
@@ -74,47 +70,11 @@ public class JpaEventPublication {
 		return publicationDate;
 	}
 
-	public String getListenerId() {
-		return listenerId;
-	}
-
 	public String getSerializedEvent() {
 		return serializedEvent;
 	}
 
 	public Class<?> getEventType() {
 		return eventType;
-	}
-
-	public Instant getCompletionDate() {
-		return completionDate;
-	}
-
-	public void setCompletionDate(Instant completionDate) {
-		this.completionDate = completionDate;
-	}
-
-	public Instant getLastResubmissionDate() {
-		return lastResubmissionDate;
-	}
-
-	public void setLastResubmissionDate(Instant lastResubmissionDate) {
-		this.lastResubmissionDate = lastResubmissionDate;
-	}
-
-	public int getCompletionAttempts() {
-		return completionAttempts;
-	}
-
-	public void setCompletionAttempts(int completionAttempts) {
-		this.completionAttempts = completionAttempts;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 }

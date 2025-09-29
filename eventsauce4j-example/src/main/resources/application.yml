@@ -11,3 +11,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+#eventsauce4j:
+#  persistence: JPA

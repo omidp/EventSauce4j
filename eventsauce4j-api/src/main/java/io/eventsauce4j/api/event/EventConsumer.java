@@ -19,9 +19,39 @@
 package io.eventsauce4j.api.event;
 
 /**
- * @author Omid Pourhadi
+ * Generic contract for handling domain events in an event-driven system.
+ * <p>
+ * Implementations of this interface define how a specific type of event should be
+ * processed when it is published by the system. This allows decoupling of event
+ * producers from event consumers and supports extensible event-driven architectures.
+ * </p>
+ *
+ * <p><b>Usage example:</b></p>
+ * <pre>{@code
+ * public class OrderConsumer implements EventConsumer<OrderRefunded> {
+ *     @Override
+ *     public void handle(OrderRefunded event) {
+ *         log.info("Processing refund event: " + event);
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <T> the type of event this consumer can handle
+ *
+ *  @author Omid Pourhadi
+ *
  */
 public interface EventConsumer<T> {
 
+	/**
+	 * Handle the given event.
+	 * <p>
+	 * This method will be invoked when an event of type {@code T} is dispatched
+	 * to the consumer. The implementation should contain the business logic
+	 * that needs to be executed in reaction to the event.
+	 * </p>
+	 *
+	 * @param event the event to handle, must not be {@code null}
+	 */
 	void handle(T event);
 }

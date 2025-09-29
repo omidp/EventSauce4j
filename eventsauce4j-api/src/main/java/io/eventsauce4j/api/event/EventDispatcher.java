@@ -21,6 +21,8 @@ package io.eventsauce4j.api.event;
 import java.util.Map;
 
 /**
+ * Dispatches domain events.
+ *
  * @author Omid Pourhadi
  */
 public interface EventDispatcher {

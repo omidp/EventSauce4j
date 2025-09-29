@@ -21,8 +21,6 @@ package io.eventsauce4j.jpa.outbox.dlq;
 import io.eventsauce4j.api.event.EventPublication;
 import io.eventsauce4j.api.message.MessageSerializer;
 import io.eventsauce4j.api.outbox.dlq.DeadLetter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.persistence.EntityManager;
 
 /**
@@ -32,8 +30,6 @@ public class JpaDeadLetter implements DeadLetter {
 
 	private final EntityManager entityManager;
 	private final MessageSerializer messageSerializer;
-	private final JsonMapper jsonMapper = new JsonMapper();
-
 
 	public JpaDeadLetter(EntityManager entityManager, MessageSerializer messageSerializer) {
 		this.entityManager = entityManager;
@@ -48,16 +44,8 @@ public class JpaDeadLetter implements DeadLetter {
 			"",
 			messageSerializer.serialize(eventPublication.getMessage().getEvent()),
 			eventPublication.getMessage().getEvent().getClass(),
-			writeValueAsString(eventPublication.getMessage().getHeaders())
+			messageSerializer.serialize(eventPublication.getMessage().getHeaders())
 		);
 		entityManager.persist(entity);
-	}
-
-	private String writeValueAsString(Object object) {
-		try {
-			return jsonMapper.writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
 	}
 }

@@ -18,15 +18,16 @@
 
 package io.eventsauce4j.jackson;
 
-import io.eventsauce4j.api.message.MessageConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.eventsauce4j.api.message.MessageConverter;
 
 /**
  * @author Omid Pourhadi
  */
 public class JacksonMessageConverter implements MessageConverter {
-	JsonMapper jsonMapper = JsonMapper.builder().build();
+	private static JsonMapper jsonMapper = JsonMapper.builder().build();
+
 	@Override
 	public String serialize(Object event) {
 		try {
@@ -44,4 +45,9 @@ public class JacksonMessageConverter implements MessageConverter {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public static JsonMapper JsonSerializer() {
+		return jsonMapper;
+	}
+
 }

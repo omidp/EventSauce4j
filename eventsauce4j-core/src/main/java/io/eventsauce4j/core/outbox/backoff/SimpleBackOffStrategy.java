@@ -26,13 +26,13 @@ import java.time.Duration;
 /**
  * @author Omid Pourhadi
  */
-public class WaitBackOffStrategy implements BackOffStrategy {
+public class SimpleBackOffStrategy implements BackOffStrategy {
 
 	private final int maxTries;
 	private final Duration delay;
 	private final Sleeper sleeper;
 
-	public WaitBackOffStrategy(int maxTries, Duration delay) {
+	public SimpleBackOffStrategy(int maxTries, Duration delay) {
 		this.maxTries = maxTries;
 		this.delay = delay;
 		this.sleeper = Sleeper.create();

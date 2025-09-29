@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class MessageDispatcherChain implements MessageDispatcher {
 
-	private List<MessageDispatcher> messageDispatchers;
+	private final List<MessageDispatcher> messageDispatchers;
 
 	public MessageDispatcherChain(List<MessageDispatcher> messageDispatchers) {
 		this.messageDispatchers = messageDispatchers;

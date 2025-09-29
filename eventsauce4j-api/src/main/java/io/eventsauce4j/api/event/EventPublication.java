@@ -41,7 +41,6 @@ public interface EventPublication {
 		return getCompletionDate().isPresent();
 	}
 
-
 	Status getStatus();
 
 	Instant getLastResubmissionDate();
@@ -51,6 +50,5 @@ public interface EventPublication {
 	default int compareTo(EventPublication that) {
 		return this.getPublicationDate().compareTo(that.getPublicationDate());
 	}
-
 
 }

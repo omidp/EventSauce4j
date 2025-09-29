@@ -41,10 +41,5 @@ public enum Status {
 		/**
 		 * The processing ended up in a failure.
 		 */
-		FAILED,
-
-		/**
-		 * A previously failed publication has been resubmitted for processing.
-		 */
-		RESUBMITTED;
+		FAILED;
 	}

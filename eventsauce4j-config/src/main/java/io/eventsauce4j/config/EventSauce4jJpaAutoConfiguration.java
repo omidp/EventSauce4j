@@ -16,28 +16,18 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.message;
+package io.eventsauce4j.config;
 
-import java.util.Map;
+import jakarta.persistence.EntityManager;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author Omid Pourhadi
  */
-public class Message {
-
-	private final Object event;
-	private final Map<String, String> headers;
-
-	public Message(Object event, Map<String, String> headers) {
-		this.event = event;
-		this.headers = headers;
-	}
-
-	public Object getEvent() {
-		return event;
-	}
-
-	public Map<String, String> getHeaders() {
-		return headers;
-	}
+@AutoConfiguration(after = {EventSauce4jConfig.class})
+@ConditionalOnClass({EntityManager.class})
+@Import(EventSauce4jJpaConfiguration.class)
+public class EventSauce4jJpaAutoConfiguration {
 }

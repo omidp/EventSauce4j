@@ -33,25 +33,27 @@ public class DefaultEventPublication implements EventPublication {
 
 	private final Message message;
 	private final UUID id;
+	private final Instant publicationDate;
 
-	public DefaultEventPublication(Message message, UUID id) {
+	public DefaultEventPublication(Message message, UUID id, Instant publicationDate) {
 		this.message = message;
 		this.id = id;
+		this.publicationDate = publicationDate;
 	}
 
 	@Override
 	public UUID getIdentifier() {
-		return id;
+		return this.id;
 	}
 
 	@Override
 	public Message getMessage() {
-		return message;
+		return this.message;
 	}
 
 	@Override
 	public Instant getPublicationDate() {
-		return Instant.now();
+		return this.publicationDate;
 	}
 
 	@Override

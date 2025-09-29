@@ -27,6 +27,7 @@ import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.eventsauce4j.jackson.JacksonMessageConverter;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,6 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 
 	private final MessageConverter messageConverter;
 	private final EntityManager entityManager;
-	private final JsonMapper jsonMapper = new JsonMapper();
 
 	public JpaEventPublicationRepository(MessageConverter messageConverter, EntityManager entityManager) {
 		this.messageConverter = messageConverter;
@@ -58,7 +58,7 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 			"",
 			messageConverter.serialize(eventPublication.getMessage().getEvent()),
 			eventPublication.getMessage().getEvent().getClass(),
-			writeValueAsString(eventPublication.getMessage().getHeaders())
+			messageConverter.serialize(eventPublication.getMessage().getHeaders())
 		);
 		entityManager.persist(entity);
 	}
@@ -101,22 +101,14 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 		return new DefaultEventPublication(new Message(
 			messageConverter.deserialize(eventPublication.getSerializedEvent(), eventPublication.getEventType()),
 			toHeaders(eventPublication.getHeaders())
-		), eventPublication.getId());
-	}
-
-	private String writeValueAsString(Object object) {
-		try {
-			return jsonMapper.writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
-		}
+		), eventPublication.getId(), eventPublication.getPublicationDate());
 	}
 
 	private HashMap<String, String> toHeaders(String headers) {
 		try {
 			TypeReference<HashMap<String, String>> typeRef
 				= new TypeReference<>() {};
-			return jsonMapper.readValue(headers, typeRef);
+			return JacksonMessageConverter.JsonSerializer().readValue(headers, typeRef);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

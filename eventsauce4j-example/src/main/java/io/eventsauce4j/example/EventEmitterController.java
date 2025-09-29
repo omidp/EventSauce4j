@@ -16,28 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.message;
+package io.eventsauce4j.example;
 
-import java.util.Map;
+import io.eventsauce4j.example.domain.event.OrderRefunded;
+import io.eventsauce4j.api.event.EventDispatcher;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * @author Omid Pourhadi
- */
-public class Message {
+import java.util.UUID;
 
-	private final Object event;
-	private final Map<String, String> headers;
+@RestController
+public class EventEmitterController {
 
-	public Message(Object event, Map<String, String> headers) {
-		this.event = event;
-		this.headers = headers;
+	private final EventDispatcher eventDispatcher;
+
+	public EventEmitterController(EventDispatcher eventDispatcher) {
+		this.eventDispatcher = eventDispatcher;
 	}
 
-	public Object getEvent() {
-		return event;
+	@GetMapping("/emit")
+	public String ok() {
+		eventDispatcher.dispatch(new OrderRefunded(UUID.randomUUID(), "order-refund"));
+		return "ok";
 	}
 
-	public Map<String, String> getHeaders() {
-		return headers;
-	}
 }
