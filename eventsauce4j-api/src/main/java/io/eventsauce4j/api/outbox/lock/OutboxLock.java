@@ -19,12 +19,30 @@
 package io.eventsauce4j.api.outbox.lock;
 
 /**
+ * * Provides a locking mechanism for the Outbox pattern to ensure
+ * * that events are processed safely in a distributed environment.
+ * *
+ * * <p>When multiple application instances are running, it is critical
+ * * to guarantee that a given event is processed by only one instance
+ * * at a time, unless the consumer is explicitly designed to be
+ * * idempotent.</p>
+ * *
+ * * <p>Implementations of this interface may use various strategies
+ * * (e.g., database row locks, distributed locks, or external systems
+ * * like Redis) to coordinate exclusive access.</p>
+ *
  * @author Omid Pourhadi
  */
 public interface OutboxLock {
 
+	/**
+	 * Attempts to acquire the lock for event processing.
+	 */
 	boolean acquireLock();
 
+	/**
+	 * Releases the lock, allowing other instances to acquire it.
+	 */
 	void releaseLock();
 
 }
