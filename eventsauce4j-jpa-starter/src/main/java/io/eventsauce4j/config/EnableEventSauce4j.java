@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core.annotation;
+package io.eventsauce4j.config;
 
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -29,11 +29,10 @@ import java.lang.annotation.Target;
 /**
  * @author Omid Pourhadi
  */
-@Documented
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
-@Component
-public @interface Consumer {
-
+@Documented
+@Import({EventSauce4jConfig.class, EventSauce4jJpaAutoConfiguration.class, OutboxSchedulingConfig.class})
+public @interface EnableEventSauce4j {
 
 }

@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core.annotation;
+package io.eventsauce4j.config;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import jakarta.persistence.EntityManager;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author Omid Pourhadi
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
-public @interface Observer {
-
+@AutoConfiguration(after = {EventSauce4jConfig.class})
+@ConditionalOnClass({EntityManager.class})
+@Import(EventSauce4jJpaConfiguration.class)
+public class EventSauce4jJpaAutoConfiguration {
 }

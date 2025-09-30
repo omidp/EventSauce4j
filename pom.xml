@@ -121,12 +121,11 @@
 
 	<modules>
 		<module>eventsauce4j-api</module>
-		<module>eventsauce4j-core</module>
 		<module>eventsauce4j-jpa</module>
 		<module>eventsauce4j-jackson</module>
-		<module>eventsauce4j-config</module>
 		<module>eventsauce4j-integration-test</module>
 		<module>eventsauce4j-junit</module>
+		<module>eventsauce4j-jpa-starter</module>
 		<module>eventsauce4j-example</module>
 	</modules>
 	<profiles>

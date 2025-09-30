@@ -52,7 +52,7 @@
 		
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-config</artifactId>
+			<artifactId>eventsauce4j-jpa-starter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

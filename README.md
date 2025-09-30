@@ -55,14 +55,4 @@ mvn clean install
 
 ## Usage
 
-Add the following dependency to your pom.xml:
-
-```
-<dependency>
-  <groupId>io.eventsauce4j</groupId>
-  <artifactId>eventsauce4j-config</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-</dependency>
-```
-
 For reference, see the Spring Boot example project: eventsauce4j-example.
