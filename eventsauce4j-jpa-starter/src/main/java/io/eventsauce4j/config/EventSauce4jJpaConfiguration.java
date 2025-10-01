@@ -27,12 +27,14 @@ import io.eventsauce4j.core.dispatcher.MessageDispatcherChain;
 import io.eventsauce4j.core.outbox.backoff.SimpleBackOffStrategy;
 import io.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
 import io.eventsauce4j.jackson.JacksonMessageConverter;
+import io.eventsauce4j.jpa.outbox.JpaEventPublication;
 import io.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
 import io.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
 import io.eventsauce4j.jpa.outbox.lock.DatabaseOutboxLock;
 import io.eventsauce4j.jpa.outbox.relay.DatabaseOutboxRelay;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,8 +50,9 @@ import static io.eventsauce4j.config.EventSauce4jConfig.SYNCHRONOUS_MESSAGE_DISP
 /**
  * @author Omid Pourhadi
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(havingValue = "JPA", prefix = "eventsauce4j", name = "persistence", matchIfMissing = true)
+@AutoConfigurationPackage(basePackageClasses = JpaEventPublication.class)
 public class EventSauce4jJpaConfiguration {
 
 	@Bean

@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * @author Omid Pourhadi
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({EventSauce4jCustomConfiguration.class})
 public class EventSauce4jConfig {
 

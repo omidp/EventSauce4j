@@ -38,11 +38,12 @@ import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_RELAY;
 /**
  * @author Omid Pourhadi
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableScheduling
 public class OutboxSchedulingConfig implements SchedulingConfigurer, ApplicationContextAware, DisposableBean {
 
 	private ApplicationContext applicationContext;
+	private volatile boolean lockAcquired;
 
 	public Executor outboxTaskExecutor() {
 		return Executors.newSingleThreadScheduledExecutor();
@@ -56,7 +57,7 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 		taskRegistrar.setScheduler(outboxTaskExecutor());
 		taskRegistrar.addTriggerTask(
 			() -> {
-				boolean lockAcquired = outboxLock.acquireLock();
+				lockAcquired = outboxLock.acquireLock();
 				try {
 					if (lockAcquired) {
 						outboxRelay.publish();
@@ -83,5 +84,9 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 
 	@Override
 	public void destroy() throws Exception {
+		if (lockAcquired) {
+			OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, OUTBOX_LOCK);
+			outboxLock.releaseLock();
+		}
 	}
 }
