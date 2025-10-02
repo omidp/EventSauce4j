@@ -20,6 +20,8 @@ package io.eventsauce4j.jpa.outbox;
 
 import io.eventsauce4j.api.event.Status;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -44,7 +46,9 @@ public class JpaEventPublication {
 	protected Instant completionDate;
 	protected Instant lastResubmissionDate;
 	protected int completionAttempts;
+	@Enumerated(EnumType.STRING)
 	protected Status status;
+	protected Instant consumedAt;
 
 	private JpaEventPublication() {
 	}
