@@ -19,6 +19,7 @@
 package io.eventsauce4j.jpa.outbox;
 
 import io.eventsauce4j.api.event.Status;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,17 +38,26 @@ public class JpaEventPublication {
 
 	@Id
 	private UUID id;
+	@Column(name = "publication_date")
 	private Instant publicationDate;
+	@Column(name = "listener_id")
 	private String listenerId;
+	@Column(name = "serialized_event")
 	private String serializedEvent;
+	@Column(name = "event_type")
 	private Class<?> eventType;
+	@Column(name = "meta_data")
 	private String metaData;
-
+	@Column(name = "completion_date")
 	protected Instant completionDate;
+	@Column(name = "last_resubmission_date")
 	protected Instant lastResubmissionDate;
+	@Column(name = "completion_attempts")
 	protected int completionAttempts;
 	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
 	protected Status status;
+	@Column(name = "consumed_at")
 	protected Instant consumedAt;
 
 	private JpaEventPublication() {
@@ -80,5 +90,9 @@ public class JpaEventPublication {
 
 	public Class<?> getEventType() {
 		return eventType;
+	}
+
+	public Instant getCompletionDate() {
+		return completionDate;
 	}
 }
