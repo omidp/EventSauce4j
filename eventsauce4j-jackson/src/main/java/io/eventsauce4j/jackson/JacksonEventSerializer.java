@@ -20,12 +20,12 @@ package io.eventsauce4j.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import io.eventsauce4j.api.message.MessageConverter;
+import io.eventsauce4j.api.event.EventSerializer;
 
 /**
  * @author Omid Pourhadi
  */
-public class JacksonMessageConverter implements MessageConverter {
+public class JacksonEventSerializer implements EventSerializer {
 	private static JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override

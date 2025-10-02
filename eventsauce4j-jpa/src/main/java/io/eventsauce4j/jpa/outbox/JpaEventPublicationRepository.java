@@ -18,22 +18,22 @@
 
 package io.eventsauce4j.jpa.outbox;
 
-import io.eventsauce4j.core.DefaultEventPublication;
-import io.eventsauce4j.api.event.EventPublication;
-import io.eventsauce4j.api.event.Status;
-import io.eventsauce4j.api.message.Message;
-import io.eventsauce4j.api.message.MessageConverter;
-import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import io.eventsauce4j.jackson.JacksonMessageConverter;
+import io.eventsauce4j.api.event.EventPublication;
+import io.eventsauce4j.api.event.EventSerializer;
+import io.eventsauce4j.api.event.MetaData;
+import io.eventsauce4j.api.event.Status;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.eventsauce4j.core.DefaultEventPublication;
+import io.eventsauce4j.jackson.JacksonEventSerializer;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -42,11 +42,11 @@ import java.util.UUID;
 @Transactional
 public class JpaEventPublicationRepository implements EventPublicationRepository {
 
-	private final MessageConverter messageConverter;
+	private final EventSerializer eventSerializer;
 	private final EntityManager entityManager;
 
-	public JpaEventPublicationRepository(MessageConverter messageConverter, EntityManager entityManager) {
-		this.messageConverter = messageConverter;
+	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager) {
+		this.eventSerializer = eventSerializer;
 		this.entityManager = entityManager;
 	}
 
@@ -56,9 +56,9 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 			eventPublication.getIdentifier(),
 			eventPublication.getPublicationDate(),
 			"",
-			messageConverter.serialize(eventPublication.getMessage().getEvent()),
+			eventSerializer.serialize(eventPublication.getMessage().getEvent()),
 			eventPublication.getMessage().getEvent().getClass(),
-			messageConverter.serialize(eventPublication.getMessage().getHeaders())
+			eventSerializer.serialize(eventPublication.getMessage().getMetaData())
 		);
 		entityManager.persist(entity);
 	}
@@ -99,16 +99,16 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
 		return new DefaultEventPublication(new Message(
-			messageConverter.deserialize(eventPublication.getSerializedEvent(), eventPublication.getEventType()),
-			toHeaders(eventPublication.getHeaders())
+			eventSerializer.deserialize(eventPublication.getSerializedEvent(), eventPublication.getEventType()),
+			toMetaData(eventPublication.getMetaData())
 		), eventPublication.getId(), eventPublication.getPublicationDate());
 	}
 
-	private HashMap<String, String> toHeaders(String headers) {
+	private MetaData toMetaData(String metadata) {
 		try {
-			TypeReference<HashMap<String, String>> typeRef
+			TypeReference<Map<String, Object>> typeRef
 				= new TypeReference<>() {};
-			return JacksonMessageConverter.JsonSerializer().readValue(headers, typeRef);
+			return new MetaData(JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

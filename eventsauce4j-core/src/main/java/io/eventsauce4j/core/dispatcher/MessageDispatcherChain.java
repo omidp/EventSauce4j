@@ -16,19 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core.dispatcher;
 
-import java.util.Map;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.message.MessageDispatcher;
+
+import java.util.List;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
+public class MessageDispatcherChain implements MessageDispatcher {
 
-	void dispatch(Object... events);
+	private final List<MessageDispatcher> messageDispatchers;
 
-	void dispatchWithHeaders(MetaData metaData, Object... events);
+	public MessageDispatcherChain(List<MessageDispatcher> messageDispatchers) {
+		this.messageDispatchers = messageDispatchers;
+	}
 
+	@Override
+	public void dispatch(Message message) {
+		for (MessageDispatcher messageDispatcher : messageDispatchers) {
+			messageDispatcher.dispatch(message);
+		}
+	}
 }

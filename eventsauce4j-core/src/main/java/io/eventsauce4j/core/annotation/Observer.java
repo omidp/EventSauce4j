@@ -16,19 +16,20 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core.annotation;
 
-import java.util.Map;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
-
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+public @interface Observer {
 
 }

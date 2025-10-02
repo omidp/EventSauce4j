@@ -16,19 +16,20 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core.outbox.relay;
 
-import java.util.Map;
+import io.eventsauce4j.api.event.EventPublication;
+import io.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
-
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+public class MarkMessagesConsumedOnCommit implements RelayCommitStrategy {
+	@Override
+	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
+		for (EventPublication event : events) {
+			eventPublicationRepository.markAsComplete(event.getIdentifier());
+		}
+	}
 }

@@ -16,19 +16,24 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core.decorator;
+
+import io.eventsauce4j.api.event.MetaData;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.message.MessageDecorator;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
+public class IdGeneratorMessageDecorator implements MessageDecorator {
 
-	void dispatch(Object... events);
+	public static final String ID = "id";
 
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+	@Override
+	public Message decorate(Message message) {
+		return new Message(message.getEvent(), new MetaData(Map.of(ID, UUID.randomUUID().toString())));
+	}
 }

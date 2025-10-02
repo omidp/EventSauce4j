@@ -16,19 +16,17 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core.decorator;
 
-import java.util.Map;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.message.MessageDecorator;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
-
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+public class NoOpMessageDecorator implements MessageDecorator {
+	@Override
+	public Message decorate(Message message) {
+		return message;
+	}
 }

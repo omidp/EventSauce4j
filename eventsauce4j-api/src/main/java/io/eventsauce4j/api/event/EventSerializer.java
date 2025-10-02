@@ -18,17 +18,11 @@
 
 package io.eventsauce4j.api.event;
 
-import java.util.Map;
+import io.eventsauce4j.api.message.MessageDeserializer;
+import io.eventsauce4j.api.message.MessageSerializer;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
-
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+public interface EventSerializer extends MessageDeserializer, MessageSerializer {
 }

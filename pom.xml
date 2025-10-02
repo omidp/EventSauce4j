@@ -121,6 +121,7 @@
 
 	<modules>
 		<module>eventsauce4j-api</module>
+		<module>eventsauce4j-core</module>
 		<module>eventsauce4j-jpa</module>
 		<module>eventsauce4j-jackson</module>
 		<module>eventsauce4j-integration-test</module>

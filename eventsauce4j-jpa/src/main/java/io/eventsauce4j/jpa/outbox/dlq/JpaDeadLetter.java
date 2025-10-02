@@ -44,7 +44,7 @@ public class JpaDeadLetter implements DeadLetter {
 			"",
 			messageSerializer.serialize(eventPublication.getMessage().getEvent()),
 			eventPublication.getMessage().getEvent().getClass(),
-			messageSerializer.serialize(eventPublication.getMessage().getHeaders())
+			messageSerializer.serialize(eventPublication.getMessage().getMetaData())
 		);
 		entityManager.persist(entity);
 	}

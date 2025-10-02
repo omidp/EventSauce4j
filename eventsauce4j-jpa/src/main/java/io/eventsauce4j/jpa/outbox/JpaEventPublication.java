@@ -39,7 +39,7 @@ public class JpaEventPublication {
 	private String listenerId;
 	private String serializedEvent;
 	private Class<?> eventType;
-	private String headers;
+	private String metaData;
 
 	protected Instant completionDate;
 	protected Instant lastResubmissionDate;
@@ -49,17 +49,17 @@ public class JpaEventPublication {
 	private JpaEventPublication() {
 	}
 
-	public JpaEventPublication(UUID id, Instant publicationDate, String listenerId, String serializedEvent, Class<?> eventType, String headers) {
+	public JpaEventPublication(UUID id, Instant publicationDate, String listenerId, String serializedEvent, Class<?> eventType, String metaData) {
 		this.id = id;
 		this.publicationDate = publicationDate;
 		this.listenerId = listenerId;
 		this.serializedEvent = serializedEvent;
 		this.eventType = eventType;
-		this.headers = headers;
+		this.metaData = metaData;
 	}
 
-	public String getHeaders() {
-		return headers;
+	public String getMetaData() {
+		return metaData;
 	}
 
 	public UUID getId() {

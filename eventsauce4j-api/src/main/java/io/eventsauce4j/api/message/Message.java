@@ -18,7 +18,7 @@
 
 package io.eventsauce4j.api.message;
 
-import java.util.Map;
+import io.eventsauce4j.api.event.MetaData;
 
 /**
  * @author Omid Pourhadi
@@ -26,18 +26,18 @@ import java.util.Map;
 public class Message {
 
 	private final Object event;
-	private final Map<String, String> headers;
+	private final MetaData metaData;
 
-	public Message(Object event, Map<String, String> headers) {
+	public Message(Object event, MetaData metaData) {
 		this.event = event;
-		this.headers = headers;
+		this.metaData = metaData;
 	}
 
 	public Object getEvent() {
 		return event;
 	}
 
-	public Map<String, String> getHeaders() {
-		return headers;
+	public MetaData getMetaData() {
+		return metaData;
 	}
 }

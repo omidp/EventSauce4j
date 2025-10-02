@@ -26,7 +26,7 @@ import io.eventsauce4j.api.outbox.lock.OutboxLock;
 import io.eventsauce4j.core.dispatcher.MessageDispatcherChain;
 import io.eventsauce4j.core.outbox.backoff.SimpleBackOffStrategy;
 import io.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
-import io.eventsauce4j.jackson.JacksonMessageConverter;
+import io.eventsauce4j.jackson.JacksonEventSerializer;
 import io.eventsauce4j.jpa.outbox.JpaEventPublication;
 import io.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
 import io.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
@@ -57,7 +57,7 @@ public class EventSauce4jJpaConfiguration {
 
 	@Bean
 	EventPublicationRepository eventPublicationRepository(EntityManager entityManager) {
-		return new JpaEventPublicationRepository(new JacksonMessageConverter(), entityManager);
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager);
 	}
 
 	@Bean(name = OUTBOX_RELAY)
@@ -76,7 +76,7 @@ public class EventSauce4jJpaConfiguration {
 
 	@Bean
 	DeadLetter deadLetterQueue(EntityManager entityManager) {
-		return new JpaDeadLetter(entityManager, new JacksonMessageConverter());
+		return new JpaDeadLetter(entityManager, new JacksonEventSerializer());
 	}
 
 	@Bean(name = OUTBOX_LOCK)

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
@@ -39,15 +40,16 @@ import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringJUnitConfig(initializers = ConfigDataApplicationContextInitializer.class)
+@SpringJUnitConfig(initializers = {ConfigDataApplicationContextInitializer.class}, classes = JpaTestConfig.class)
 @RecordApplicationEvents
 @EnableEventSauce4j
-@TestPropertySource(properties = {
-	"eventsauce4j.persistence=JPA",
-	"key2 = value2"
-})
+//@TestPropertySource(properties = {
+//	"eventsauce4j.persistence=JPA",
+//	"spring.datasource.driverClassName=org.postgresql.Driver"
+//})
 @AutoConfigureTestDatabase
 @AutoConfigureTestEntityManager
+@Profile("test")
 public class EventDispatcherIntegrationTest {
 
 

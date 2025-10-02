@@ -16,19 +16,16 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core;
 
-import java.util.Map;
+import org.springframework.context.ApplicationEvent;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
+public class EventMessage extends ApplicationEvent {
 
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+	public EventMessage(Object source) {
+		super(source);
+	}
 }

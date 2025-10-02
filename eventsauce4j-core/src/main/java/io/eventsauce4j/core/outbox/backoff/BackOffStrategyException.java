@@ -16,19 +16,14 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
-
-import java.util.Map;
+package io.eventsauce4j.core.outbox.backoff;
 
 /**
- * Dispatches domain events.
- *
  * @author Omid Pourhadi
  */
-public interface EventDispatcher {
+public class BackOffStrategyException extends RuntimeException{
 
-	void dispatch(Object... events);
-
-	void dispatchWithHeaders(MetaData metaData, Object... events);
-
+	public BackOffStrategyException(Throwable cause) {
+		super(cause);
+	}
 }
