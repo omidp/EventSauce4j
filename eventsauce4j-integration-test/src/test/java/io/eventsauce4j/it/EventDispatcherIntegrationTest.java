@@ -24,32 +24,25 @@ package io.eventsauce4j.it;
 
 import io.eventsauce4j.config.EnableEventSauce4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.context.annotation.Profile;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringJUnitConfig(initializers = {ConfigDataApplicationContextInitializer.class}, classes = JpaTestConfig.class)
+@SpringJUnitConfig(initializers = {ConfigDataApplicationContextInitializer.class}, classes = {EventDispatcherIntegrationTest.MyTestConfig.class, JpaTestConfig.class})
 @RecordApplicationEvents
-@EnableEventSauce4j
-//@TestPropertySource(properties = {
-//	"eventsauce4j.persistence=JPA",
-//	"spring.datasource.driverClassName=org.postgresql.Driver"
-//})
-@AutoConfigureTestDatabase
 @AutoConfigureTestEntityManager
-@Profile("test")
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class EventDispatcherIntegrationTest {
 
 
@@ -58,6 +51,13 @@ public class EventDispatcherIntegrationTest {
 		service.submitOrder(new Order(UUID.randomUUID(), "First order."));
 		long numEvents = events.stream(OrderStarter.class).count();
 		assertThat(numEvents).isEqualTo(1);
+	}
+
+	@EnableEventSauce4j
+	@EnableTransactionManagement
+	@ComponentScan(basePackageClasses = OrderService.class)
+	public static class MyTestConfig{
+
 	}
 
 }

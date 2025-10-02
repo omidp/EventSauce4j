@@ -1,14 +1,14 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/testdb
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
     username: test
     password: test
-    driverClassName: org.postgresql.Driver
+    driverClassName: org.h2.Driver
   jpa:
     open-in-view: false
     show-sql: true
-    hibernate:
-      ddl-auto: update
+    generateDdl: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+        dialect: org.hibernate.dialect.H2Dialect

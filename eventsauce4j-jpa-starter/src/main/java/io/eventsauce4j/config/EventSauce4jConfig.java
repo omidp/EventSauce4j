@@ -78,7 +78,7 @@ public class EventSauce4jConfig {
 
 
 	@Bean
-	EventSauce4jInitializer eventSauce4jInitializer() {
+	public static EventSauce4jInitializer eventSauce4jInitializer() {
 		return new EventSauce4jInitializer();
 	}
 

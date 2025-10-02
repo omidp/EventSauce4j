@@ -19,6 +19,7 @@
 package io.eventsauce4j.it;
 
 import io.eventsauce4j.jpa.outbox.JpaEventPublication;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
@@ -26,10 +27,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.SharedEntityManagerCreator;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -39,6 +40,12 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties({JpaProperties.class, DataSourceProperties.class})
 public class JpaTestConfig {
 
+
+	@Bean("entityManager")
+	@DependsOn("entityManagerFactory")
+	EntityManager entityManager(EntityManagerFactory entityManagerFactory){
+		return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
+	}
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSourceProperties dataSourceProperties, JpaProperties jpaProperties) {
