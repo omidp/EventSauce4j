@@ -22,7 +22,6 @@ import io.eventsauce4j.api.event.EventDispatcher;
 import io.eventsauce4j.api.message.MessageDecorator;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.eventsauce4j.core.consumer.EventMessageConsumer;
 import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import io.eventsauce4j.core.dispatcher.OutboxMessageDispatcher;
@@ -68,12 +67,6 @@ public class EventSauce4jConfig {
 	@Bean
 	MessageDecorator messageDecorator() {
 		return new IdGeneratorMessageDecorator();
-	}
-
-
-	@Bean(name = EVENT_MESSAGE_CONSUMER)
-	EventMessageConsumer eventMessageConsumer() {
-		return new EventMessageConsumer();
 	}
 
 

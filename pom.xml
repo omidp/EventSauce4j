@@ -122,7 +122,7 @@
 		<module>eventsauce4j-integration-test</module>
 		<module>eventsauce4j-junit</module>
 		<module>eventsauce4j-jpa-starter</module>
-		<module>eventsauce4j-example</module>
+		<module>eventsauce4j-rabbitmq</module>
 	</modules>
 	<profiles>
 		<profile>

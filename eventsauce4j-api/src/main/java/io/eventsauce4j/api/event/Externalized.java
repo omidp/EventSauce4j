@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core.annotation;
+package io.eventsauce4j.api.event;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -29,9 +29,9 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 public @interface Externalized {
 
-	String value() default "";
+	String routingKey() default "";
 
 }

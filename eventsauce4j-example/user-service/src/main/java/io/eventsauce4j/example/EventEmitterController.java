@@ -16,28 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.jpa.outbox.dlq;
+package io.eventsauce4j.example;
 
-import io.eventsauce4j.jpa.outbox.JpaEvent;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import io.eventsauce4j.api.event.EventDispatcher;
+import io.eventsauce4j.example.domain.event.EmailSent;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
 import java.util.UUID;
 
-/**
- * @author Omid Pourhadi
- */
-@Entity
-@Table(name = "event_publication_dlq")
-public class JpaEventPublicationDlq extends JpaEvent {
+@RestController
+public class EventEmitterController {
 
+	private final EventDispatcher eventDispatcher;
 
-	private JpaEventPublicationDlq() {
-		super();
+	public EventEmitterController(EventDispatcher eventDispatcher) {
+		this.eventDispatcher = eventDispatcher;
 	}
 
-	public JpaEventPublicationDlq(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
-		super(id, publicationDate, serializedEvent, routingKey, metaData);
+	@GetMapping("/emit")
+	public String ok() {
+		eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email sent."));
+		return "ok";
 	}
+
 }

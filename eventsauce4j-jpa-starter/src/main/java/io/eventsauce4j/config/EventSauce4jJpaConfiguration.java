@@ -18,6 +18,7 @@
 
 package io.eventsauce4j.config;
 
+import io.eventsauce4j.api.event.Inflection;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.eventsauce4j.api.outbox.OutboxRelay;
@@ -36,6 +37,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -56,16 +58,17 @@ import static io.eventsauce4j.config.EventSauce4jConfig.SYNCHRONOUS_MESSAGE_DISP
 public class EventSauce4jJpaConfiguration {
 
 	@Bean
-	EventPublicationRepository eventPublicationRepository(EntityManager entityManager) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager);
+	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflection.class));
 	}
 
 	@Bean(name = OUTBOX_RELAY)
 	OutboxRelay outboxRelay(EntityManager em,
 							@Qualifier(SYNCHRONOUS_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousMessageDispatcher,
-							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher) {
+							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher,
+							@Qualifier("jpaEventPublicationRepository") EventPublicationRepository eventPublicationRepository) {
 		return new DatabaseOutboxRelay(
-			eventPublicationRepository(em),
+			eventPublicationRepository,
 			new MessageDispatcherChain(List.of(synchronousMessageDispatcher, synchronousEventMessageDispatcher)),
 			new SimpleBackOffStrategy(3, Duration.ofSeconds(5)),
 			new MarkMessagesConsumedOnCommit(),

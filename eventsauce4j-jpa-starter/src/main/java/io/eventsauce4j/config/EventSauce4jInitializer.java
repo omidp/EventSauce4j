@@ -19,11 +19,9 @@
 package io.eventsauce4j.config;
 
 
-import io.eventsauce4j.api.event.EventConsumer;
 import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.core.annotation.Consumer;
-import io.eventsauce4j.core.annotation.Externalized;
-import io.eventsauce4j.core.consumer.EventMessageConsumer;
+import io.eventsauce4j.api.event.Externalized;
 import io.eventsauce4j.core.dispatcher.SynchronousMessageDispatcher;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -33,12 +31,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Omid Pourhadi
@@ -46,7 +40,6 @@ import java.util.Map;
 public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitializingSingleton, ApplicationContextAware, PriorityOrdered {
 
 	private List<MessageConsumer> consumers = new ArrayList<>();
-	private Map<Type, EventConsumer<?>> eventConsumers = new HashMap<>();
 	private ApplicationContext applicationContext;
 
 	@Override
@@ -57,18 +50,6 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 		if (bean.getClass().isAnnotationPresent(Consumer.class)) {
 			if (bean instanceof MessageConsumer) {
 				consumers.add((MessageConsumer) bean);
-			}
-			if (bean instanceof EventConsumer<?>) {
-				Type[] genericInterfaces = bean.getClass().getGenericInterfaces();
-				for (Type genericInterface : genericInterfaces) {
-					if (genericInterface instanceof ParameterizedType) {
-						ParameterizedType paramType = (ParameterizedType) genericInterface;
-						if (paramType.getRawType().getTypeName().equals(EventConsumer.class.getName())) {
-							Type actualType = paramType.getActualTypeArguments()[0];
-							eventConsumers.put(actualType, (EventConsumer<?>) bean);
-						}
-					}
-				}
 			}
 		}
 		return bean;
@@ -91,11 +72,5 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 			SynchronousMessageDispatcher.class
 		);
 		synchronousMessageDispatcher.setMessageConsumers(consumers);
-		//
-		EventMessageConsumer eventMessageConsumer = applicationContext.getBean(
-			EventSauce4jConfig.EVENT_MESSAGE_CONSUMER,
-			EventMessageConsumer.class
-		);
-		eventMessageConsumer.setEventConsumers(eventConsumers);
 	}
 }

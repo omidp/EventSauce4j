@@ -38,14 +38,14 @@ public class JpaDeadLetter implements DeadLetter {
 
 	@Override
 	public void process(EventPublication eventPublication) {
-		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
-			eventPublication.getIdentifier(),
-			eventPublication.getPublicationDate(),
-			"",
-			messageSerializer.serialize(eventPublication.getMessage().getEvent()),
-			eventPublication.getMessage().getEvent().getClass(),
-			messageSerializer.serialize(eventPublication.getMessage().getMetaData())
-		);
-		entityManager.persist(entity);
+		//TODO: Add inflection
+//		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
+//			eventPublication.getIdentifier(),
+//			eventPublication.getPublicationDate(),
+//			messageSerializer.serialize(eventPublication.getMessage().getEvent()),
+//			eventPublication.getRoutingKey(),
+//			messageSerializer.serialize(eventPublication.getMessage().getMetaData())
+//		);
+//		entityManager.persist(entity);
 	}
 }

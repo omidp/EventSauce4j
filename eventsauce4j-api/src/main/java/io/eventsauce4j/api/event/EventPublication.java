@@ -51,4 +51,12 @@ public interface EventPublication {
 		return this.getPublicationDate().compareTo(that.getPublicationDate());
 	}
 
+	default String getRoutingKey() {
+		Class<?> clz = getMessage().getEvent().getClass();
+		if (clz.isAnnotationPresent(Externalized.class)) {
+			return clz.getAnnotation(Externalized.class).routingKey();
+		}
+		return clz.getName();
+	}
+
 }

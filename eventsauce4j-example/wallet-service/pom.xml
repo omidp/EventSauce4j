@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.eventsauce4j</groupId>
-	<artifactId>eventsauce4j-example</artifactId>
+	<artifactId>wallet-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>eventsauce4j-example</name>
+	<name>wallet-service</name>
 	<description>Demo project for EventSauce4j Spring Boot</description>
 	<url/>
 	<licenses>

@@ -16,28 +16,25 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.jpa.outbox.dlq;
+package io.eventsauce4j.api.event;
 
-import io.eventsauce4j.jpa.outbox.JpaEvent;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-
-import java.time.Instant;
-import java.util.UUID;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Omid Pourhadi
  */
-@Entity
-@Table(name = "event_publication_dlq")
-public class JpaEventPublicationDlq extends JpaEvent {
+public class DefaultInflection implements Inflection {
 
+	private final Map<String, Class<?>> mapping;
 
-	private JpaEventPublicationDlq() {
-		super();
+	public DefaultInflection(Map<String, Class<?>> mapping) {
+		this.mapping = Collections.unmodifiableMap(mapping);
 	}
 
-	public JpaEventPublicationDlq(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
-		super(id, publicationDate, serializedEvent, routingKey, metaData);
+	@Override
+	public Optional<Class<?>> getInglectedClass(String routingKey) {
+		return Optional.ofNullable(mapping.get(routingKey));
 	}
 }

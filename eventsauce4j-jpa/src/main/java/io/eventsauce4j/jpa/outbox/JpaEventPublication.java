@@ -18,12 +18,7 @@
 
 package io.eventsauce4j.jpa.outbox;
 
-import io.eventsauce4j.api.event.Status;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
@@ -34,65 +29,16 @@ import java.util.UUID;
  */
 @Table(name = "event_publication")
 @Entity
-public class JpaEventPublication {
+public class JpaEventPublication extends JpaEvent {
 
-	@Id
-	private UUID id;
-	@Column(name = "publication_date")
-	private Instant publicationDate;
-	@Column(name = "listener_id")
-	private String listenerId;
-	@Column(name = "serialized_event")
-	private String serializedEvent;
-	@Column(name = "event_type")
-	private Class<?> eventType;
-	@Column(name = "meta_data")
-	private String metaData;
-	@Column(name = "completion_date")
-	protected Instant completionDate;
-	@Column(name = "last_resubmission_date")
-	protected Instant lastResubmissionDate;
-	@Column(name = "completion_attempts")
-	protected int completionAttempts;
-	@Enumerated(EnumType.STRING)
-	@Column(name = "status")
-	protected Status status;
-	@Column(name = "consumed_at")
-	protected Instant consumedAt;
 
 	private JpaEventPublication() {
+		super();
 	}
 
-	public JpaEventPublication(UUID id, Instant publicationDate, String listenerId, String serializedEvent, Class<?> eventType, String metaData) {
-		this.id = id;
-		this.publicationDate = publicationDate;
-		this.listenerId = listenerId;
-		this.serializedEvent = serializedEvent;
-		this.eventType = eventType;
-		this.metaData = metaData;
+	public JpaEventPublication(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
+		super(id, publicationDate, serializedEvent, routingKey, metaData);
 	}
 
-	public String getMetaData() {
-		return metaData;
-	}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public Instant getPublicationDate() {
-		return publicationDate;
-	}
-
-	public String getSerializedEvent() {
-		return serializedEvent;
-	}
-
-	public Class<?> getEventType() {
-		return eventType;
-	}
-
-	public Instant getCompletionDate() {
-		return completionDate;
-	}
 }

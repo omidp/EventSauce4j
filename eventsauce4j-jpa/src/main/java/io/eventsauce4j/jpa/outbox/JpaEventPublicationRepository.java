@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.eventsauce4j.api.event.EventPublication;
 import io.eventsauce4j.api.event.EventSerializer;
+import io.eventsauce4j.api.event.Inflection;
 import io.eventsauce4j.api.event.MetaData;
 import io.eventsauce4j.api.event.Status;
 import io.eventsauce4j.api.message.Message;
@@ -34,7 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * @author Omid Pourhadi
@@ -44,10 +48,12 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 
 	private final EventSerializer eventSerializer;
 	private final EntityManager entityManager;
+	private final Supplier<Inflection> inflection;
 
-	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager) {
+	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager, Supplier<Inflection> inflection) {
 		this.eventSerializer = eventSerializer;
 		this.entityManager = entityManager;
+		this.inflection = inflection;
 	}
 
 	@Override
@@ -55,9 +61,8 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 		JpaEventPublication entity = new JpaEventPublication(
 			eventPublication.getIdentifier(),
 			eventPublication.getPublicationDate(),
-			"",
 			eventSerializer.serialize(eventPublication.getMessage().getEvent()),
-			eventPublication.getMessage().getEvent().getClass(),
+			eventPublication.getRoutingKey(),
 			eventSerializer.serialize(eventPublication.getMessage().getMetaData())
 		);
 		entityManager.persist(entity);
@@ -69,7 +74,9 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 				select ep from JpaEventPublication ep
 				where ep.completionDate is null
 				""", JpaEventPublication.class).setMaxResults(batchSize).getResultList()
-			.stream().map(this::convert).toList();
+			.stream().map(this::convert)
+			.filter(Objects::nonNull)
+			.toList();
 	}
 
 	@Override
@@ -98,8 +105,12 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	}
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
+		Optional<Class<?>> inflectedClass = inflection.get().getInglectedClass(eventPublication.getRoutingKey());
+		if (inflectedClass.isEmpty()) {
+			return null;
+		}
 		return new DefaultEventPublication(new Message(
-			eventSerializer.deserialize(eventPublication.getSerializedEvent(), eventPublication.getEventType()),
+			eventSerializer.deserialize(eventPublication.getSerializedEvent(), inflectedClass.get()),
 			toMetaData(eventPublication.getMetaData())
 		), eventPublication.getId(), eventPublication.getPublicationDate());
 	}

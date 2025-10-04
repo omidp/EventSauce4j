@@ -16,28 +16,29 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.jpa.outbox.dlq;
+package io.eventsauce4j.example;
 
-import io.eventsauce4j.jpa.outbox.JpaEvent;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import io.eventsauce4j.api.event.DefaultInflection;
+import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.config.EnableEventSauce4j;
+import io.eventsauce4j.example.domain.event.EmailSent;
+import io.eventsauce4j.example.domain.event.UserCreated;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import java.time.Instant;
-import java.util.UUID;
+import java.util.Map;
 
 /**
  * @author Omid Pourhadi
  */
-@Entity
-@Table(name = "event_publication_dlq")
-public class JpaEventPublicationDlq extends JpaEvent {
+@Configuration
+@EnableEventSauce4j
+public class Config {
 
-
-	private JpaEventPublicationDlq() {
-		super();
+	@Bean Inflection inflection(){
+		return new DefaultInflection(Map.of(UserCreated.class.getName(), UserCreated.class,
+			EmailSent.class.getName(), EmailSent.class
+		));
 	}
 
-	public JpaEventPublicationDlq(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
-		super(id, publicationDate, serializedEvent, routingKey, metaData);
-	}
 }
