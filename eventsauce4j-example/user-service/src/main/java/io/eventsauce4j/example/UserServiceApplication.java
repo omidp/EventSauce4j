@@ -19,7 +19,6 @@
 package io.eventsauce4j.example;
 
 import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.config.EnableEventSauce4j;
 import io.eventsauce4j.example.domain.event.UserCreated;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

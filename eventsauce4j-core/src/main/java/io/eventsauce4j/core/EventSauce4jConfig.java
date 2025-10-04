@@ -16,21 +16,24 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.config;
+package io.eventsauce4j.core;
 
 import io.eventsauce4j.api.event.EventDispatcher;
+import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.api.message.MessageDecorator;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.eventsauce4j.core.consumer.EventMessageConsumer;
 import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import io.eventsauce4j.core.dispatcher.OutboxMessageDispatcher;
 import io.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
-import io.eventsauce4j.core.dispatcher.SynchronousMessageDispatcher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 /**
  * @author Omid Pourhadi
@@ -39,16 +42,10 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties({EventSauce4jCustomConfiguration.class})
 public class EventSauce4jConfig {
 
-	public static final String SYNCHRONOUS_MESSAGE_DISPATCHER_NAME = "synchronousMessageDispatcher";
 	public static final String SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME = "synchronousEventMessageDispatcher";
 	public static final String EVENT_MESSAGE_CONSUMER = "eventMessageConsumer";
 	public static final String OUTBOX_RELAY = "outboxRelay";
 	public static final String OUTBOX_LOCK = "outboxLock";
-
-	@Bean(name = SYNCHRONOUS_MESSAGE_DISPATCHER_NAME)
-	MessageDispatcher synchronousMessageDispatcher() {
-		return new SynchronousMessageDispatcher();
-	}
 
 	@Bean(name = SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME)
 	MessageDispatcher synchronousEventMessageDispatcher() {
@@ -69,6 +66,11 @@ public class EventSauce4jConfig {
 		return new IdGeneratorMessageDecorator();
 	}
 
+
+	@Bean
+	EventMessageConsumer eventMessageConsumer(List<MessageConsumer> consumers) {
+		return new EventMessageConsumer(consumers);
+	}
 
 	@Bean
 	public static EventSauce4jInitializer eventSauce4jInitializer() {

@@ -24,13 +24,11 @@ package io.eventsauce4j.it;
 
 import io.eventsauce4j.api.event.EventDispatcher;
 import io.eventsauce4j.api.message.MessageDispatcher;
-import io.eventsauce4j.config.EnableEventSauce4j;
-import io.eventsauce4j.config.EventSauce4jConfig;
+import io.eventsauce4j.config.EnableJpaEventSauce4j;
+import io.eventsauce4j.core.EventSauce4jConfig;
 import io.eventsauce4j.core.EventMessage;
 import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
-import io.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,11 +47,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -109,7 +104,7 @@ public class EventDispatcherIntegrationTest {
 		assertThat(numEvents).isEqualTo(1);
 	}
 
-	@EnableEventSauce4j
+	@EnableJpaEventSauce4j
 	@EnableTransactionManagement
 	@ComponentScan(basePackageClasses = OrderService.class)
 	public static class MyTestConfig {

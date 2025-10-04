@@ -20,7 +20,7 @@ package io.eventsauce4j.example;
 
 import io.eventsauce4j.api.event.DefaultInflection;
 import io.eventsauce4j.api.event.Inflection;
-import io.eventsauce4j.config.EnableEventSauce4j;
+import io.eventsauce4j.config.EnableJpaEventSauce4j;
 import io.eventsauce4j.example.domain.event.EmailSent;
 import io.eventsauce4j.example.domain.event.UserCreated;
 import org.springframework.context.annotation.Bean;
@@ -32,10 +32,11 @@ import java.util.Map;
  * @author Omid Pourhadi
  */
 @Configuration
-@EnableEventSauce4j
+@EnableJpaEventSauce4j
 public class Config {
 
-	@Bean Inflection inflection(){
+	@Bean
+	Inflection inflection() {
 		return new DefaultInflection(Map.of(UserCreated.class.getName(), UserCreated.class,
 			EmailSent.class.getName(), EmailSent.class
 		));

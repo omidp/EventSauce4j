@@ -44,10 +44,9 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 import java.util.List;
 
-import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_LOCK;
-import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_RELAY;
-import static io.eventsauce4j.config.EventSauce4jConfig.SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME;
-import static io.eventsauce4j.config.EventSauce4jConfig.SYNCHRONOUS_MESSAGE_DISPATCHER_NAME;
+import static io.eventsauce4j.core.EventSauce4jConfig.OUTBOX_LOCK;
+import static io.eventsauce4j.core.EventSauce4jConfig.OUTBOX_RELAY;
+import static io.eventsauce4j.core.EventSauce4jConfig.SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME;
 
 /**
  * @author Omid Pourhadi
@@ -64,12 +63,11 @@ public class EventSauce4jJpaConfiguration {
 
 	@Bean(name = OUTBOX_RELAY)
 	OutboxRelay outboxRelay(EntityManager em,
-							@Qualifier(SYNCHRONOUS_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousMessageDispatcher,
 							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher,
 							@Qualifier("jpaEventPublicationRepository") EventPublicationRepository eventPublicationRepository) {
 		return new DatabaseOutboxRelay(
 			eventPublicationRepository,
-			new MessageDispatcherChain(List.of(synchronousMessageDispatcher, synchronousEventMessageDispatcher)),
+			new MessageDispatcherChain(List.of(synchronousEventMessageDispatcher)),
 			new SimpleBackOffStrategy(3, Duration.ofSeconds(5)),
 			new MarkMessagesConsumedOnCommit(),
 			deadLetterQueue(em)

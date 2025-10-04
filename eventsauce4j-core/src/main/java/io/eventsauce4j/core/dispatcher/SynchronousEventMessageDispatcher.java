@@ -33,7 +33,7 @@ public class SynchronousEventMessageDispatcher implements MessageDispatcher, App
 
 	@Override
 	public void dispatch(Message message) {
-		applicationEventPublisher.publishEvent(new EventMessage(message.getEvent()));
+		applicationEventPublisher.publishEvent(new EventMessage(message));
 	}
 
 	@Override

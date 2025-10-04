@@ -16,19 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.config;
+package io.eventsauce4j.example;
 
-import io.eventsauce4j.core.EventSauce4jConfig;
-import jakarta.persistence.EntityManager;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Import;
+import io.eventsauce4j.api.event.DefaultInflection;
+import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.config.EnableJpaEventSauce4j;
+import io.eventsauce4j.example.domain.event.PaymentUserCreated;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
 
 /**
  * @author Omid Pourhadi
  */
-@AutoConfiguration(after = {EventSauce4jConfig.class})
-@ConditionalOnClass({EntityManager.class})
-@Import(EventSauce4jJpaConfiguration.class)
-public class EventSauce4jJpaAutoConfiguration {
+@Configuration
+@EnableJpaEventSauce4j
+public class Config {
+
+	@Bean Inflection inflection(){
+		return new DefaultInflection(Map.of(
+			PaymentUserCreated.class.getName(), PaymentUserCreated.class
+		));
+	}
+
 }

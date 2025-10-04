@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.config;
+package io.eventsauce4j.core;
 
 
 import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.core.annotation.Consumer;
 import io.eventsauce4j.api.event.Externalized;
-import io.eventsauce4j.core.dispatcher.SynchronousMessageDispatcher;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -39,7 +38,6 @@ import java.util.List;
  */
 public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitializingSingleton, ApplicationContextAware, PriorityOrdered {
 
-	private List<MessageConsumer> consumers = new ArrayList<>();
 	private ApplicationContext applicationContext;
 
 	@Override
@@ -48,9 +46,6 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 			//TODO: events need routing
 		}
 		if (bean.getClass().isAnnotationPresent(Consumer.class)) {
-			if (bean instanceof MessageConsumer) {
-				consumers.add((MessageConsumer) bean);
-			}
 		}
 		return bean;
 	}
@@ -67,10 +62,5 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		SynchronousMessageDispatcher synchronousMessageDispatcher = applicationContext.getBean(
-			EventSauce4jConfig.SYNCHRONOUS_MESSAGE_DISPATCHER_NAME,
-			SynchronousMessageDispatcher.class
-		);
-		synchronousMessageDispatcher.setMessageConsumers(consumers);
 	}
 }

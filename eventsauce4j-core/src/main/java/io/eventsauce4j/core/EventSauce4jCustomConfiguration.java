@@ -16,19 +16,23 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.config;
+package io.eventsauce4j.core;
 
-import io.eventsauce4j.core.EventSauce4jConfig;
-import jakarta.persistence.EntityManager;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * @author Omid Pourhadi
- */
-@AutoConfiguration(after = {EventSauce4jConfig.class})
-@ConditionalOnClass({EntityManager.class})
-@Import(EventSauce4jJpaConfiguration.class)
-public class EventSauce4jJpaAutoConfiguration {
+@ConfigurationProperties(prefix = "eventsauce4j")
+public class EventSauce4jCustomConfiguration {
+
+	@Value("${eventsauce4j.outboxDelayInterval:10}")
+	private int outboxDelayInterval;
+
+	public int getOutboxDelayInterval() {
+		return outboxDelayInterval;
+	}
+
+	public void setOutboxDelayInterval(int outboxDelayInterval) {
+		this.outboxDelayInterval = outboxDelayInterval;
+	}
+
 }

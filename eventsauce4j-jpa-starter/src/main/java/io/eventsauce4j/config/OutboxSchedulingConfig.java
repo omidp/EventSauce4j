@@ -20,6 +20,7 @@ package io.eventsauce4j.config;
 
 import io.eventsauce4j.api.outbox.OutboxRelay;
 import io.eventsauce4j.api.outbox.lock.OutboxLock;
+import io.eventsauce4j.core.EventSauce4jCustomConfiguration;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -32,8 +33,8 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_LOCK;
-import static io.eventsauce4j.config.EventSauce4jConfig.OUTBOX_RELAY;
+import static io.eventsauce4j.core.EventSauce4jConfig.OUTBOX_LOCK;
+import static io.eventsauce4j.core.EventSauce4jConfig.OUTBOX_RELAY;
 
 /**
  * @author Omid Pourhadi

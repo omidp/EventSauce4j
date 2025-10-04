@@ -26,21 +26,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.UUID;
-
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableEventSauce4j
-public class EventSauce4jApplication {
+public class PaymentServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EventSauce4jApplication.class, args);
+		SpringApplication.run(PaymentServiceApplication.class, args);
 	}
 
 	@Bean
 	CommandLineRunner commandLineRunner(EventDispatcher eventDispatcher) {
 		return args -> {
-			eventDispatcher.dispatch(new OrderStarted(UUID.randomUUID(), "order started"));
 		};
 	}
 

@@ -18,6 +18,7 @@
 
 package io.eventsauce4j.config;
 
+import io.eventsauce4j.core.EventSauce4jConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
@@ -33,6 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Import({EventSauce4jConfig.class, EventSauce4jJpaAutoConfiguration.class, OutboxSchedulingConfig.class})
-public @interface EnableEventSauce4j {
+public @interface EnableJpaEventSauce4j {
 
 }

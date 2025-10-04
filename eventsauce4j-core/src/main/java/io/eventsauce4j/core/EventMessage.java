@@ -18,6 +18,7 @@
 
 package io.eventsauce4j.core;
 
+import io.eventsauce4j.api.message.Message;
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -25,7 +26,14 @@ import org.springframework.context.ApplicationEvent;
  */
 public class EventMessage extends ApplicationEvent {
 
+	private final Message message;
+
 	public EventMessage(Object source) {
 		super(source);
+		this.message = (Message) source;
+	}
+
+	public Message getMessage() {
+		return message;
 	}
 }

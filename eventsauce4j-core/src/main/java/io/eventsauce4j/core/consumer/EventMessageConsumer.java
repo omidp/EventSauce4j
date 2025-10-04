@@ -16,30 +16,35 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core.dispatcher;
+package io.eventsauce4j.core.consumer;
 
-import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageConsumer;
-import io.eventsauce4j.api.message.MessageDispatcher;
+import io.eventsauce4j.core.EventMessage;
+import org.springframework.context.ApplicationListener;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Omid Pourhadi
  */
-public class SynchronousMessageDispatcher implements MessageDispatcher {
+public class EventMessageConsumer implements ApplicationListener<EventMessage> {
 
-	private Collection<MessageConsumer> messageConsumers = new ArrayList<>();
+	private final List<MessageConsumer> messageConsumers;
+
+	public EventMessageConsumer(List<MessageConsumer> messageConsumers) {
+		this.messageConsumers = messageConsumers;
+	}
 
 	@Override
-	public void dispatch(Message message) {
+	public void onApplicationEvent(EventMessage event) {
 		for (MessageConsumer messageConsumer : messageConsumers) {
-			messageConsumer.handle(message);
+			messageConsumer.handle(event.getMessage());
 		}
 	}
 
-	public void setMessageConsumers(Collection<MessageConsumer> messageConsumers) {
-		this.messageConsumers = messageConsumers;
+	@Override
+	public boolean supportsAsyncExecution() {
+		return false;
 	}
+
 }
