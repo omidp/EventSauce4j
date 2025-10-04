@@ -11,3 +11,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8081
+
+
+
+eventsauce4j:
+  rabbitmq:
+    host: 127.0.0.1

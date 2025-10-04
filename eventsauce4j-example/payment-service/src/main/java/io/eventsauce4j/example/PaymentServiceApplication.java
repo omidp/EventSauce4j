@@ -19,7 +19,6 @@
 package io.eventsauce4j.example;
 
 import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.config.EnableEventSauce4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableEventSauce4j
 public class PaymentServiceApplication {
 
 	public static void main(String[] args) {

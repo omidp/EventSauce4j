@@ -34,7 +34,7 @@ public class DefaultInflection implements Inflection {
 	}
 
 	@Override
-	public Optional<Class<?>> getInglectedClass(String routingKey) {
+	public Optional<Class<?>> getInflectedClass(String routingKey) {
 		return Optional.ofNullable(mapping.get(routingKey));
 	}
 }

@@ -16,15 +16,19 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.rabbitmq;
 
-import java.util.Optional;
+import io.eventsauce4j.core.EventSauce4jConfig;
+import jakarta.persistence.EntityManager;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Import;
 
 /**
  * @author Omid Pourhadi
  */
-public interface Inflection {
-
-	Optional<Class<?>> getInflectedClass(String routingKey);
-
+@AutoConfiguration(after = {EventSauce4jConfig.class})
+@ConditionalOnClass({EntityManager.class})
+@Import(EventSauce4jRabbitMqConfiguration.class)
+public class EventSauce4jRabbitMqAutoConfiguration {
 }

@@ -105,7 +105,7 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	}
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
-		Optional<Class<?>> inflectedClass = inflection.get().getInglectedClass(eventPublication.getRoutingKey());
+		Optional<Class<?>> inflectedClass = inflection.get().getInflectedClass(eventPublication.getRoutingKey());
 		if (inflectedClass.isEmpty()) {
 			return null;
 		}

@@ -20,6 +20,7 @@ package io.eventsauce4j.example;
 
 import io.eventsauce4j.api.event.EventDispatcher;
 import io.eventsauce4j.example.domain.event.EmailSent;
+import io.eventsauce4j.example.domain.event.UserCreated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ public class EventEmitterController {
 
 	@GetMapping("/emit")
 	public String ok() {
-		eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email sent."));
+		eventDispatcher.dispatch(new UserCreated(UUID.randomUUID(), "email sent."));
 		return "ok";
 	}
 

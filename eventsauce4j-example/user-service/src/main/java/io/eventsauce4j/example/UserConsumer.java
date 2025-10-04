@@ -45,7 +45,7 @@ public class UserConsumer implements MessageConsumer {
 		log.info("handle message ");
 		if (message.getEvent() instanceof UserCreated) {
 			log.info("user created");
-			eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email"));
+//			eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email"));
 		}
 	}
 

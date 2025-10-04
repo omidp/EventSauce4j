@@ -43,7 +43,6 @@ import java.util.List;
 public class EventSauce4jConfig {
 
 	public static final String SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME = "synchronousEventMessageDispatcher";
-	public static final String EVENT_MESSAGE_CONSUMER = "eventMessageConsumer";
 	public static final String OUTBOX_RELAY = "outboxRelay";
 	public static final String OUTBOX_LOCK = "outboxLock";
 

@@ -16,15 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
-
-import java.util.Optional;
+package io.eventsauce4j.rabbitmq;
 
 /**
  * @author Omid Pourhadi
  */
-public interface Inflection {
+public class RabbitMqException extends RuntimeException{
+	public RabbitMqException() {
+	}
 
-	Optional<Class<?>> getInflectedClass(String routingKey);
+	public RabbitMqException(String message) {
+		super(message);
+	}
 
+	public RabbitMqException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public RabbitMqException(Throwable cause) {
+		super(cause);
+	}
+
+	public RabbitMqException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }

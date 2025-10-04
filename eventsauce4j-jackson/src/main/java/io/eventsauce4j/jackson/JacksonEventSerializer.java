@@ -19,6 +19,7 @@
 package io.eventsauce4j.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.eventsauce4j.api.event.EventSerializer;
 
@@ -26,7 +27,9 @@ import io.eventsauce4j.api.event.EventSerializer;
  * @author Omid Pourhadi
  */
 public class JacksonEventSerializer implements EventSerializer {
-	private static JsonMapper jsonMapper = JsonMapper.builder().build();
+	private static JsonMapper jsonMapper = JsonMapper.builder()
+		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+		.build();
 
 	@Override
 	public String serialize(Object event) {

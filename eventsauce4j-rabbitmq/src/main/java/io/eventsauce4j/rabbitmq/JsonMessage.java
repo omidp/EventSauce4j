@@ -16,15 +16,25 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.rabbitmq;
 
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Map;
 
 /**
  * @author Omid Pourhadi
  */
-public interface Inflection {
+public record JsonMessage<T>(T event, Map<String, Object> metaData) {
 
-	Optional<Class<?>> getInflectedClass(String routingKey);
+	@JsonCreator
+	public JsonMessage(
+		@JsonProperty("event") T event,
+		@JsonProperty("metaData") Map<String, Object> metaData) {
+		this.event = event;
+		this.metaData = metaData;
+	}
+
 
 }

@@ -16,58 +16,67 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.rmq;
+package io.eventsauce4j.rabbitmq;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.MessageProperties;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.message.MessageSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.TimeoutException;
 
 /**
  * @author Omid Pourhadi
  */
 public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
+	private static final Logger log = LoggerFactory.getLogger(RabbitMqMessageDispatcher.class);
 
 	private final MessageSerializer messageSerializer;
+	private final RabbitMqConfiguration rabbitMqConfiguration;
+	private final RabbitMqSetup rabbitMqSetup;
 
-	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer) {
+	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer,
+									 RabbitMqConfiguration rabbitMqConfiguration,
+									 RabbitMqSetup rabbitMqSetup) {
 		this.messageSerializer = messageSerializer;
+		this.rabbitMqConfiguration = rabbitMqConfiguration;
+		this.rabbitMqSetup = rabbitMqSetup;
 	}
 
 	@Override
 	public void dispatch(Message message) {
-		try (Connection conn = RabbitConfig.newConnection();
+		try (Connection conn = rabbitMqSetup.newConnection();
 			 Channel ch = conn.createChannel()) {
-
-			RabbitConfig.declareTopology(ch);         // safe to call repeatedly
 
 			// Enable confirms (simple & robust)
 			ch.confirmSelect();
-
+			AMQP.BasicProperties messageProperties =
+				new AMQP.BasicProperties("application/json",
+					null,
+					message.getMetaData(),
+					2,
+					0, null, null, null,
+					null, null, message.getEvent().getClass().getName(), null,
+					null, null
+				);
 			ch.basicPublish(
-				RabbitConfig.EXCHANGE,
-				RabbitConfig.ROUTING_KEY,
-				MessageProperties.PERSISTENT_TEXT_PLAIN,      // make message persistent
+				rabbitMqConfiguration.getExchange(),
+				rabbitMqConfiguration.getRoutingKey(),
+				messageProperties,
 				messageSerializer.serialize(message).getBytes(StandardCharsets.UTF_8)
 			);
 
 			// wait for all outstanding acks (throws on nack/timeout)
 			ch.waitForConfirmsOrDie();
 
-			System.out.println("Published messages with confirms.");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (TimeoutException e) {
-			throw new RuntimeException(e);
+			log.debug("Published messages with confirms.");
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new RabbitMqException(e);
 		}
 	}
 }

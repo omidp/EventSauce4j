@@ -16,41 +16,32 @@
  * limitations under the License.
  */
 
-import io.eventsauce4j.api.event.MetaData;
-import io.eventsauce4j.api.message.Message;
-import io.eventsauce4j.api.message.MessageDeserializer;
-import io.eventsauce4j.api.message.MessageSerializer;
-import io.eventsauce4j.rmq.RabbitMqConsumer;
-import io.eventsauce4j.rmq.RabbitMqMessageDispatcher;
-
-import java.util.concurrent.TimeUnit;
-
 /**
  * @author Omid Pourhadi
  */
 public class RmqTest {
 
 	public static void main(String[] args) {
-		RabbitMqMessageDispatcher d = new RabbitMqMessageDispatcher(new MessageSerializer() {
-			@Override
-			public String serialize(Object event) {
-				return event.toString();
-			}
-		});
-		for (int i = 0; i < 10; i++) {
-			d.dispatch(new Message("hi " + i, MetaData.emptyInstance()));
-		}
-
-		//
-		while (true){
-			RabbitMqConsumer c = new RabbitMqConsumer(null);
-			c.consume();
-			try {
-				TimeUnit.SECONDS.sleep(5);
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
-		}
+//		RabbitMqMessageDispatcher d = new RabbitMqMessageDispatcher(new MessageSerializer() {
+//			@Override
+//			public String serialize(Object event) {
+//				return event.toString();
+//			}
+//		});
+//		for (int i = 0; i < 10; i++) {
+//			d.dispatch(new Message("hi " + i, MetaData.emptyInstance()));
+//		}
+//
+//		//
+//		while (true){
+//			RabbitMqConsumer c = new RabbitMqConsumer(null, messageConsumers);
+//			c.consume();
+//			try {
+//				TimeUnit.SECONDS.sleep(5);
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
 
 	}
 

@@ -50,9 +50,14 @@
 			<scope>test</scope>
 		</dependency>
 		
+<!--		<dependency>-->
+<!--			<groupId>io.eventsauce4j</groupId>-->
+<!--			<artifactId>eventsauce4j-jpa-starter</artifactId>-->
+<!--			<version>0.0.1-SNAPSHOT</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-jpa-starter</artifactId>
+			<artifactId>eventsauce4j-rabbitmq</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

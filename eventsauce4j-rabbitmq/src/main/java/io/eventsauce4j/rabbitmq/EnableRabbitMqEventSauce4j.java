@@ -16,15 +16,21 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.rabbitmq;
 
-import java.util.Optional;
+import io.eventsauce4j.core.EventSauce4jConfig;
+import org.springframework.context.annotation.Import;
 
-/**
- * @author Omid Pourhadi
- */
-public interface Inflection {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	Optional<Class<?>> getInflectedClass(String routingKey);
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Import({EventSauce4jConfig.class, EventSauce4jRabbitMqAutoConfiguration.class, OutboxSchedulingConfig.class})
+public @interface EnableRabbitMqEventSauce4j {
 
 }
