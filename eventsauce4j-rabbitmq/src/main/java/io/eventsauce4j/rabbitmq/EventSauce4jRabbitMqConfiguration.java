@@ -25,8 +25,11 @@ import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.eventsauce4j.api.outbox.OutboxRelay;
 import io.eventsauce4j.api.outbox.dlq.DeadLetter;
 import io.eventsauce4j.api.outbox.lock.OutboxLock;
+import io.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
+import io.eventsauce4j.core.EventSauce4jCustomConfiguration;
 import io.eventsauce4j.core.dispatcher.MessageDispatcherChain;
 import io.eventsauce4j.core.outbox.backoff.SimpleBackOffStrategy;
+import io.eventsauce4j.core.outbox.relay.DeleteMessageOnCommit;
 import io.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
 import io.eventsauce4j.jackson.JacksonEventSerializer;
 import io.eventsauce4j.jpa.outbox.JpaEventPublication;
@@ -59,6 +62,9 @@ import static io.eventsauce4j.core.EventSauce4jConfig.SYNCHRONOUS_EVENT_MESSAGE_
 @EnableConfigurationProperties({RabbitMqConfiguration.class})
 public class EventSauce4jRabbitMqConfiguration {
 
+	private static final String RMQ_MESSAGE_DISPATCHER = "rabbitMqMessageDispatcher";
+	private static final String PUBLICATION_REPO = "jpaEventPublicationRepository";
+
 	@Bean
 	RabbitMqSetup rabbitMqSetup(RabbitMqConfiguration config) {
 		RabbitMqSetup rabbitMqSetup = new RabbitMqSetup(config);
@@ -66,9 +72,9 @@ public class EventSauce4jRabbitMqConfiguration {
 		return rabbitMqSetup;
 	}
 
-	@Bean("rabbitMqMessageDispatcher")
-	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup) {
-		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup);
+	@Bean(RMQ_MESSAGE_DISPATCHER)
+	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflection inflection) {
+		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflection);
 	}
 
 	@Bean
@@ -76,7 +82,7 @@ public class EventSauce4jRabbitMqConfiguration {
 		return new RabbitMqConsumer(inflection, messageConsumers, rabbitMqConfiguration, rabbitMqSetup);
 	}
 
-	@Bean
+	@Bean(PUBLICATION_REPO)
 	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
 		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflection.class));
 	}
@@ -84,15 +90,28 @@ public class EventSauce4jRabbitMqConfiguration {
 	@Bean(name = OUTBOX_RELAY)
 	OutboxRelay outboxRelay(EntityManager em,
 							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher,
-							@Qualifier("rabbitMqMessageDispatcher") MessageDispatcher rabbitMqMessageDispatcher,
-							@Qualifier("jpaEventPublicationRepository") EventPublicationRepository eventPublicationRepository) {
+							@Qualifier(RMQ_MESSAGE_DISPATCHER) MessageDispatcher rabbitMqMessageDispatcher,
+							@Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository,
+							RelayCommitStrategy relayCommitStrategy) {
 		return new DatabaseOutboxRelay(
 			eventPublicationRepository,
 			new MessageDispatcherChain(List.of(synchronousEventMessageDispatcher, rabbitMqMessageDispatcher)),
 			new SimpleBackOffStrategy(3, Duration.ofSeconds(5)),
-			new MarkMessagesConsumedOnCommit(),
+			relayCommitStrategy,
 			deadLetterQueue(em)
 		);
+	}
+
+	@Bean
+	@ConditionalOnProperty(havingValue = "true", prefix = "eventsauce4j", name = "archive", matchIfMissing = true)
+	RelayCommitStrategy markMessagesConsumedOnCommit() {
+		return new MarkMessagesConsumedOnCommit();
+	}
+
+	@Bean
+	@ConditionalOnProperty(havingValue = "false", prefix = "eventsauce4j", name = "archive")
+	RelayCommitStrategy deleteMessageOnCommit() {
+		return new DeleteMessageOnCommit();
 	}
 
 

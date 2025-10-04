@@ -21,6 +21,7 @@ package io.eventsauce4j.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import io.eventsauce4j.api.event.Inflection;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.message.MessageSerializer;
@@ -39,13 +40,15 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 	private final MessageSerializer messageSerializer;
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
+	private final Inflection inflection;
 
 	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer,
 									 RabbitMqConfiguration rabbitMqConfiguration,
-									 RabbitMqSetup rabbitMqSetup) {
+									 RabbitMqSetup rabbitMqSetup, Inflection inflection) {
 		this.messageSerializer = messageSerializer;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
+		this.inflection = inflection;
 	}
 
 	@Override
@@ -55,13 +58,15 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 			// Enable confirms (simple & robust)
 			ch.confirmSelect();
+			String eventType = message.getEvent().getClass().getName();
+			Class<?> inflectedClass = inflection.getInflectedClass(eventType).orElse(message.getEvent().getClass());
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,
 					message.getMetaData(),
 					2,
 					0, null, null, null,
-					null, null, message.getEvent().getClass().getName(), null,
+					null, null, inflectedClass.getName(), null,
 					null, null
 				);
 			ch.basicPublish(
