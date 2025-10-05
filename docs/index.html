@@ -426,6 +426,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#back-off-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔁 Back-off Strategy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      💾 Commit Strategy
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -600,6 +618,27 @@ Although this adds slight latency, it guarantees <strong>at-least-once delivery<
 <p>In horizontally scaled Spring Boot applications (multiple instances of the same service), it’s crucial to prevent duplicate event consumption.</p>
 <p><strong>EventSauce4j</strong> uses an outbox lock mechanism so that only one instance at a time processes pending events from the outbox table.
 This ensures consistent, non-duplicated event delivery across your service cluster.</p>
+<hr />
+<h3 id="back-off-strategy">🔁 Back-off Strategy<a class="headerlink" href="#back-off-strategy" title="Permanent link">&para;</a></h3>
+<p>The <strong>Backoff Strategy</strong> in EventSauce4j is a mechanism used to handle temporary delivery failures when sending messages. It determines how the system should wait and retry after a failure, helping ensure reliable message delivery without overwhelming the system.</p>
+<p>EventSauce4j provides two types of backoff strategies:</p>
+<p><strong>SimpleBackOffStrategy</strong>
+When a message delivery fails, this strategy retries a fixed number of times with a constant delay between attempts. If all retries fail, the message is moved to a Dead Letter Queue (DLQ) or Dead Letter Table for later inspection.</p>
+<p><strong>ExponentialBackOffStrategy</strong>
+In this approach, the delay between retries increases exponentially after each failed attempt. This means the system waits longer before each subsequent retry.</p>
+<pre><code class="language-yaml">eventsauce4j:
+  backoff: simple #exponential
+</code></pre>
+<hr />
+<h3 id="commit-strategy">💾 Commit Strategy<a class="headerlink" href="#commit-strategy" title="Permanent link">&para;</a></h3>
+<p>Messages can be committed using two strategies:</p>
+<ul>
+<li>Mark message as consumed</li>
+<li>Delete the message</li>
+</ul>
+<pre><code class="language-yaml">eventsauce4j:
+  archive: true #false will delete the message
+</code></pre>
 
 
 
