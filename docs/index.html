@@ -336,6 +336,84 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#core-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Concepts
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Concepts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#message-decoration" class="md-nav__link">
+    <span class="md-ellipsis">
+      📨 Message Decoration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-dispatcher" class="md-nav__link">
+    <span class="md-ellipsis">
+      ⚡ Event Dispatcher
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-dispatcher" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧭 Message Dispatcher
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inflector" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔤 Inflector
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#message-serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      🧩 Message Serializer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      🗃️ Outbox
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outbox-lock" class="md-nav__link">
+    <span class="md-ellipsis">
+      🔒 Outbox Lock
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -429,24 +507,24 @@ The goals of eventsauce4j are:</p>
 </tbody>
 </table>
 <hr />
-<h1 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h1>
+<h2 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
 <p>This section introduces the fundamental building blocks of <strong>eventsauce4j</strong> and explains how they interact to support event-sourced applications in Java and Spring.</p>
-<h2 id="message-decoration">📨 Message Decoration<a class="headerlink" href="#message-decoration" title="Permanent link">&para;</a></h2>
+<h3 id="message-decoration">📨 Message Decoration<a class="headerlink" href="#message-decoration" title="Permanent link">&para;</a></h3>
 <p>EventSauce4j allows message decoration, meaning you can attach additional metadata (headers) to your messages.
 This is useful for adding contextual information before a message is persisted or dispatched, such as correlation IDs, tenant identifiers, or trace information.</p>
 <hr />
-<h2 id="event-dispatcher">⚡ Event Dispatcher<a class="headerlink" href="#event-dispatcher" title="Permanent link">&para;</a></h2>
+<h3 id="event-dispatcher">⚡ Event Dispatcher<a class="headerlink" href="#event-dispatcher" title="Permanent link">&para;</a></h3>
 <p>Events are a central concept in event sourcing, but they’re also valuable beyond it.
 An event dispatcher decouples systems by propagating events to subscribers, enabling clean separation between write and read models or between microservices.</p>
 <p>In eventsauce4j, the event dispatcher ensures that domain events flow seamlessly from your aggregates to handlers or external systems.</p>
 <hr />
-<h2 id="message-dispatcher">🧭 Message Dispatcher<a class="headerlink" href="#message-dispatcher" title="Permanent link">&para;</a></h2>
+<h3 id="message-dispatcher">🧭 Message Dispatcher<a class="headerlink" href="#message-dispatcher" title="Permanent link">&para;</a></h3>
 <p>The message dispatcher is responsible for sending messages to registered <code>MessageConsumers</code>.
 It defines how events are actually delivered synchronously or asynchronously depending on the module in use.</p>
 <p><strong>Custom Dispatchers</strong></p>
 <p>You can implement your own message dispatcher by implementing the <code>MessageDispatcher</code> interface.</p>
 <hr />
-<h2 id="inflector">🔤 Inflector<a class="headerlink" href="#inflector" title="Permanent link">&para;</a></h2>
+<h3 id="inflector">🔤 Inflector<a class="headerlink" href="#inflector" title="Permanent link">&para;</a></h3>
 <p>An <strong>Inflector</strong> converts event class names into string identifiers when storing events.
 When reconstructing events, it performs the reverse: mapping the stored string back to the correct fully-qualified class name.</p>
 <p>This mechanism supports cross-service communication and event versioning.</p>
@@ -466,12 +544,12 @@ You can define this mapping as follows:</p>
 ));
 </code></pre>
 <hr />
-<h2 id="message-serializer">🧩 Message Serializer<a class="headerlink" href="#message-serializer" title="Permanent link">&para;</a></h2>
+<h3 id="message-serializer">🧩 Message Serializer<a class="headerlink" href="#message-serializer" title="Permanent link">&para;</a></h3>
 <p>The message serializer is responsible for converting messages to and from serialized formats for persistence or transport.
 When implementing a custom message repository, you’ll typically use this interface.</p>
 <p>By default, eventsauce4j provides an jackson-based serializer, but you can easily implement your own strategy (e.g., JSON, Avro, Protobuf) to fit your infrastructure.</p>
 <hr />
-<h2 id="outbox">🗃️ Outbox<a class="headerlink" href="#outbox" title="Permanent link">&para;</a></h2>
+<h3 id="outbox">🗃️ Outbox<a class="headerlink" href="#outbox" title="Permanent link">&para;</a></h3>
 <p>The <strong>Outbox pattern</strong> ensures that event persistence and dispatching occur atomically, either both succeed or both fail.</p>
 <p><strong>Why It Matters</strong></p>
 <p>Without an outbox, persisting domain changes and dispatching events involve two separate network operations.
@@ -479,7 +557,7 @@ If one fails, inconsistencies can occur.</p>
 <p>The <strong>transactional outbox</strong> buffers events in a dedicated database table before dispatching them asynchronously.
 Although this adds slight latency, it guarantees <strong>at-least-once delivery</strong> and ensures that only persisted events are published to consumers.</p>
 <hr />
-<h2 id="outbox-lock">🔒 Outbox Lock<a class="headerlink" href="#outbox-lock" title="Permanent link">&para;</a></h2>
+<h3 id="outbox-lock">🔒 Outbox Lock<a class="headerlink" href="#outbox-lock" title="Permanent link">&para;</a></h3>
 <p>In horizontally scaled Spring Boot applications (multiple instances of the same service), it’s crucial to prevent duplicate event consumption.</p>
 <p><strong>EventSauce4j</strong> uses an outbox lock mechanism so that only one instance at a time processes pending events from the outbox table.
 This ensures consistent, non-duplicated event delivery across your service cluster.</p>
