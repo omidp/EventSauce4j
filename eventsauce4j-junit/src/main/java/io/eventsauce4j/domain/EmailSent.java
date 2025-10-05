@@ -24,5 +24,5 @@ import io.eventsauce4j.api.event.Event;
  * @author Omid Pourhadi
  */
 @Event(routingKey = "user.email")
-public class EmailSent {
+public record EmailSent(int id) {
 }

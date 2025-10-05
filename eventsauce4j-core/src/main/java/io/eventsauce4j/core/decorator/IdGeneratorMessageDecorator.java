@@ -34,6 +34,6 @@ public class IdGeneratorMessageDecorator implements MessageDecorator {
 
 	@Override
 	public Message decorate(Message message) {
-		return new Message(message.getEvent(), new MetaData(Map.of(ID, UUID.randomUUID().toString())));
+		return new Message(message.event(), new MetaData(Map.of(ID, UUID.randomUUID().toString())));
 	}
 }

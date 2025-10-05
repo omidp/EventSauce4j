@@ -59,7 +59,7 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 	@Override
 	public void dispatch(Message message) {
-		if (message.getEvent().getClass().isAnnotationPresent(ExternalEvent.class)) {
+		if (message.event().getClass().isAnnotationPresent(ExternalEvent.class)) {
 			//only external messages can be dispatch
 			dispatchExternalMessage(message);
 		}
@@ -71,13 +71,13 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 			// Enable confirms (simple & robust)
 			ch.confirmSelect();
-			String eventType = message.getEvent().getClass().getName();
-			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.getEvent().getClass());
+			String eventType = message.event().getClass().getName();
+			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.event().getClass());
 			UUID msgId = getHeaderId(message);
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,
-					message.getMetaData(),
+					message.metaData(),
 					2,
 					0, null, null, null,
 					msgId.toString(), null, inflectedClass.getName(), null,
@@ -100,7 +100,7 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 	}
 
 	UUID getHeaderId(Message message) {
-		return message.getMetaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.getMetaData()
+		return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
 			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
 	}
 }

@@ -34,7 +34,7 @@ public class SynchronousEventMessageDispatcher implements MessageDispatcher, App
 
 	@Override
 	public void dispatch(Message message) {
-		if (!message.getEvent().getClass().isAnnotationPresent(ExternalEvent.class)) {
+		if (!message.event().getClass().isAnnotationPresent(ExternalEvent.class)) {
 			applicationEventPublisher.publishEvent(new EventMessage(message));
 		}
 	}
