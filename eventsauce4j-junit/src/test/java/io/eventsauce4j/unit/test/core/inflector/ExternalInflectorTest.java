@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.unit.test;
+package io.eventsauce4j.unit.test.core.inflector;
 
 import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.core.inflector.ExternalInflector;

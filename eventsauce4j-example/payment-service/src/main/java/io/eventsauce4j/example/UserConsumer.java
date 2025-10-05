@@ -41,7 +41,7 @@ public class UserConsumer implements MessageConsumer {
 	@Override
 	public void handle(Message message) {
 		log.info("handle message(s) ");
-		if (message.getEvent() instanceof PaymentUserCreated pc) {
+		if (message.event() instanceof PaymentUserCreated pc) {
 			log.info("PaymentUserCreated : " + pc);
 			eventDispatcher.dispatch(new BonusAcquired(pc.id()));
 		}

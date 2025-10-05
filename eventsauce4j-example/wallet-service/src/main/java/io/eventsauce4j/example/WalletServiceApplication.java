@@ -18,30 +18,23 @@
 
 package io.eventsauce4j.example;
 
-import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.config.EnableEventSauce4j;
-import io.eventsauce4j.example.domain.event.OrderStarted;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.UUID;
-
 @SpringBootApplication
 @EnableTransactionManagement
-@EnableEventSauce4j
-public class EventSauce4jApplication {
+public class WalletServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EventSauce4jApplication.class, args);
+		SpringApplication.run(WalletServiceApplication.class, args);
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(EventDispatcher eventDispatcher) {
+	CommandLineRunner commandLineRunner() {
 		return args -> {
-			eventDispatcher.dispatch(new OrderStarted(UUID.randomUUID(), "order started"));
 		};
 	}
 

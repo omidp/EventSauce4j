@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.unit.test;
+package io.eventsauce4j.unit.test.core.inflector;
 
 import io.eventsauce4j.api.event.Inflector;
-import io.eventsauce4j.core.inflector.ExternalInflector;
-import io.eventsauce4j.core.inflector.StaticInflector;
+import io.eventsauce4j.core.inflector.AnnotationInflector;
+import io.eventsauce4j.domain.EmailSent;
 import io.eventsauce4j.domain.UserCreated;
+import io.eventsauce4j.domain.external.UserPaid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,24 +34,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Omid Pourhadi
  */
-public class StaticInflectorTest {
+public class AnnotationInflectorTest {
 
-	private Inflector externalInflection;
+	private Inflector annotationInflector;
 
 	@BeforeEach
 	void setUp() {
-		externalInflection = new StaticInflector(Map.of("user.test", UserCreated.class));
+		annotationInflector = new AnnotationInflector(EmailSent.class.getPackageName());
 	}
 
 	@Test
 	void testInflectEvent() {
-		Optional<Class<?>> inflectedClass = externalInflection.inflect("user.test");
+		Optional<Class<?>> inflectedClass = annotationInflector.inflect("user.email");
 		assertTrue(inflectedClass.isPresent());
+		Optional<Class<?>> inflectedClass2 = annotationInflector.inflect(UserCreated.class.getName());
+		assertTrue(inflectedClass2.isPresent());
 	}
 
 	@Test
 	void testInflectEventNotPresent() {
-		Optional<Class<?>> inflectedClass = externalInflection.inflect(UserCreated.class.getName());
+		Optional<Class<?>> inflectedClass = annotationInflector.inflect(UserPaid.class.getName());
 		assertFalse(inflectedClass.isPresent());
 	}
 }

@@ -34,7 +34,7 @@ public class PaymentConsumer implements MessageConsumer {
 	@Override
 	public void handle(Message message) {
 		log.info("handle message(s) ");
-		if (message.getEvent() instanceof BonusAcquired ba) {
+		if (message.event() instanceof BonusAcquired ba) {
 			log.info("BonusAcquired : " + ba);
 		}
 	}

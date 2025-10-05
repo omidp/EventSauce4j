@@ -129,7 +129,7 @@ public class RabbitMqConsumer {
 		}
 
 		private UUID getHeaderId(Message message) {
-			return message.getMetaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.getMetaData()
+			return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
 				.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
 		}
 

@@ -43,12 +43,12 @@ public class UserConsumer implements MessageConsumer {
 	@Override
 	public void handle(Message message) {
 		log.info("UserConsumer#handle message.");
-		if (message.getEvent() instanceof UserCreated uc) {
+		if (message.event() instanceof UserCreated uc) {
 			log.info("user created : " + uc);
 			eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email sent"));
 			eventDispatcher.dispatch(new io.eventsauce4j.example.domain.event.external.UserCreated(uc.id(), uc.description()));
 		}
-		if (message.getEvent() instanceof EmailSent es) {
+		if (message.event() instanceof EmailSent es) {
 			log.info("email sent : " + es);
 		}
 	}

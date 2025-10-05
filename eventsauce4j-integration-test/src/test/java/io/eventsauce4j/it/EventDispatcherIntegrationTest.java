@@ -25,8 +25,8 @@ package io.eventsauce4j.it;
 import io.eventsauce4j.api.event.EventDispatcher;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.config.EnableJpaEventSauce4j;
-import io.eventsauce4j.core.EventSauce4jConfig;
 import io.eventsauce4j.core.EventMessage;
+import io.eventsauce4j.core.EventSauce4jConfig;
 import io.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import org.junit.jupiter.api.Test;
@@ -34,11 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -46,9 +44,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -60,46 +56,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class EventDispatcherIntegrationTest {
 
-	@Autowired DataSource dataSource;
-
-	@Autowired ApplicationEventPublisher publisher;
-
 	@Test
 	void submitOrder(@Autowired OrderService service, ApplicationEvents events) {
-		CompletableFuture.runAsync(() -> {
-//			publisher.publishEvent(new EventMessage(new OrderStarter(UUID.randomUUID())));
-		}).join();
-//		publisher.publishEvent(new EventMessage(new OrderStarter(UUID.randomUUID())));
-		var jdbcTemp = new JdbcTemplate(dataSource);
 		service.submitOrder(new Order(UUID.randomUUID(), "First order."));
-
-//		Awaitility.await()
-//			.atMost(Duration.ofSeconds(30))     // ma
-//			.until(new Callable<Boolean>() {
-//				@Override
-//				public Boolean call() throws Exception {
-//					return jdbcTemp.queryForObject(
-//						"select count(*) from event_publication where completion_date is not null and event_type = ?",
-//						Number.class,
-//						OrderStarter.class.getName()
-//					).intValue() > 0;
-//				}
-//			});
-//
-//		int rec = jdbcTemp
-//			.queryForObject(
-//				"select count(*) from event_publication where completion_date is not null and event_type = ?",
-//				Number.class,
-//				OrderStarter.class.getName()
-//			)
-//			.intValue();
-
-//		System.out.println(rec);
-//		try {
-//			TimeUnit.SECONDS.sleep(10);
-//		} catch (InterruptedException e) {
-//			throw new RuntimeException(e);
-//		}
 		long numEvents = events.stream(EventMessage.class).count();
 		assertThat(numEvents).isEqualTo(1);
 	}

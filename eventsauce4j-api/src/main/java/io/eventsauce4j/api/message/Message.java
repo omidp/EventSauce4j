@@ -23,21 +23,7 @@ import io.eventsauce4j.api.event.MetaData;
 /**
  * @author Omid Pourhadi
  */
-public class Message {
+public record Message(Object event, MetaData metaData) {
 
-	private final Object event;
-	private final MetaData metaData;
 
-	public Message(Object event, MetaData metaData) {
-		this.event = event;
-		this.metaData = metaData;
-	}
-
-	public Object getEvent() {
-		return event;
-	}
-
-	public MetaData getMetaData() {
-		return metaData;
-	}
 }

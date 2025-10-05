@@ -61,9 +61,9 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 		JpaEventPublication entity = new JpaEventPublication(
 			eventPublication.getIdentifier(),
 			eventPublication.getPublicationDate(),
-			eventSerializer.serialize(eventPublication.getMessage().getEvent()),
+			eventSerializer.serialize(eventPublication.getMessage().event()),
 			eventPublication.getRoutingKey(),
-			eventSerializer.serialize(eventPublication.getMessage().getMetaData()),
+			eventSerializer.serialize(eventPublication.getMessage().metaData()),
 			Status.PROCESSING
 		);
 		entityManager.persist(entity);
