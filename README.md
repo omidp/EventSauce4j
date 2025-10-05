@@ -1,6 +1,6 @@
 # EventSauce4j
 
-A lightweight, **event sourcing** toolkit for Java 17+, inspired by (and conceptually aligned with) [EventSauce](https://eventsauce.io/).  
+A lightweight, **event sourcing** toolkit for Java + Spring, inspired by (and conceptually aligned with) [EventSauce](https://eventsauce.io/).  
 It provides clean building blocks for **domain events**, **message repositories**, **dispatching**, **outbox**, with a persistence module.
 
 > If you know EventSauce in PHP, you should feel at home: the vocabulary, responsibilities, and flow are intentionally adapted to Java idioms.

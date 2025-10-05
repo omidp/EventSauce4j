@@ -28,6 +28,26 @@ public class EventSauce4jCustomConfiguration {
 	private int outboxDelayInterval;
 	@Value("${eventsauce4j.outbox.lockName}")
 	private String outboxLockName;
+	@Value("${eventsauce4j.backoff.simple.maxRetries:3}")
+	private int simpleBackoffMaxRetries;
+	@Value("${eventsauce4j.backoff.simple.delay:5}")
+	private int simpleBackoffDelay;
+
+	public int getSimpleBackoffMaxRetries() {
+		return simpleBackoffMaxRetries;
+	}
+
+	public void setSimpleBackoffMaxRetries(int simpleBackoffMaxRetries) {
+		this.simpleBackoffMaxRetries = simpleBackoffMaxRetries;
+	}
+
+	public int getSimpleBackoffDelay() {
+		return simpleBackoffDelay;
+	}
+
+	public void setSimpleBackoffDelay(int simpleBackoffDelay) {
+		this.simpleBackoffDelay = simpleBackoffDelay;
+	}
 
 	public String getOutboxLockName() {
 		return outboxLockName;

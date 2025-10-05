@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.eventsauce4j</groupId>
 	<artifactId>user-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>user-service</name>
 	<description>Demo project for EventSauce4j Spring Boot</description>
 	<url/>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
 			<artifactId>eventsauce4j-rabbitmq-starter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
