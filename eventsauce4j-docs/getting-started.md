@@ -11,6 +11,7 @@ ___
 - Java 17+
 - Spring Boot (recommended)
 - Maven
+- Postgres
 - (For RabbitMQ starter) a running RabbitMQ broker
 
 #### 1) JPA Starter
@@ -136,3 +137,16 @@ eventsauce4j:
 #### Working Example
 
 See eventsauce4j-example: two Spring Boot services (user-service and payment-service) demonstrating JPA outbox + RabbitMQ messaging and shared event mappings.
+
+#### Database Schema Setup (PostgreSQL)
+
+When using the **JPA Outbox Starter**, eventsauce4j relies on a set of tables to persist and publish events.
+You’ll find a ready-to-use SQL script named schema.sql in the project.
+
+**Alternatively**, you can configure Hibernate to automatically generate the tables for you.
+
+This script defines the required tables for **PostgreSQL**, including:
+
+**Event Store table / Outbox table** : to persist domain events and manage pending events for dispatch
+
+**Lock table** : to prevent duplicate event consumption in distributed environments
