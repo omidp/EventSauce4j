@@ -123,6 +123,7 @@
 		<module>eventsauce4j-junit</module>
 		<module>eventsauce4j-jpa-starter</module>
 		<module>eventsauce4j-rabbitmq</module>
+		<module>eventsauce4j-rabbitmq-starter</module>
 	</modules>
 	<profiles>
 		<profile>

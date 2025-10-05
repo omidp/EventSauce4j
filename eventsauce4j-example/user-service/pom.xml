@@ -57,7 +57,7 @@
 <!--		</dependency>-->
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-rabbitmq</artifactId>
+			<artifactId>eventsauce4j-rabbitmq-starter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
