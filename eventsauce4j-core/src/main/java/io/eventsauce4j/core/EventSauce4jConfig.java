@@ -67,8 +67,8 @@ public class EventSauce4jConfig {
 
 
 	@Bean
-	EventMessageConsumer eventMessageConsumer(List<MessageConsumer> consumers) {
-		return new EventMessageConsumer(consumers);
+	EventMessageConsumer eventMessageConsumer(List<MessageConsumer> consumers, ApplicationContext applicationContext) {
+		return new EventMessageConsumer(consumers, () -> applicationContext.getBean(EventPublicationRepository.class));
 	}
 
 	@Bean

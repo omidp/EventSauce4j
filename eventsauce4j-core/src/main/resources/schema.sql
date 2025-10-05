@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS event_publication (
 	serialized_event varchar(255) NULL,
 	status varchar(255) NULL,
 	routing_key varchar(255) NULL,
+	created_at timestamptz(6) NULL,
 	CONSTRAINT event_publication_pkey PRIMARY KEY (id),
 	CONSTRAINT event_publication_status_check CHECK (((status)::text = ANY ((ARRAY['PUBLISHED'::character varying, 'PROCESSING'::character varying, 'COMPLETED'::character varying, 'FAILED'::character varying])::text[])))
 );
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS event_publication_dlq (
 	serialized_event varchar(255) NULL,
 	status varchar(255) NULL,
 	meta_data varchar(255) NULL,
+	created_at timestamptz(6) NULL,
 	CONSTRAINT event_publication_dlq_pkey PRIMARY KEY (id),
 	CONSTRAINT event_publication_dlq_status_check CHECK (((status)::text = ANY ((ARRAY['PUBLISHED'::character varying, 'PROCESSING'::character varying, 'COMPLETED'::character varying, 'FAILED'::character varying])::text[])))
 );

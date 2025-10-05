@@ -18,11 +18,16 @@
 
 package io.eventsauce4j.core.consumer;
 
+import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageConsumer;
+import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.eventsauce4j.core.EventMessage;
+import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * @author Omid Pourhadi
@@ -30,16 +35,24 @@ import java.util.List;
 public class EventMessageConsumer implements ApplicationListener<EventMessage> {
 
 	private final List<MessageConsumer> messageConsumers;
+	private final Supplier<EventPublicationRepository> eventPublicationRepository;
 
-	public EventMessageConsumer(List<MessageConsumer> messageConsumers) {
+	public EventMessageConsumer(List<MessageConsumer> messageConsumers, Supplier<EventPublicationRepository> eventPublicationRepository) {
 		this.messageConsumers = messageConsumers;
+		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
 	@Override
 	public void onApplicationEvent(EventMessage event) {
 		for (MessageConsumer messageConsumer : messageConsumers) {
 			messageConsumer.handle(event.getMessage());
+			eventPublicationRepository.get().markAsPublished(getHeaderId(event.getMessage()));
 		}
+	}
+
+	UUID getHeaderId(Message message) {
+		return message.getMetaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.getMetaData()
+			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
 	}
 
 	@Override

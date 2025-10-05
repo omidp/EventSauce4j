@@ -28,6 +28,8 @@ import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.event.MetaData;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageConsumer;
+import io.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import io.eventsauce4j.jackson.JacksonEventSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +52,16 @@ public class RabbitMqConsumer {
 	private final List<MessageConsumer> messageConsumers;
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
+	private final EventPublicationRepository eventPublicationRepository;
 
 	public RabbitMqConsumer(Inflector inflector, List<MessageConsumer> messageConsumers,
 							RabbitMqConfiguration rabbitMqConfiguration,
-							RabbitMqSetup rabbitMqSetup) {
+							RabbitMqSetup rabbitMqSetup, EventPublicationRepository eventPublicationRepository) {
 		this.inflector = inflector;
 		this.messageConsumers = messageConsumers;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
+		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
 	public void consume() {
@@ -103,7 +107,9 @@ public class RabbitMqConsumer {
 						try {
 							JsonMessage<?> jsonMessage = JacksonEventSerializer.JsonSerializer().readValue(msg, jsonMessageTypeReference(clz));
 							for (MessageConsumer messageConsumer : messageConsumers) {
-								messageConsumer.handle(new Message(jsonMessage.event(), new MetaData(jsonMessage.metaData())));
+								var message = new Message(jsonMessage.event(), new MetaData(jsonMessage.metaData()));
+								messageConsumer.handle(message);
+								eventPublicationRepository.markAsCompleted(getHeaderId(message));
 							}
 						} catch (JsonProcessingException e) {
 							throw new RuntimeException(e);
@@ -122,6 +128,10 @@ public class RabbitMqConsumer {
 			}
 		}
 
+		private UUID getHeaderId(Message message) {
+			return message.getMetaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.getMetaData()
+				.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
+		}
 
 		private TypeReference<JsonMessage<?>> jsonMessageTypeReference(Class<?> inflectedClass) {
 			return new TypeReference<>() {

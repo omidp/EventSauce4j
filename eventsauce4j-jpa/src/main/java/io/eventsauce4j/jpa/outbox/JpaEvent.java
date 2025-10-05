@@ -38,13 +38,14 @@ public abstract class JpaEvent {
 
 	}
 
-	public JpaEvent(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
-
+	public JpaEvent(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData, Status status) {
 		this.id = id;
 		this.publicationDate = publicationDate;
 		this.serializedEvent = serializedEvent;
 		this.routingKey = routingKey;
 		this.metaData = metaData;
+		this.status = status;
+		this.created_at = Instant.now();
 	}
 
 	@Id
@@ -68,6 +69,8 @@ public abstract class JpaEvent {
 	protected Status status;
 	@Column(name = "consumed_at")
 	protected Instant consumedAt;
+	@Column(name = "created_at")
+	protected Instant created_at;
 
 	public String getMetaData() {
 		return metaData;

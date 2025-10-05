@@ -18,6 +18,7 @@
 
 package io.eventsauce4j.jpa.outbox;
 
+import io.eventsauce4j.api.event.Status;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -36,8 +37,8 @@ public class JpaEventPublication extends JpaEvent {
 		super();
 	}
 
-	public JpaEventPublication(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData) {
-		super(id, publicationDate, serializedEvent, routingKey, metaData);
+	public JpaEventPublication(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData, Status status) {
+		super(id, publicationDate, serializedEvent, routingKey, metaData, status);
 	}
 
 

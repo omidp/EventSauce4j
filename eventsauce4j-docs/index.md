@@ -118,3 +118,36 @@ In horizontally scaled Spring Boot applications (multiple instances of the same 
 
 **EventSauce4j** uses an outbox lock mechanism so that only one instance at a time processes pending events from the outbox table.
 This ensures consistent, non-duplicated event delivery across your service cluster.
+
+___
+
+### 🔁 Back-off Strategy
+
+The **Backoff Strategy** in EventSauce4j is a mechanism used to handle temporary delivery failures when sending messages. It determines how the system should wait and retry after a failure, helping ensure reliable message delivery without overwhelming the system.
+
+EventSauce4j provides two types of backoff strategies:
+
+**SimpleBackOffStrategy**
+When a message delivery fails, this strategy retries a fixed number of times with a constant delay between attempts. If all retries fail, the message is moved to a Dead Letter Queue (DLQ) or Dead Letter Table for later inspection.
+
+**ExponentialBackOffStrategy**
+In this approach, the delay between retries increases exponentially after each failed attempt. This means the system waits longer before each subsequent retry.
+
+```yaml
+eventsauce4j:
+  backoff: simple #exponential
+```
+
+___
+
+### 💾 Commit Strategy
+
+Messages can be committed using two strategies:
+
+- Mark message as consumed
+- Delete the message
+
+```yaml
+eventsauce4j:
+  archive: true #false will delete the message
+```

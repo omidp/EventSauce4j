@@ -32,7 +32,9 @@ public interface EventPublicationRepository {
 
 	List<EventPublication> retrieveBatch(int batchSize);
 
-	void markAsComplete(UUID id);
+	void markAsCompleted(UUID id);
+
+	void markAsPublished(UUID id);
 
 	void delete(UUID identifier);
 

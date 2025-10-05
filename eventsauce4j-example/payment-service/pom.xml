@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.eventsauce4j</groupId>
 	<artifactId>payment-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>payment-service</name>
 	<description>Demo project for EventSauce4j Spring Boot</description>
 	<url/>
@@ -49,17 +49,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>io.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-jpa-starter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
+<!--		-->
+<!--		<dependency>-->
+<!--			<groupId>io.eventsauce4j</groupId>-->
+<!--			<artifactId>eventsauce4j-jpa-starter</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
 			<artifactId>eventsauce4j-rabbitmq-starter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 
