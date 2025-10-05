@@ -5,6 +5,8 @@ It provides clean building blocks for **domain events**, **message repositories*
 
 > If you know EventSauce in PHP, you should feel at home: the vocabulary, responsibilities, and flow are intentionally adapted to Java idioms.
 
+[![Build Status](https://github.com/omidp/EventSauce4j/actions/workflows/ci.yml/badge.svg)](https://github.com/omidp/EventSauce4j/actions/workflows/ci.yml)
+
 ---
 
 ## Table of Contents
