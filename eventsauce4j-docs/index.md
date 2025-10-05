@@ -29,18 +29,18 @@ ___
 
 ___
 
-# Core Concepts
+## Core Concepts
 
 This section introduces the fundamental building blocks of **eventsauce4j** and explains how they interact to support event-sourced applications in Java and Spring.
 
-## 📨 Message Decoration
+### 📨 Message Decoration
 
 EventSauce4j allows message decoration, meaning you can attach additional metadata (headers) to your messages.
 This is useful for adding contextual information before a message is persisted or dispatched, such as correlation IDs, tenant identifiers, or trace information.
 
 ___
 
-## ⚡ Event Dispatcher
+### ⚡ Event Dispatcher
 
 Events are a central concept in event sourcing, but they’re also valuable beyond it.
 An event dispatcher decouples systems by propagating events to subscribers, enabling clean separation between write and read models or between microservices.
@@ -49,7 +49,7 @@ In eventsauce4j, the event dispatcher ensures that domain events flow seamlessly
 
 ___
 
-## 🧭 Message Dispatcher
+### 🧭 Message Dispatcher
 
 The message dispatcher is responsible for sending messages to registered `MessageConsumers`.
 It defines how events are actually delivered synchronously or asynchronously depending on the module in use.
@@ -60,7 +60,7 @@ You can implement your own message dispatcher by implementing the `MessageDispat
 
 ___
 
-## 🔤 Inflector
+### 🔤 Inflector
 
 An **Inflector** converts event class names into string identifiers when storing events.
 When reconstructing events, it performs the reverse: mapping the stored string back to the correct fully-qualified class name.
@@ -89,7 +89,7 @@ new StaticInflector(Map.of(
 
 ___
 
-## 🧩 Message Serializer
+### 🧩 Message Serializer
 
 The message serializer is responsible for converting messages to and from serialized formats for persistence or transport.
 When implementing a custom message repository, you’ll typically use this interface.
@@ -98,7 +98,7 @@ By default, eventsauce4j provides an jackson-based serializer, but you can easil
 
 ___
 
-## 🗃️ Outbox
+### 🗃️ Outbox
 
 The **Outbox pattern** ensures that event persistence and dispatching occur atomically, either both succeed or both fail.
 
@@ -112,7 +112,7 @@ Although this adds slight latency, it guarantees **at-least-once delivery** and 
 
 ___
 
-## 🔒 Outbox Lock
+### 🔒 Outbox Lock
 
 In horizontally scaled Spring Boot applications (multiple instances of the same service), it’s crucial to prevent duplicate event consumption.
 
