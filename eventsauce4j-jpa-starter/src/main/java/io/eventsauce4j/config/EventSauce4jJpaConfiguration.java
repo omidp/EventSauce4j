@@ -18,7 +18,7 @@
 
 package io.eventsauce4j.config;
 
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.eventsauce4j.api.outbox.OutboxRelay;
@@ -59,7 +59,7 @@ public class EventSauce4jJpaConfiguration {
 
 	@Bean
 	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflection.class));
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
 	}
 
 	@Bean(name = OUTBOX_RELAY)

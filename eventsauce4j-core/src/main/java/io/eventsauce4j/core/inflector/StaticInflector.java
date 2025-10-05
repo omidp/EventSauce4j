@@ -16,17 +16,27 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event.external;
+package io.eventsauce4j.core.inflector;
 
-import io.eventsauce4j.api.event.ExternalEvent;
+import io.eventsauce4j.api.event.Inflector;
 
-import java.util.UUID;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * Public event for other/payment service(s) consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-@ExternalEvent(routingKey = "payment.public.userCreated")
-public record UserCreated(UUID id, String description) {
+public class StaticInflector implements Inflector {
+
+	private final Map<String, Class<?>> mapping;
+
+	public StaticInflector(Map<String, Class<?>> mapping) {
+		this.mapping = Collections.unmodifiableMap(mapping);
+	}
+
+	@Override
+	public Optional<Class<?>> inflect(String routingKey) {
+		return Optional.ofNullable(mapping.get(routingKey));
+	}
 }

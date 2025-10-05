@@ -18,6 +18,8 @@
 
 package io.eventsauce4j.example.domain.event;
 
+import io.eventsauce4j.api.event.Event;
+
 import java.util.UUID;
 
 /**
@@ -25,5 +27,6 @@ import java.util.UUID;
  * @param id
  * @param description
  */
+@Event
 public record UserCreated(UUID id, String description) {
 }

@@ -18,10 +18,11 @@
 
 package io.eventsauce4j.example;
 
-import io.eventsauce4j.api.event.Inflection;
-import io.eventsauce4j.core.ChainInflection;
-import io.eventsauce4j.core.DefaultInflection;
-import io.eventsauce4j.core.ExternalInflection;
+import io.eventsauce4j.api.event.Inflector;
+import io.eventsauce4j.core.inflector.AnnotationInflector;
+import io.eventsauce4j.core.inflector.ChainInflector;
+import io.eventsauce4j.core.inflector.ExternalInflector;
+import io.eventsauce4j.core.inflector.StaticInflector;
 import io.eventsauce4j.example.domain.event.EmailSent;
 import io.eventsauce4j.example.domain.event.UserCreated;
 import io.eventsauce4j.rabbitmq.EnableRabbitMqEventSauce4j;
@@ -40,11 +41,11 @@ import java.util.Map;
 public class Config {
 
 	@Bean
-	Inflection inflection() {
-		return new ChainInflection(List.of(
-			new ExternalInflection("io.eventsauce4j.example.domain.event.external"),
-			new DefaultInflection(Map.of(
-				UserCreated.class.getName(), UserCreated.class,
+	Inflector inflection() {
+		return new ChainInflector(List.of(
+			new ExternalInflector("io.eventsauce4j.example.domain.event.external"),
+			new AnnotationInflector(UserCreated.class.getPackageName()),
+			new StaticInflector(Map.of(
 				EmailSent.class.getName(), EmailSent.class
 			))
 		));

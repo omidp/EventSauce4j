@@ -53,8 +53,8 @@ public interface EventPublication {
 
 	default String getRoutingKey() {
 		Class<?> clz = getMessage().getEvent().getClass();
-		if (clz.isAnnotationPresent(Externalized.class)) {
-			return clz.getAnnotation(Externalized.class).routingKey();
+		if (clz.isAnnotationPresent(ExternalEvent.class)) {
+			return clz.getAnnotation(ExternalEvent.class).routingKey();
 		}
 		return clz.getName();
 	}

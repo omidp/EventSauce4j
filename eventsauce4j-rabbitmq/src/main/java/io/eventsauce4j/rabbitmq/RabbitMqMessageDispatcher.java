@@ -21,8 +21,8 @@ package io.eventsauce4j.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import io.eventsauce4j.api.event.Externalized;
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.ExternalEvent;
+import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.message.MessageSerializer;
@@ -41,20 +41,20 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 	private final MessageSerializer messageSerializer;
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
-	private final Inflection inflection;
+	private final Inflector inflector;
 
 	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer,
 									 RabbitMqConfiguration rabbitMqConfiguration,
-									 RabbitMqSetup rabbitMqSetup, Inflection inflection) {
+									 RabbitMqSetup rabbitMqSetup, Inflector inflector) {
 		this.messageSerializer = messageSerializer;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
-		this.inflection = inflection;
+		this.inflector = inflector;
 	}
 
 	@Override
 	public void dispatch(Message message) {
-		if (message.getEvent().getClass().isAnnotationPresent(Externalized.class)) {
+		if (message.getEvent().getClass().isAnnotationPresent(ExternalEvent.class)) {
 			//only external messages can be dispatch
 			dispatchExternalMessage(message);
 		}
@@ -67,7 +67,7 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 			// Enable confirms (simple & robust)
 			ch.confirmSelect();
 			String eventType = message.getEvent().getClass().getName();
-			Class<?> inflectedClass = inflection.getInflectedClass(eventType).orElse(message.getEvent().getClass());
+			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.getEvent().getClass());
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,

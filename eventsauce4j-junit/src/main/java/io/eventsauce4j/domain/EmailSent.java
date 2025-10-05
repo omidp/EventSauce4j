@@ -16,15 +16,13 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.domain;
 
-import java.util.Optional;
+import io.eventsauce4j.api.event.Event;
 
 /**
  * @author Omid Pourhadi
  */
-public interface Inflection {
-
-	Optional<Class<?>> getInflectedClass(String routingKey);
-
+@Event(routingKey = "user.email")
+public class EmailSent {
 }

@@ -16,31 +16,22 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core;
+package io.eventsauce4j.api.event;
 
-import io.eventsauce4j.api.event.Inflection;
-
-import java.util.List;
-import java.util.Optional;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Omid Pourhadi
  */
-public class ChainInflection implements Inflection {
-	private List<Inflection> inflections;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface ExternalEvent {
 
-	public ChainInflection(List<Inflection> inflections) {
-		this.inflections = inflections;
-	}
+	String routingKey();
 
-	@Override
-	public Optional<Class<?>> getInflectedClass(String routingKey) {
-		for (Inflection inflection : inflections) {
-			Optional<Class<?>> inflectedClass = inflection.getInflectedClass(routingKey);
-			if (inflectedClass.isPresent()) {
-				return inflectedClass;
-			}
-		}
-		return Optional.empty();
-	}
 }

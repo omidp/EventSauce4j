@@ -16,22 +16,15 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.example.domain.event;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.eventsauce4j.api.event.Event;
+
+import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Externalized {
-
-	String routingKey();
-
+@Event
+public record BonusAcquired(UUID userId) {
 }

@@ -16,27 +16,28 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core;
+package io.eventsauce4j.example;
 
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.message.Message;
+import io.eventsauce4j.api.message.MessageConsumer;
+import io.eventsauce4j.core.annotation.Consumer;
+import io.eventsauce4j.example.domain.event.BonusAcquired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+@Consumer
+public class PaymentConsumer implements MessageConsumer {
 
-/**
- * @author Omid Pourhadi
- */
-public class DefaultInflection implements Inflection {
+	private static final Logger log = LoggerFactory.getLogger(PaymentConsumer.class);
 
-	private final Map<String, Class<?>> mapping;
-
-	public DefaultInflection(Map<String, Class<?>> mapping) {
-		this.mapping = Collections.unmodifiableMap(mapping);
-	}
 
 	@Override
-	public Optional<Class<?>> getInflectedClass(String routingKey) {
-		return Optional.ofNullable(mapping.get(routingKey));
+	public void handle(Message message) {
+		log.info("handle message(s) ");
+		if (message.getEvent() instanceof BonusAcquired ba) {
+			log.info("BonusAcquired : " + ba);
+		}
 	}
+
+
 }

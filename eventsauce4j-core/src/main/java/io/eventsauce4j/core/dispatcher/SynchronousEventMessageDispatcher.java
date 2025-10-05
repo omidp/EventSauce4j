@@ -18,7 +18,7 @@
 
 package io.eventsauce4j.core.dispatcher;
 
-import io.eventsauce4j.api.event.Externalized;
+import io.eventsauce4j.api.event.ExternalEvent;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.core.EventMessage;
@@ -34,7 +34,7 @@ public class SynchronousEventMessageDispatcher implements MessageDispatcher, App
 
 	@Override
 	public void dispatch(Message message) {
-		if (!message.getEvent().getClass().isAnnotationPresent(Externalized.class)) {
+		if (!message.getEvent().getClass().isAnnotationPresent(ExternalEvent.class)) {
 			applicationEventPublisher.publishEvent(new EventMessage(message));
 		}
 	}

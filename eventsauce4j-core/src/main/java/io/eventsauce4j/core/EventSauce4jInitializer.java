@@ -19,9 +19,8 @@
 package io.eventsauce4j.core;
 
 
-import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.core.annotation.Consumer;
-import io.eventsauce4j.api.event.Externalized;
+import io.eventsauce4j.api.event.ExternalEvent;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -29,9 +28,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Omid Pourhadi
@@ -42,7 +38,7 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean.getClass().isAnnotationPresent(Externalized.class)) {
+		if (bean.getClass().isAnnotationPresent(ExternalEvent.class)) {
 			//TODO: events need routing
 		}
 		if (bean.getClass().isAnnotationPresent(Consumer.class)) {

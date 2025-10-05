@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.core;
+package io.eventsauce4j.core.inflector;
 
-import io.eventsauce4j.api.event.Externalized;
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.Event;
+import io.eventsauce4j.api.event.Inflector;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -33,26 +33,26 @@ import java.util.Optional;
 /**
  * @author Omid Pourhadi
  */
-public class ExternalInflection implements Inflection {
+public class AnnotationInflector implements Inflector {
 
 	private Map<String, Class<?>> mapping = new HashMap<>();
 
-	public ExternalInflection(String... packages) {
+	public AnnotationInflector(String... packages) {
 		this(List.of(packages));
 	}
 
-	public ExternalInflection(Collection<String> packages) {
+	public AnnotationInflector(Collection<String> packages) {
 		ClassPathScanningCandidateComponentProvider provider =
 			new ClassPathScanningCandidateComponentProvider(false);
-		provider.addIncludeFilter(new AnnotationTypeFilter(Externalized.class));
+		provider.addIncludeFilter(new AnnotationTypeFilter(Event.class));
 		for (String pkg : packages) {
 			for (BeanDefinition candidate : provider.findCandidateComponents(pkg)) {
 				String className = candidate.getBeanClassName();
 				try {
 					Class<?> clazz = Class.forName(className);
-					if (clazz.isAnnotationPresent(Externalized.class)) {
-						Externalized clazzAnnotation = clazz.getAnnotation(Externalized.class);
-						mapping.put(clazzAnnotation.routingKey(), clazz);
+					if (clazz.isAnnotationPresent(Event.class)) {
+						Event an = clazz.getAnnotation(Event.class);
+						mapping.put(an.routingKey().isEmpty() ? clazz.getName() : an.routingKey(), clazz);
 					}
 				} catch (ClassNotFoundException e) {
 					throw new IllegalStateException("Failed to load class: " + className, e);
@@ -63,7 +63,7 @@ public class ExternalInflection implements Inflection {
 	}
 
 	@Override
-	public Optional<Class<?>> getInflectedClass(String routingKey) {
+	public Optional<Class<?>> inflect(String routingKey) {
 		return Optional.ofNullable(mapping.get(routingKey));
 	}
 }

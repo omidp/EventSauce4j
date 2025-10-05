@@ -18,29 +18,40 @@
 
 package io.eventsauce4j.unit.test;
 
-import io.eventsauce4j.core.ExternalInflection;
+import io.eventsauce4j.api.event.Inflector;
+import io.eventsauce4j.core.inflector.ExternalInflector;
+import io.eventsauce4j.core.inflector.StaticInflector;
+import io.eventsauce4j.domain.UserCreated;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Omid Pourhadi
  */
-public class ExternalInflectionTest {
+public class StaticInflectorTest {
 
-	private ExternalInflection externalInflection;
+	private Inflector externalInflection;
 
 	@BeforeEach
 	void setUp() {
-		externalInflection = new ExternalInflection("io.eventsauce4j.domain");
+		externalInflection = new StaticInflector(Map.of("user.test", UserCreated.class));
 	}
 
 	@Test
-	void test() {
-		Optional<Class<?>> inflectedClass = externalInflection.getInflectedClass("payment.UserPaid");
+	void testInflectEvent() {
+		Optional<Class<?>> inflectedClass = externalInflection.inflect("user.test");
 		assertTrue(inflectedClass.isPresent());
+	}
+
+	@Test
+	void testInflectEventNotPresent() {
+		Optional<Class<?>> inflectedClass = externalInflection.inflect(UserCreated.class.getName());
+		assertFalse(inflectedClass.isPresent());
 	}
 }

@@ -18,8 +18,11 @@
 
 package io.eventsauce4j.domain;
 
+import io.eventsauce4j.api.event.Event;
+
 /**
  * @author Omid Pourhadi
  */
+@Event
 public class UserCreated {
 }

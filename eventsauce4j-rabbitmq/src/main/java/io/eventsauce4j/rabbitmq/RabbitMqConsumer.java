@@ -24,7 +24,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.event.MetaData;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageConsumer;
@@ -46,15 +46,15 @@ public class RabbitMqConsumer {
 
 	private static final Logger log = LoggerFactory.getLogger(RabbitMqConsumer.class);
 
-	private final Inflection inflection;
+	private final Inflector inflector;
 	private final List<MessageConsumer> messageConsumers;
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
 
-	public RabbitMqConsumer(Inflection inflection, List<MessageConsumer> messageConsumers,
+	public RabbitMqConsumer(Inflector inflector, List<MessageConsumer> messageConsumers,
 							RabbitMqConfiguration rabbitMqConfiguration,
 							RabbitMqSetup rabbitMqSetup) {
-		this.inflection = inflection;
+		this.inflector = inflector;
 		this.messageConsumers = messageConsumers;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
@@ -99,7 +99,7 @@ public class RabbitMqConsumer {
 				// --- Process message ---
 				log.debug(" [x] Received: " + msg);
 				if (properties.getType() != null) {
-					inflection.getInflectedClass(properties.getType()).ifPresentOrElse(clz -> {
+					inflector.inflect(properties.getType()).ifPresentOrElse(clz -> {
 						try {
 							JsonMessage<?> jsonMessage = JacksonEventSerializer.JsonSerializer().readValue(msg, jsonMessageTypeReference(clz));
 							for (MessageConsumer messageConsumer : messageConsumers) {

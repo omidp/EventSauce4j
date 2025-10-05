@@ -18,13 +18,17 @@
 
 package io.eventsauce4j.example;
 
-import io.eventsauce4j.api.event.Inflection;
-import io.eventsauce4j.core.DefaultInflection;
+import io.eventsauce4j.api.event.Inflector;
+import io.eventsauce4j.core.inflector.AnnotationInflector;
+import io.eventsauce4j.core.inflector.ChainInflector;
+import io.eventsauce4j.core.inflector.StaticInflector;
+import io.eventsauce4j.example.domain.event.BonusAcquired;
 import io.eventsauce4j.example.domain.event.PaymentUserCreated;
 import io.eventsauce4j.rabbitmq.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,9 +40,10 @@ import java.util.Map;
 public class Config {
 
 	@Bean
-	Inflection inflection() {
-		return new DefaultInflection(Map.of(
-			"payment.public.userCreated", PaymentUserCreated.class
+	Inflector inflection() {
+		return new ChainInflector(List.of(
+			new StaticInflector(Map.of("payment.public.userCreated", PaymentUserCreated.class)),
+			new AnnotationInflector(BonusAcquired.class.getPackageName())
 		));
 	}
 

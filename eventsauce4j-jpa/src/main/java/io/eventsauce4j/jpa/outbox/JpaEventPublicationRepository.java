@@ -22,7 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.eventsauce4j.api.event.EventPublication;
 import io.eventsauce4j.api.event.EventSerializer;
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.event.MetaData;
 import io.eventsauce4j.api.event.Status;
 import io.eventsauce4j.api.message.Message;
@@ -48,9 +48,9 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 
 	private final EventSerializer eventSerializer;
 	private final EntityManager entityManager;
-	private final Supplier<Inflection> inflection;
+	private final Supplier<Inflector> inflection;
 
-	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager, Supplier<Inflection> inflection) {
+	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager, Supplier<Inflector> inflection) {
 		this.eventSerializer = eventSerializer;
 		this.entityManager = entityManager;
 		this.inflection = inflection;
@@ -105,7 +105,7 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	}
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
-		Optional<Class<?>> inflectedClass = inflection.get().getInflectedClass(eventPublication.getRoutingKey());
+		Optional<Class<?>> inflectedClass = inflection.get().inflect(eventPublication.getRoutingKey());
 		if (inflectedClass.isEmpty()) {
 			return null;
 		}

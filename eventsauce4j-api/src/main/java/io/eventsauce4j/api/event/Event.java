@@ -16,13 +16,22 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.domain;
+package io.eventsauce4j.api.event;
 
-import io.eventsauce4j.api.event.Externalized;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Omid Pourhadi
  */
-@Externalized(routingKey = "payment.UserPaid")
-public class UserPaid {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Event {
+
+	String routingKey() default "";
+
 }

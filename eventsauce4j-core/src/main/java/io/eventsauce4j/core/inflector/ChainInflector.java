@@ -16,17 +16,31 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event.external;
+package io.eventsauce4j.core.inflector;
 
-import io.eventsauce4j.api.event.ExternalEvent;
+import io.eventsauce4j.api.event.Inflector;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Public event for other/payment service(s) consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-@ExternalEvent(routingKey = "payment.public.userCreated")
-public record UserCreated(UUID id, String description) {
+public class ChainInflector implements Inflector {
+	private final List<Inflector> inflectors;
+
+	public ChainInflector(List<Inflector> inflectors) {
+		this.inflectors = inflectors;
+	}
+
+	@Override
+	public Optional<Class<?>> inflect(String routingKey) {
+		for (Inflector inflector : inflectors) {
+			Optional<Class<?>> inflectedClass = inflector.inflect(routingKey);
+			if (inflectedClass.isPresent()) {
+				return inflectedClass;
+			}
+		}
+		return Optional.empty();
+	}
 }

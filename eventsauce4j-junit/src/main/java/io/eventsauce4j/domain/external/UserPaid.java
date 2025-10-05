@@ -16,17 +16,13 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event.external;
+package io.eventsauce4j.domain.external;
 
 import io.eventsauce4j.api.event.ExternalEvent;
 
-import java.util.UUID;
-
 /**
- * Public event for other/payment service(s) consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-@ExternalEvent(routingKey = "payment.public.userCreated")
-public record UserCreated(UUID id, String description) {
+@ExternalEvent(routingKey = "payment.UserPaid")
+public class UserPaid {
 }

@@ -22,6 +22,7 @@ import io.eventsauce4j.api.event.EventDispatcher;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.core.annotation.Consumer;
+import io.eventsauce4j.example.domain.event.BonusAcquired;
 import io.eventsauce4j.example.domain.event.PaymentUserCreated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,9 @@ public class UserConsumer implements MessageConsumer {
 	@Override
 	public void handle(Message message) {
 		log.info("handle message(s) ");
-		if (message.getEvent() instanceof PaymentUserCreated pc){
+		if (message.getEvent() instanceof PaymentUserCreated pc) {
 			log.info("PaymentUserCreated : " + pc);
+			eventDispatcher.dispatch(new BonusAcquired(pc.id()));
 		}
 	}
 

@@ -18,7 +18,7 @@
 
 package io.eventsauce4j.rabbitmq;
 
-import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.message.MessageConsumer;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.outbox.EventPublicationRepository;
@@ -73,18 +73,18 @@ public class EventSauce4jRabbitMqConfiguration {
 	}
 
 	@Bean(RMQ_MESSAGE_DISPATCHER)
-	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflection inflection) {
-		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflection);
+	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflector inflector) {
+		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflector);
 	}
 
 	@Bean
-	RabbitMqConsumer rabbitMqConsumer(List<MessageConsumer> messageConsumers, Inflection inflection, RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfiguration) {
-		return new RabbitMqConsumer(inflection, messageConsumers, rabbitMqConfiguration, rabbitMqSetup);
+	RabbitMqConsumer rabbitMqConsumer(List<MessageConsumer> messageConsumers, Inflector inflector, RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfiguration) {
+		return new RabbitMqConsumer(inflector, messageConsumers, rabbitMqConfiguration, rabbitMqSetup);
 	}
 
 	@Bean(PUBLICATION_REPO)
 	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflection.class));
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
 	}
 
 	@Bean(name = OUTBOX_RELAY)
