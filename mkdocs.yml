@@ -1,0 +1,24 @@
+site_name: EventSauce4j
+site_url: https://omidp.github.io/EventSauce4j/
+repo_url: https://github.com/omidp/EventSauce4j
+repo_name: omidp/EventSauce4j
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - content.code.copy
+    - toc.integrate
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  # - Architecture: architecture.md
+  # - API: api/index.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - toc:
+      permalink: true
