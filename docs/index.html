@@ -391,6 +391,7 @@ It provides clean building blocks for domain events, message repositories, dispa
 <blockquote>
 <p>If you know EventSauce in PHP, you should feel at home: the vocabulary, responsibilities, and flow are intentionally adapted to Java idioms.</p>
 </blockquote>
+<hr />
 <h2 id="why-eventsauce4j">Why EventSauce4j?<a class="headerlink" href="#why-eventsauce4j" title="Permanent link">&para;</a></h2>
 <p>Event sourcing is a powerful architectural pattern, but many existing libraries are large, opinionated, or hard to integrate with.<br />
 The goals of eventsauce4j are:</p>
@@ -399,6 +400,7 @@ The goals of eventsauce4j are:</p>
 <li>Pluggable persistence / transport / serialization</li>
 <li>A pragmatic event sourcing library for Spring framework with a focus on developer experience.</li>
 </ul>
+<hr />
 <h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -426,6 +428,61 @@ The goals of eventsauce4j are:</p>
 </tr>
 </tbody>
 </table>
+<hr />
+<h1 id="core-concepts">Core Concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h1>
+<p>This section introduces the fundamental building blocks of <strong>eventsauce4j</strong> and explains how they interact to support event-sourced applications in Java and Spring.</p>
+<h2 id="message-decoration">📨 Message Decoration<a class="headerlink" href="#message-decoration" title="Permanent link">&para;</a></h2>
+<p>EventSauce4j allows message decoration, meaning you can attach additional metadata (headers) to your messages.
+This is useful for adding contextual information before a message is persisted or dispatched, such as correlation IDs, tenant identifiers, or trace information.</p>
+<hr />
+<h2 id="event-dispatcher">⚡ Event Dispatcher<a class="headerlink" href="#event-dispatcher" title="Permanent link">&para;</a></h2>
+<p>Events are a central concept in event sourcing, but they’re also valuable beyond it.
+An event dispatcher decouples systems by propagating events to subscribers, enabling clean separation between write and read models or between microservices.</p>
+<p>In eventsauce4j, the event dispatcher ensures that domain events flow seamlessly from your aggregates to handlers or external systems.</p>
+<hr />
+<h2 id="message-dispatcher">🧭 Message Dispatcher<a class="headerlink" href="#message-dispatcher" title="Permanent link">&para;</a></h2>
+<p>The message dispatcher is responsible for sending messages to registered <code>MessageConsumers</code>.
+It defines how events are actually delivered synchronously or asynchronously depending on the module in use.</p>
+<p><strong>Custom Dispatchers</strong></p>
+<p>You can implement your own message dispatcher by implementing the <code>MessageDispatcher</code> interface.</p>
+<hr />
+<h2 id="inflector">🔤 Inflector<a class="headerlink" href="#inflector" title="Permanent link">&para;</a></h2>
+<p>An <strong>Inflector</strong> converts event class names into string identifiers when storing events.
+When reconstructing events, it performs the reverse: mapping the stored string back to the correct fully-qualified class name.</p>
+<p>This mechanism supports cross-service communication and event versioning.</p>
+<p><strong>How It Works</strong></p>
+<p>The Inflector composes your event type mappings using several strategies:</p>
+<ul>
+<li><strong>ExternalInflector</strong> — maps external event packages</li>
+<li><strong>AnnotationInflector</strong> — maps annotated event classes</li>
+<li><strong>StaticInflector</strong> — defines explicit key-to-class mappings</li>
+</ul>
+<p><strong>Example: Cross-Service Event Mapping</strong></p>
+<p>When dispatching a <code>UserCreated</code> event from <strong>user-service</strong> to <strong>payment-service</strong> via <code>RabbitMqMessageDispatcher</code>,
+the consumer service must know how to deserialize it to its local event type.
+You can define this mapping as follows:</p>
+<pre><code class="language-java">new StaticInflector(Map.of(
+  &quot;payment.public.userCreated&quot;, PaymentUserCreated.class
+));
+</code></pre>
+<hr />
+<h2 id="message-serializer">🧩 Message Serializer<a class="headerlink" href="#message-serializer" title="Permanent link">&para;</a></h2>
+<p>The message serializer is responsible for converting messages to and from serialized formats for persistence or transport.
+When implementing a custom message repository, you’ll typically use this interface.</p>
+<p>By default, eventsauce4j provides an jackson-based serializer, but you can easily implement your own strategy (e.g., JSON, Avro, Protobuf) to fit your infrastructure.</p>
+<hr />
+<h2 id="outbox">🗃️ Outbox<a class="headerlink" href="#outbox" title="Permanent link">&para;</a></h2>
+<p>The <strong>Outbox pattern</strong> ensures that event persistence and dispatching occur atomically, either both succeed or both fail.</p>
+<p><strong>Why It Matters</strong></p>
+<p>Without an outbox, persisting domain changes and dispatching events involve two separate network operations.
+If one fails, inconsistencies can occur.</p>
+<p>The <strong>transactional outbox</strong> buffers events in a dedicated database table before dispatching them asynchronously.
+Although this adds slight latency, it guarantees <strong>at-least-once delivery</strong> and ensures that only persisted events are published to consumers.</p>
+<hr />
+<h2 id="outbox-lock">🔒 Outbox Lock<a class="headerlink" href="#outbox-lock" title="Permanent link">&para;</a></h2>
+<p>In horizontally scaled Spring Boot applications (multiple instances of the same service), it’s crucial to prevent duplicate event consumption.</p>
+<p><strong>EventSauce4j</strong> uses an outbox lock mechanism so that only one instance at a time processes pending events from the outbox table.
+This ensures consistent, non-duplicated event delivery across your service cluster.</p>
 
 
 
