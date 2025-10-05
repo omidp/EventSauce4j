@@ -3,6 +3,9 @@ site_url: https://omidp.github.io/EventSauce4j/
 repo_url: https://github.com/omidp/EventSauce4j
 repo_name: omidp/EventSauce4j
 
+docs_dir: eventsauce4j-docs
+site_dir: docs
+
 theme:
   name: material
   features:
