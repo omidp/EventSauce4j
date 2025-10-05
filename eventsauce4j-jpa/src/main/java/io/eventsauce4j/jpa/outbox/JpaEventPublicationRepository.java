@@ -63,7 +63,8 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 			eventPublication.getPublicationDate(),
 			eventSerializer.serialize(eventPublication.getMessage().getEvent()),
 			eventPublication.getRoutingKey(),
-			eventSerializer.serialize(eventPublication.getMessage().getMetaData())
+			eventSerializer.serialize(eventPublication.getMessage().getMetaData()),
+			Status.PROCESSING
 		);
 		entityManager.persist(entity);
 	}
@@ -72,17 +73,30 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	public List<EventPublication> retrieveBatch(int batchSize) {
 		return entityManager.createQuery("""
 				select ep from JpaEventPublication ep
-				where ep.completionDate is null
-				""", JpaEventPublication.class).setMaxResults(batchSize).getResultList()
+				where ep.status <> :status and ep.consumedAt is null
+				""", JpaEventPublication.class)
+			.setParameter("status", Status.COMPLETED)
+			.setMaxResults(batchSize).getResultList()
 			.stream().map(this::convert)
 			.filter(Objects::nonNull)
 			.toList();
 	}
 
 	@Override
-	public void markAsComplete(UUID id) {
+	public void markAsPublished(UUID id) {
 		entityManager.createQuery("""
 				update JpaEventPublication ep set ep.completionDate = :now, ep.status = :status 
+				where ep.id = :id
+				""").setParameter("now", Clock.systemUTC().instant())
+			.setParameter("id", id)
+			.setParameter("status", Status.PUBLISHED)
+			.executeUpdate();
+	}
+
+	@Override
+	public void markAsCompleted(UUID id) {
+		entityManager.createQuery("""
+				update JpaEventPublication ep set ep.consumedAt = :now, ep.status = :status 
 				where ep.id = :id
 				""").setParameter("now", Clock.systemUTC().instant())
 			.setParameter("id", id)

@@ -29,7 +29,7 @@ public class MarkMessagesConsumedOnCommit implements RelayCommitStrategy {
 	@Override
 	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
 		for (EventPublication event : events) {
-			eventPublicationRepository.markAsComplete(event.getIdentifier());
+			eventPublicationRepository.markAsCompleted(event.getIdentifier());
 		}
 	}
 }

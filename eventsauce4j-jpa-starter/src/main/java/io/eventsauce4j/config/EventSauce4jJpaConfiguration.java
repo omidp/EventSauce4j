@@ -63,7 +63,9 @@ import static io.eventsauce4j.core.EventSauce4jConfig.SYNCHRONOUS_EVENT_MESSAGE_
 @AutoConfigurationPackage(basePackageClasses = JpaEventPublication.class)
 public class EventSauce4jJpaConfiguration {
 
-	@Bean
+	private static final String PUBLICATION_REPO = "jpaEventPublicationRepository";
+
+	@Bean(PUBLICATION_REPO)
 	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
 		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
 	}
@@ -71,7 +73,7 @@ public class EventSauce4jJpaConfiguration {
 	@Bean(name = OUTBOX_RELAY)
 	OutboxRelay outboxRelay(EntityManager em,
 							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher,
-							@Qualifier("jpaEventPublicationRepository") EventPublicationRepository eventPublicationRepository,
+							@Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository,
 							RelayCommitStrategy relayCommitStrategy, BackOffStrategy backOffStrategy) {
 		return new DatabaseOutboxRelay(
 			eventPublicationRepository,

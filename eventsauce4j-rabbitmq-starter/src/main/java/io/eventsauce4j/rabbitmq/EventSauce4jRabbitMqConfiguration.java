@@ -77,13 +77,16 @@ public class EventSauce4jRabbitMqConfiguration {
 	}
 
 	@Bean(RMQ_MESSAGE_DISPATCHER)
-	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflector inflector) {
-		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflector);
+	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflector inflector,
+												@Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository) {
+		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflector, eventPublicationRepository);
 	}
 
 	@Bean
-	RabbitMqConsumer rabbitMqConsumer(List<MessageConsumer> messageConsumers, Inflector inflector, RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfiguration) {
-		return new RabbitMqConsumer(inflector, messageConsumers, rabbitMqConfiguration, rabbitMqSetup);
+	RabbitMqConsumer rabbitMqConsumer(List<MessageConsumer> messageConsumers, Inflector inflector, RabbitMqSetup rabbitMqSetup,
+									  RabbitMqConfiguration rabbitMqConfiguration,
+									  @Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository) {
+		return new RabbitMqConsumer(inflector, messageConsumers, rabbitMqConfiguration, rabbitMqSetup, eventPublicationRepository);
 	}
 
 	@Bean(PUBLICATION_REPO)

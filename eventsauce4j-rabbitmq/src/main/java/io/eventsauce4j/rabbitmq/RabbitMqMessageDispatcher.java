@@ -26,10 +26,13 @@ import io.eventsauce4j.api.event.Inflector;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
 import io.eventsauce4j.api.message.MessageSerializer;
+import io.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
@@ -42,14 +45,16 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
 	private final Inflector inflector;
+	private final EventPublicationRepository eventPublicationRepository;
 
 	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer,
 									 RabbitMqConfiguration rabbitMqConfiguration,
-									 RabbitMqSetup rabbitMqSetup, Inflector inflector) {
+									 RabbitMqSetup rabbitMqSetup, Inflector inflector, EventPublicationRepository eventPublicationRepository) {
 		this.messageSerializer = messageSerializer;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
 		this.inflector = inflector;
+		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
 	@Override
@@ -68,13 +73,14 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 			ch.confirmSelect();
 			String eventType = message.getEvent().getClass().getName();
 			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.getEvent().getClass());
+			UUID msgId = getHeaderId(message);
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,
 					message.getMetaData(),
 					2,
 					0, null, null, null,
-					null, null, inflectedClass.getName(), null,
+					msgId.toString(), null, inflectedClass.getName(), null,
 					null, null
 				);
 			ch.basicPublish(
@@ -86,10 +92,15 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 			// wait for all outstanding acks (throws on nack/timeout)
 			ch.waitForConfirmsOrDie();
-
+			eventPublicationRepository.markAsPublished(msgId);
 			log.debug("Published messages with confirms.");
 		} catch (Exception e) {
 			throw new RabbitMqException(e);
 		}
+	}
+
+	UUID getHeaderId(Message message) {
+		return message.getMetaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.getMetaData()
+			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
 	}
 }

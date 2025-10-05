@@ -49,12 +49,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>io.eventsauce4j</groupId>
-			<artifactId>eventsauce4j-jpa-starter</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+<!--		-->
+<!--		<dependency>-->
+<!--			<groupId>io.eventsauce4j</groupId>-->
+<!--			<artifactId>eventsauce4j-jpa-starter</artifactId>-->
+<!--			<version>${project.version}</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>io.eventsauce4j</groupId>
