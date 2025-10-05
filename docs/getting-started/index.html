@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-a-dependency" class="md-skip">
+        <a href="#modules-in-this-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -337,20 +337,128 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#add-a-dependency" class="md-nav__link">
+  <a href="#modules-in-this-guide" class="md-nav__link">
     <span class="md-ellipsis">
-      Add a dependency
+      Modules in this guide
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#enable-configuration" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      Enable configuration
+      Prerequisites
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-jpa-starter" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) JPA Starter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1) JPA Starter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-add-the-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.1 Add the dependency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-enable-the-starter" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.2 Enable the starter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rabbitmq-starter" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) RabbitMQ Starter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2) RabbitMQ Starter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-add-the-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Add the dependency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-enable-the-starter" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Enable the starter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-rabbitmq-for-rabbitmq-starter" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Start RabbitMQ (for RabbitMQ starter)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      4) Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outbox-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outbox settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -383,31 +491,108 @@
 
   <h1>Getting Started</h1>
 
-<h3 id="add-a-dependency">Add a dependency<a class="headerlink" href="#add-a-dependency" title="Permanent link">&para;</a></h3>
-<pre><code>&lt;dependency&gt;
-            &lt;groupId&gt;io.eventsauce4j&lt;/groupId&gt;
-            &lt;artifactId&gt;eventsauce4j-rabbitmq-starter&lt;/artifactId&gt;
-            &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
-        &lt;/dependency&gt;
+<h3 id="modules-in-this-guide">Modules in this guide<a class="headerlink" href="#modules-in-this-guide" title="Permanent link">&para;</a></h3>
+<p><code>eventsauce4j-jpa-starter</code> : JPA outbox + synchronous dispatch</p>
+<p><code>eventsauce4j-rabbitmq-starter</code> : RabbitMQ producer/consumer integration</p>
+<hr />
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Java 17+</li>
+<li>Spring Boot (recommended)</li>
+<li>Maven</li>
+<li>(For RabbitMQ starter) a running RabbitMQ broker</li>
+</ul>
+<h4 id="1-jpa-starter">1) JPA Starter<a class="headerlink" href="#1-jpa-starter" title="Permanent link">&para;</a></h4>
+<h5 id="11-add-the-dependency">1.1 Add the dependency<a class="headerlink" href="#11-add-the-dependency" title="Permanent link">&para;</a></h5>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.eventsauce4j&lt;/groupId&gt;
+  &lt;artifactId&gt;eventsauce4j-jpa-starter&lt;/artifactId&gt;
+  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
 </code></pre>
-<h3 id="enable-configuration">Enable configuration<a class="headerlink" href="#enable-configuration" title="Permanent link">&para;</a></h3>
-<pre><code>@Configuration
-//@EnableJpaEventSauce4j
+<h5 id="12-enable-the-starter">1.2 Enable the starter<a class="headerlink" href="#12-enable-the-starter" title="Permanent link">&para;</a></h5>
+<pre><code class="language-java">import io.eventsauce4j.starter.jpa.EnableJpaEventSauce4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@EnableJpaEventSauce4j
+public class Config {
+
+  @Bean
+  Inflector inflection() {
+    return new ChainInflector(List.of(
+      new ExternalInflector(&quot;io.eventsauce4j.example.domain.event.external&quot;),
+      new AnnotationInflector(UserCreated.class.getPackageName()),
+      new StaticInflector(Map.of(
+        EmailSent.class.getName(), EmailSent.class
+      ))
+    ));
+  }
+}
+</code></pre>
+<hr />
+<h4 id="2-rabbitmq-starter">2) RabbitMQ Starter<a class="headerlink" href="#2-rabbitmq-starter" title="Permanent link">&para;</a></h4>
+<h5 id="21-add-the-dependency">2.1 Add the dependency<a class="headerlink" href="#21-add-the-dependency" title="Permanent link">&para;</a></h5>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.eventsauce4j&lt;/groupId&gt;
+    &lt;artifactId&gt;eventsauce4j-rabbitmq-starter&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h5 id="22-enable-the-starter">2.2 Enable the starter<a class="headerlink" href="#22-enable-the-starter" title="Permanent link">&para;</a></h5>
+<pre><code class="language-java">import io.eventsauce4j.starter.rabbitmq.EnableRabbitMqEventSauce4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 @EnableRabbitMqEventSauce4j
 public class Config {
 
-    @Bean
-    Inflector inflection() {
-        return new ChainInflector(List.of(
-            new ExternalInflector(&quot;io.eventsauce4j.example.domain.event.external&quot;),
-            new AnnotationInflector(UserCreated.class.getPackageName()),
-            new StaticInflector(Map.of(
-                EmailSent.class.getName(), EmailSent.class
-            ))
-        ));
-    }
+  @Bean
+  Inflector inflection() {
+    return new ChainInflector(List.of(
+      new ExternalInflector(&quot;io.eventsauce4j.example.domain.event.external&quot;),
+      new AnnotationInflector(UserCreated.class.getPackageName()),
+      new StaticInflector(Map.of(
+        EmailSent.class.getName(), EmailSent.class
+      ))
+    ));
+  }
 }
 </code></pre>
+<h4 id="3-start-rabbitmq-for-rabbitmq-starter">3) Start RabbitMQ (for RabbitMQ starter)<a class="headerlink" href="#3-start-rabbitmq-for-rabbitmq-starter" title="Permanent link">&para;</a></h4>
+<p>Run a local broker with Docker:</p>
+<pre><code>docker run -d --name rabbitmq \
+  -p 5672:5672 -p 15672:15672 \
+  -e RABBITMQ_DEFAULT_USER=guest \
+  -e RABBITMQ_DEFAULT_PASS=guest \
+  rabbitmq:3.13-management
+</code></pre>
+<p>Management UI: http://localhost:15672 (user/pass guest).</p>
+<h4 id="4-configuration">4) Configuration<a class="headerlink" href="#4-configuration" title="Permanent link">&para;</a></h4>
+<p>RabbitMQ settings (application.yml)</p>
+<pre><code class="language-yaml">eventsauce4j:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange: eventsauce4j.exchange
+    routingKey: eventsauce4j.key
+</code></pre>
+<h4 id="outbox-settings">Outbox settings<a class="headerlink" href="#outbox-settings" title="Permanent link">&para;</a></h4>
+<p>Use Spring properties to tune outbox publishing:</p>
+<p><code>eventsauce4j.outbox.delayInterval</code> : delay between outbox publish cycles</p>
+<p><code>eventsauce4j.outbox.lockName</code> : lock name to isolate publishers per service</p>
+<p>Example:</p>
+<pre><code class="language-yaml">eventsauce4j:
+  outbox:
+    delayInterval: 5 #seconds
+    lockName: user-service-outbox-lock
+</code></pre>
+<h4 id="working-example">Working Example<a class="headerlink" href="#working-example" title="Permanent link">&para;</a></h4>
+<p>See eventsauce4j-example: two Spring Boot services (user-service and payment-service) demonstrating JPA outbox + RabbitMQ messaging and shared event mappings.</p>
 
 
 

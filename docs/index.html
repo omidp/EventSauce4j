@@ -319,6 +319,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#why-eventsauce4j" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why EventSauce4j?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#modules" class="md-nav__link">
     <span class="md-ellipsis">
       Modules
@@ -377,18 +386,46 @@
 
 
 <h1 id="welcome-to-eventsauce4j">Welcome to EventSauce4j<a class="headerlink" href="#welcome-to-eventsauce4j" title="Permanent link">&para;</a></h1>
-<p>A lightweight, event sourcing toolkit for Java 17+, inspired by (and conceptually aligned with) EventSauce.
+<p><code>eventsauce4j</code> is a lightweight event sourcing toolkit for <strong>Java + Spring Framework</strong>, inspired by <a href="https://eventsauce.io/">EventSauce (PHP)</a>.
 It provides clean building blocks for domain events, message repositories, dispatching, outbox, with a persistence module.</p>
 <blockquote>
 <p>If you know EventSauce in PHP, you should feel at home: the vocabulary, responsibilities, and flow are intentionally adapted to Java idioms.</p>
 </blockquote>
-<h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
+<h2 id="why-eventsauce4j">Why EventSauce4j?<a class="headerlink" href="#why-eventsauce4j" title="Permanent link">&para;</a></h2>
+<p>Event sourcing is a powerful architectural pattern, but many existing libraries are large, opinionated, or hard to integrate with.<br />
+The goals of eventsauce4j are:</p>
 <ul>
-<li><code>eventsauce4j-jpa</code> - Synchronous implementation of message dispatcher. </li>
-<li><code>eventsauce4j-jpa</code> - JPA implementation for outbox. </li>
-<li><code>eventsauce4j-jpa</code> - producer/consumer for communication between services.</li>
-<li><code>eventsauce4j-jackson</code> - JSON event serialization. </li>
+<li>Minimal footprint, easy to embed in Spring / Spring Boot</li>
+<li>Pluggable persistence / transport / serialization</li>
+<li>A pragmatic event sourcing library for Spring framework with a focus on developer experience.</li>
 </ul>
+<h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>eventsauce4j-core</strong></td>
+<td>Synchronous implementation of the message dispatcher and core event sourcing components.</td>
+</tr>
+<tr>
+<td><strong>eventsauce4j-jpa</strong></td>
+<td>JPA-based implementation of the Outbox pattern for reliable event persistence and publication.</td>
+</tr>
+<tr>
+<td><strong>eventsauce4j-rabbitmq</strong></td>
+<td>RabbitMQ producer and consumer support for inter-service event communication.</td>
+</tr>
+<tr>
+<td><strong>eventsauce4j-jackson</strong></td>
+<td>JSON event serialization and deserialization using Jackson.</td>
+</tr>
+</tbody>
+</table>
 
 
 
