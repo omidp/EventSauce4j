@@ -16,33 +16,27 @@
  * limitations under the License.
  */
 
+package io.eventsauce4j.core;
+
+import io.eventsauce4j.api.event.Inflection;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 /**
  * @author Omid Pourhadi
  */
-public class RmqTest {
+public class DefaultInflection implements Inflection {
 
-	public static void main(String[] args) {
-//		RabbitMqMessageDispatcher d = new RabbitMqMessageDispatcher(new MessageSerializer() {
-//			@Override
-//			public String serialize(Object event) {
-//				return event.toString();
-//			}
-//		});
-//		for (int i = 0; i < 10; i++) {
-//			d.dispatch(new Message("hi " + i, MetaData.emptyInstance()));
-//		}
-//
-//		//
-//		while (true){
-//			RabbitMqConsumer c = new RabbitMqConsumer(null, messageConsumers);
-//			c.consume();
-//			try {
-//				TimeUnit.SECONDS.sleep(5);
-//			} catch (InterruptedException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
+	private final Map<String, Class<?>> mapping;
 
+	public DefaultInflection(Map<String, Class<?>> mapping) {
+		this.mapping = Collections.unmodifiableMap(mapping);
 	}
 
+	@Override
+	public Optional<Class<?>> getInflectedClass(String routingKey) {
+		return Optional.ofNullable(mapping.get(routingKey));
+	}
 }

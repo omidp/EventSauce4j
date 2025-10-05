@@ -24,8 +24,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "eventsauce4j")
 public class EventSauce4jCustomConfiguration {
 
-	@Value("${eventsauce4j.outboxDelayInterval:10}")
+	@Value("${eventsauce4j.outbox.delayInterval:10}")
 	private int outboxDelayInterval;
+	@Value("${eventsauce4j.outbox.lockName}")
+	private String outboxLockName;
+
+	public String getOutboxLockName() {
+		return outboxLockName;
+	}
+
+	public void setOutboxLockName(String outboxLockName) {
+		this.outboxLockName = outboxLockName;
+	}
 
 	public int getOutboxDelayInterval() {
 		return outboxDelayInterval;

@@ -16,14 +16,13 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event;
+package io.eventsauce4j.domain;
 
-import java.util.UUID;
+import io.eventsauce4j.api.event.Externalized;
 
 /**
- * Private event for user service internal consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-public record UserCreated(UUID id, String description) {
+@Externalized(routingKey = "payment.UserPaid")
+public class UserPaid {
 }

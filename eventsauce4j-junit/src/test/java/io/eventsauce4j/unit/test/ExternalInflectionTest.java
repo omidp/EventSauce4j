@@ -16,14 +16,31 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event;
+package io.eventsauce4j.unit.test;
 
-import java.util.UUID;
+import io.eventsauce4j.core.ExternalInflection;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Private event for user service internal consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-public record UserCreated(UUID id, String description) {
+public class ExternalInflectionTest {
+
+	private ExternalInflection externalInflection;
+
+	@BeforeEach
+	void setUp() {
+		externalInflection = new ExternalInflection("io.eventsauce4j.domain");
+	}
+
+	@Test
+	void test() {
+		Optional<Class<?>> inflectedClass = externalInflection.getInflectedClass("payment.UserPaid");
+		assertTrue(inflectedClass.isPresent());
+	}
 }

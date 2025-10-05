@@ -18,9 +18,10 @@
 
 package io.eventsauce4j.core.dispatcher;
 
-import io.eventsauce4j.core.EventMessage;
+import io.eventsauce4j.api.event.Externalized;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
+import io.eventsauce4j.core.EventMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -33,14 +34,15 @@ public class SynchronousEventMessageDispatcher implements MessageDispatcher, App
 
 	@Override
 	public void dispatch(Message message) {
-		applicationEventPublisher.publishEvent(new EventMessage(message));
+		if (!message.getEvent().getClass().isAnnotationPresent(Externalized.class)) {
+			applicationEventPublisher.publishEvent(new EventMessage(message));
+		}
 	}
 
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
-
 
 
 }

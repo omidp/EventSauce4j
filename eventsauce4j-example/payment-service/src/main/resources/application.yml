@@ -5,9 +5,16 @@ spring:
     password: test
   jpa:
     open-in-view: false
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eventsauce4j:
+  outbox:
+    lockName: payment_outbox_lock
+    delayInterval: 10 #seconds
+  rabbitmq:
+    host: 127.0.0.1

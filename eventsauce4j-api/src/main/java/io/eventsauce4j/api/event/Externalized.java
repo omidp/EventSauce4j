@@ -32,6 +32,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 public @interface Externalized {
 
-	String routingKey() default "";
+	String routingKey();
 
 }

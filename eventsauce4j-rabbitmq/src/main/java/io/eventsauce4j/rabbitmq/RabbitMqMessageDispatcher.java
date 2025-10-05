@@ -21,6 +21,7 @@ package io.eventsauce4j.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
+import io.eventsauce4j.api.event.Externalized;
 import io.eventsauce4j.api.event.Inflection;
 import io.eventsauce4j.api.message.Message;
 import io.eventsauce4j.api.message.MessageDispatcher;
@@ -53,6 +54,13 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 	@Override
 	public void dispatch(Message message) {
+		if (message.getEvent().getClass().isAnnotationPresent(Externalized.class)) {
+			//only external messages can be dispatch
+			dispatchExternalMessage(message);
+		}
+	}
+
+	private void dispatchExternalMessage(Message message) {
 		try (Connection conn = rabbitMqSetup.newConnection();
 			 Channel ch = conn.createChannel()) {
 

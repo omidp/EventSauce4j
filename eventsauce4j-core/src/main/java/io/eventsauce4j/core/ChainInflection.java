@@ -16,25 +16,31 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.api.event;
+package io.eventsauce4j.core;
 
-import java.util.Collections;
-import java.util.Map;
+import io.eventsauce4j.api.event.Inflection;
+
+import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Omid Pourhadi
  */
-public class DefaultInflection implements Inflection {
+public class ChainInflection implements Inflection {
+	private List<Inflection> inflections;
 
-	private final Map<String, Class<?>> mapping;
-
-	public DefaultInflection(Map<String, Class<?>> mapping) {
-		this.mapping = Collections.unmodifiableMap(mapping);
+	public ChainInflection(List<Inflection> inflections) {
+		this.inflections = inflections;
 	}
 
 	@Override
 	public Optional<Class<?>> getInflectedClass(String routingKey) {
-		return Optional.ofNullable(mapping.get(routingKey));
+		for (Inflection inflection : inflections) {
+			Optional<Class<?>> inflectedClass = inflection.getInflectedClass(routingKey);
+			if (inflectedClass.isPresent()) {
+				return inflectedClass;
+			}
+		}
+		return Optional.empty();
 	}
 }

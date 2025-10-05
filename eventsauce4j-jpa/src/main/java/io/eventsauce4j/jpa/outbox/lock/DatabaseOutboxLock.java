@@ -35,16 +35,18 @@ public class DatabaseOutboxLock implements OutboxLock {
 	private static final Logger log = LoggerFactory.getLogger(DatabaseOutboxLock.class);
 
 	private final EntityManager entityManager;
+	private final String lockName;
 
-	public DatabaseOutboxLock(EntityManager entityManager) {
+	public DatabaseOutboxLock(EntityManager entityManager, String lockName) {
 		this.entityManager = entityManager;
+		this.lockName = lockName;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean acquireLock() {
 		try {
-			entityManager.persist(new JpaOutboxLock("outbox_lock", Instant.now()));
+			entityManager.persist(new JpaOutboxLock(lockName, Instant.now()));
 			return true;
 		} catch (Exception ignore) {
 			log.debug("outbox is locked by another process.");

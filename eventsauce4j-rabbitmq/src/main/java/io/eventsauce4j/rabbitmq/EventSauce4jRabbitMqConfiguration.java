@@ -121,8 +121,8 @@ public class EventSauce4jRabbitMqConfiguration {
 	}
 
 	@Bean(name = OUTBOX_LOCK)
-	OutboxLock outboxLock(EntityManager entityManager) {
-		return new DatabaseOutboxLock(entityManager);
+	OutboxLock outboxLock(EntityManager entityManager, EventSauce4jCustomConfiguration config) {
+		return new DatabaseOutboxLock(entityManager, config.getOutboxLockName());
 	}
 
 }

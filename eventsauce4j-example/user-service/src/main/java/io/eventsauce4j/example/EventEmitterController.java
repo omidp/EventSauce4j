@@ -19,9 +19,9 @@
 package io.eventsauce4j.example;
 
 import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.example.domain.event.EmailSent;
 import io.eventsauce4j.example.domain.event.UserCreated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -36,9 +36,13 @@ public class EventEmitterController {
 	}
 
 	@GetMapping("/emit")
-	public String ok() {
-		eventDispatcher.dispatch(new UserCreated(UUID.randomUUID(), "email sent."));
-		return "ok";
+	public String emit(@RequestParam(value = "external", defaultValue = "true") boolean external) {
+		if (external) {
+			eventDispatcher.dispatch(new io.eventsauce4j.example.domain.event.external.UserCreated(UUID.randomUUID(), "user created."));
+		} else {
+			eventDispatcher.dispatch(new UserCreated(UUID.randomUUID(), "user created."));
+		}
+		return "emitted";
 	}
 
 }

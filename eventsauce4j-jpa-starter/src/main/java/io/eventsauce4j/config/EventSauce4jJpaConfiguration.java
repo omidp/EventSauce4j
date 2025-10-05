@@ -24,6 +24,7 @@ import io.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.eventsauce4j.api.outbox.OutboxRelay;
 import io.eventsauce4j.api.outbox.dlq.DeadLetter;
 import io.eventsauce4j.api.outbox.lock.OutboxLock;
+import io.eventsauce4j.core.EventSauce4jCustomConfiguration;
 import io.eventsauce4j.core.dispatcher.MessageDispatcherChain;
 import io.eventsauce4j.core.outbox.backoff.SimpleBackOffStrategy;
 import io.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
@@ -81,8 +82,8 @@ public class EventSauce4jJpaConfiguration {
 	}
 
 	@Bean(name = OUTBOX_LOCK)
-	OutboxLock outboxLock(EntityManager entityManager) {
-		return new DatabaseOutboxLock(entityManager);
+	OutboxLock outboxLock(EntityManager entityManager, EventSauce4jCustomConfiguration config) {
+		return new DatabaseOutboxLock(entityManager, config.getOutboxLockName());
 	}
 
 

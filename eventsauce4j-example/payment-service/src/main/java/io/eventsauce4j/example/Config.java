@@ -18,8 +18,8 @@
 
 package io.eventsauce4j.example;
 
-import io.eventsauce4j.api.event.DefaultInflection;
 import io.eventsauce4j.api.event.Inflection;
+import io.eventsauce4j.core.DefaultInflection;
 import io.eventsauce4j.example.domain.event.PaymentUserCreated;
 import io.eventsauce4j.rabbitmq.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +35,10 @@ import java.util.Map;
 @EnableRabbitMqEventSauce4j
 public class Config {
 
-	@Bean Inflection inflection(){
+	@Bean
+	Inflection inflection() {
 		return new DefaultInflection(Map.of(
-			"io.eventsauce4j.example.domain.event.UserCreated", PaymentUserCreated.class
+			"payment.public.userCreated", PaymentUserCreated.class
 		));
 	}
 

@@ -16,14 +16,10 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example.domain.event;
-
-import java.util.UUID;
+package io.eventsauce4j.domain;
 
 /**
- * Private event for user service internal consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-public record UserCreated(UUID id, String description) {
+public class UserCreated {
 }
