@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.github.omidp</groupId>
 	<artifactId>wallet-service</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<name>wallet-service</name>
 	<description>Demo project for EventSauce4j Spring Boot</description>
 	<url/>
