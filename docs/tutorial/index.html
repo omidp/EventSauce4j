@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://omidp.github.io/EventSauce4j/getting-started/">
+        <link rel="canonical" href="https://omidp.github.io/EventSauce4j/tutorial/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../getting-started/">
       
-      
-        <link rel="next" href="../tutorial/">
       
       
       <link rel="icon" href="../assets/favicon.png">
@@ -22,7 +20,7 @@
     
     
       
-        <title>Getting Started - EventSauce4j</title>
+        <title>Tutorial - EventSauce4j</title>
       
     
     
@@ -64,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#modules-in-this-guide" class="md-skip">
+        <a href="#tutorial-creating-dispatching-and-consuming-events-in-eventsauce4j" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started
+              Tutorial
             
           </span>
         </div>
@@ -199,11 +197,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
         
   
   
@@ -220,9 +216,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../tutorial/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -307,6 +305,28 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -316,13 +336,15 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
   
   <span class="md-ellipsis">
-    Getting Started
+    Tutorial
     
   </span>
   
@@ -335,7 +357,7 @@
   
   
   <span class="md-ellipsis">
-    Getting Started
+    Tutorial
     
   </span>
   
@@ -348,6 +370,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -356,47 +380,38 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#modules-in-this-guide" class="md-nav__link">
+  <a href="#how-to-create-an-event" class="md-nav__link">
     <span class="md-ellipsis">
-      Modules in this guide
+      📦 How to Create an Event
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prerequisites
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Prerequisites">
+    <nav class="md-nav" aria-label="📦 How to Create an Event">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-jpa-starter" class="md-nav__link">
+  <a href="#private-or-internal-events" class="md-nav__link">
     <span class="md-ellipsis">
-      1) JPA Starter
+      🧩 Private or Internal Events
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1) JPA Starter">
+    <nav class="md-nav" aria-label="🧩 Private or Internal Events">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#11-add-the-dependency" class="md-nav__link">
+  <a href="#option-1-using-event-annotation" class="md-nav__link">
     <span class="md-ellipsis">
-      1.1 Add the dependency
+      Option 1 — Using @Event Annotation
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#12-enable-the-starter" class="md-nav__link">
+  <a href="#option-2-using-staticinflector" class="md-nav__link">
     <span class="md-ellipsis">
-      1.2 Enable the starter
+      Option 2 — Using StaticInflector
     </span>
   </a>
   
@@ -408,78 +423,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-rabbitmq-starter" class="md-nav__link">
+  <a href="#public-events" class="md-nav__link">
     <span class="md-ellipsis">
-      2) RabbitMQ Starter
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2) RabbitMQ Starter">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#21-add-the-dependency" class="md-nav__link">
-    <span class="md-ellipsis">
-      2.1 Add the dependency
+      🌍 Public Events
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#22-enable-the-starter" class="md-nav__link">
+  <a href="#how-to-dispatch-an-event" class="md-nav__link">
     <span class="md-ellipsis">
-      2.2 Enable the starter
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-start-rabbitmq-for-rabbitmq-starter" class="md-nav__link">
-    <span class="md-ellipsis">
-      3) Start RabbitMQ (for RabbitMQ starter)
+      🚀 How to Dispatch an Event
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-configuration" class="md-nav__link">
+  <a href="#how-to-consume-an-event" class="md-nav__link">
     <span class="md-ellipsis">
-      4) Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#outbox-settings" class="md-nav__link">
-    <span class="md-ellipsis">
-      Outbox settings
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#working-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      Working Example
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#database-schema-setup-postgresql" class="md-nav__link">
-    <span class="md-ellipsis">
-      Database Schema Setup (PostgreSQL)
+      🎧 How to Consume an Event
     </span>
   </a>
   
@@ -494,28 +458,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tutorial/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tutorial
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -539,118 +481,89 @@
   
 
 
-  <h1>Getting Started</h1>
-
-<h3 id="modules-in-this-guide">Modules in this guide<a class="headerlink" href="#modules-in-this-guide" title="Permanent link">&para;</a></h3>
-<p><code>eventsauce4j-jpa-starter</code> : JPA outbox + synchronous dispatch</p>
-<p><code>eventsauce4j-rabbitmq-starter</code> : RabbitMQ producer/consumer integration</p>
+<h1 id="tutorial-creating-dispatching-and-consuming-events-in-eventsauce4j">Tutorial Creating, Dispatching, and Consuming Events in eventsauce4j<a class="headerlink" href="#tutorial-creating-dispatching-and-consuming-events-in-eventsauce4j" title="Permanent link">&para;</a></h1>
+<p>This tutorial walks you through the core workflow of <strong>creating</strong>, <strong>dispatching</strong>, and <strong>consuming</strong> events using <strong>eventsauce4j</strong>.</p>
 <hr />
-<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<h2 id="how-to-create-an-event">📦 How to Create an Event<a class="headerlink" href="#how-to-create-an-event" title="Permanent link">&para;</a></h2>
+<p>In <strong>eventsauce4j</strong>, events represent changes that occurred in your domain.<br />
+There are two main types of events:</p>
 <ul>
-<li>Java 17+</li>
-<li>Spring Boot (recommended)</li>
-<li>Maven</li>
-<li>Postgres</li>
-<li>(For RabbitMQ starter) a running RabbitMQ broker</li>
+<li><strong>Private (Internal) Events</strong> — used <em>only</em> within the domain.</li>
+<li><strong>Public Events</strong> — used for <em>inter-service communication</em> via messaging (e.g., RabbitMQ).</li>
 </ul>
-<h4 id="1-jpa-starter">1) JPA Starter<a class="headerlink" href="#1-jpa-starter" title="Permanent link">&para;</a></h4>
-<h5 id="11-add-the-dependency">1.1 Add the dependency<a class="headerlink" href="#11-add-the-dependency" title="Permanent link">&para;</a></h5>
-<pre><code class="language-xml">&lt;dependency&gt;
-  &lt;groupId&gt;io.github.omidp&lt;/groupId&gt;
-  &lt;artifactId&gt;eventsauce4j-jpa-starter&lt;/artifactId&gt;
-  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
-&lt;/dependency&gt;
+<hr />
+<h3 id="private-or-internal-events">🧩 Private or Internal Events<a class="headerlink" href="#private-or-internal-events" title="Permanent link">&para;</a></h3>
+<p>Private or internal events are meant to be consumed <strong>only inside the same domain or service</strong>.<br />
+These events typically model internal state transitions and are not published externally.</p>
+<p>You can define an internal event in one of two ways:</p>
+<h4 id="option-1-using-event-annotation">Option 1 — Using <code>@Event</code> Annotation<a class="headerlink" href="#option-1-using-event-annotation" title="Permanent link">&para;</a></h4>
+<p>The simplest way is to annotate your event with <code>@Event</code>.<br />
+Optionally, you can specify a routing key if you use annotation-based inflection.</p>
+<pre><code class="language-java">@Event
+public record UserCreated(UUID id, String description) {
+}
 </code></pre>
-<h5 id="12-enable-the-starter">1.2 Enable the starter<a class="headerlink" href="#12-enable-the-starter" title="Permanent link">&para;</a></h5>
-<pre><code class="language-java">import io.github.omidp.starter.jpa.EnableJpaEventSauce4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-@EnableJpaEventSauce4j
-public class Config {
-
-  @Bean
-  Inflector inflection() {
-    return new ChainInflector(List.of(
-      new ExternalInflector(&quot;io.github.omidp.example.domain.event.external&quot;),
-      new AnnotationInflector(UserCreated.class.getPackageName()),
-      new StaticInflector(Map.of(
-        EmailSent.class.getName(), EmailSent.class
-      ))
+<h4 id="option-2-using-staticinflector">Option 2 — Using StaticInflector<a class="headerlink" href="#option-2-using-staticinflector" title="Permanent link">&para;</a></h4>
+<p>If you prefer not to annotate your events, you can define explicit mappings in your configuration using <code>StaticInflector</code>.</p>
+<p>Example configuration snippet:</p>
+<pre><code class="language-java">@Bean
+Inflector inflection() {
+    return new StaticInflector(Map.of(
+        &quot;user.internal.userCreated&quot;, UserCreated.class
     ));
-  }
 }
 </code></pre>
 <hr />
-<h4 id="2-rabbitmq-starter">2) RabbitMQ Starter<a class="headerlink" href="#2-rabbitmq-starter" title="Permanent link">&para;</a></h4>
-<h5 id="21-add-the-dependency">2.1 Add the dependency<a class="headerlink" href="#21-add-the-dependency" title="Permanent link">&para;</a></h5>
-<pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;io.github.omidp&lt;/groupId&gt;
-    &lt;artifactId&gt;eventsauce4j-rabbitmq-starter&lt;/artifactId&gt;
-    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<h5 id="22-enable-the-starter">2.2 Enable the starter<a class="headerlink" href="#22-enable-the-starter" title="Permanent link">&para;</a></h5>
-<pre><code class="language-java">import io.github.omidp.starter.rabbitmq.EnableRabbitMqEventSauce4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-@Configuration
-@EnableRabbitMqEventSauce4j
-public class Config {
-
-  @Bean
-  Inflector inflection() {
-    return new ChainInflector(List.of(
-      new ExternalInflector(&quot;io.github.omidp.example.domain.event.external&quot;),
-      new AnnotationInflector(UserCreated.class.getPackageName()),
-      new StaticInflector(Map.of(
-        EmailSent.class.getName(), EmailSent.class
-      ))
-    ));
-  }
+<h3 id="public-events">🌍 Public Events<a class="headerlink" href="#public-events" title="Permanent link">&para;</a></h3>
+<p><strong>Public events</strong> are used for <strong>cross-service communication</strong> (e.g., between <code>user-service</code> and <code>payment-service</code>).
+They must include a <strong>routing key</strong>, which determines how they’re routed in the message broker (RabbitMQ).</p>
+<p>Example:</p>
+<pre><code class="language-java">@ExternalEvent(routingKey = &quot;payment.public.userCreated&quot;)
+public record UserCreated(UUID id, String description) {
 }
 </code></pre>
-<h4 id="3-start-rabbitmq-for-rabbitmq-starter">3) Start RabbitMQ (for RabbitMQ starter)<a class="headerlink" href="#3-start-rabbitmq-for-rabbitmq-starter" title="Permanent link">&para;</a></h4>
-<p>Run a local broker with Docker:</p>
-<pre><code>docker run -d --name rabbitmq \
-  -p 5672:5672 -p 15672:15672 \
-  -e RABBITMQ_DEFAULT_USER=guest \
-  -e RABBITMQ_DEFAULT_PASS=guest \
-  rabbitmq:3.13-management
+<blockquote>
+<p>📝 <strong>Note</strong>: The routingKey ensures that other services (like payment-service) can consume and deserialize the event properly using their own inflector mappings.</p>
+</blockquote>
+<hr />
+<h3 id="how-to-dispatch-an-event">🚀 How to Dispatch an Event<a class="headerlink" href="#how-to-dispatch-an-event" title="Permanent link">&para;</a></h3>
+<p>Once your event is defined, you can dispatch it using the <code>EventDispatcher</code>.</p>
+<p>Inject the dispatcher into your service or aggregate and call <code>dispatch()</code>:</p>
+<pre><code class="language-java">@Service
+public class UserService {
+
+    private final EventDispatcher eventDispatcher;
+
+    public UserService(EventDispatcher eventDispatcher) {
+        this.eventDispatcher = eventDispatcher;
+    }
+
+    public void createUser() {
+        eventDispatcher.dispatch(
+            new UserCreated(UUID.randomUUID(), &quot;user created.&quot;)
+        );
+    }
+}
 </code></pre>
-<p>Management UI: http://localhost:15672 (user/pass guest).</p>
-<h4 id="4-configuration">4) Configuration<a class="headerlink" href="#4-configuration" title="Permanent link">&para;</a></h4>
-<p>RabbitMQ settings (application.yml)</p>
-<pre><code class="language-yaml">eventsauce4j:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    exchange: eventsauce4j.exchange
-    routingKey: eventsauce4j.key
-</code></pre>
-<h4 id="outbox-settings">Outbox settings<a class="headerlink" href="#outbox-settings" title="Permanent link">&para;</a></h4>
-<p>Use Spring properties to tune outbox publishing:</p>
-<p><code>eventsauce4j.outbox.delayInterval</code> : delay between outbox publish cycles</p>
-<p><code>eventsauce4j.outbox.lockName</code> : lock name to isolate publishers per service</p>
+<h3 id="how-to-consume-an-event">🎧 How to Consume an Event<a class="headerlink" href="#how-to-consume-an-event" title="Permanent link">&para;</a></h3>
+<p>To handle incoming events, implement a <strong>consumer</strong> class and annotate it with <code>@Consumer</code>.</p>
+<p>Consumers must implement the <code>MessageConsumer</code> interface and override the <code>handle(Message message)</code> method.</p>
 <p>Example:</p>
-<pre><code class="language-yaml">eventsauce4j:
-  outbox:
-    delayInterval: 5 #seconds
-    lockName: user-service-outbox-lock
+<pre><code class="language-java">@Consumer
+public class UserConsumer implements MessageConsumer {
+
+    private static final Logger log = LoggerFactory.getLogger(UserConsumer.class);
+
+    @Override
+    public void handle(Message message) {
+        if (message.getEvent() instanceof UserCreated uc) {
+            log.info(&quot;User created: {}&quot;, uc);
+            // Your business logic here
+        }
+    }
+}
 </code></pre>
-<h4 id="working-example">Working Example<a class="headerlink" href="#working-example" title="Permanent link">&para;</a></h4>
-<p>See eventsauce4j-example: two Spring Boot services (user-service and payment-service) demonstrating JPA outbox + RabbitMQ messaging and shared event mappings.</p>
-<h4 id="database-schema-setup-postgresql">Database Schema Setup (PostgreSQL)<a class="headerlink" href="#database-schema-setup-postgresql" title="Permanent link">&para;</a></h4>
-<p>When using the <strong>JPA Outbox Starter</strong>, eventsauce4j relies on a set of tables to persist and publish events.
-You’ll find a ready-to-use SQL script named schema.sql in the project.</p>
-<p><strong>Alternatively</strong>, you can configure Hibernate to automatically generate the tables for you.</p>
-<p>This script defines the required tables for <strong>PostgreSQL</strong>, including:</p>
-<p><strong>Event Store table / Outbox table</strong> : to persist domain events and manage pending events for dispatch</p>
-<p><strong>Lock table</strong> : to prevent duplicate event consumption in distributed environments</p>
+<p>You can define multiple consumers, and each will receive all messages.</p>
 
 
 
