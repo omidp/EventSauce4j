@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.omidp</groupId>
+		<artifactId>eventsauce4j</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+	</parent>
+	<groupId>io.github.omidp</groupId>
+	<artifactId>eventsauce4j-junit</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<name>eventsauce4j-junit</name>
+	<packaging>jar</packaging>
+	<description>eventsauce4j-junit</description>
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>io.github.omidp</groupId>
+			<artifactId>eventsauce4j-jpa-starter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Surefire plugin to run JUnit 5 tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+			</plugin>
+		</plugins>
+	</build>
+</project>
