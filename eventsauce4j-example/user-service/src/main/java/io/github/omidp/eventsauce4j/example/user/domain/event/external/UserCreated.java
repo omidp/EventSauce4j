@@ -16,26 +16,18 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.user.domain.event.external;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication
-@EnableTransactionManagement
-public class WalletServiceApplication {
+import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
 
-	public static void main(String[] args) {
-		SpringApplication.run(WalletServiceApplication.class, args);
-	}
+import java.util.UUID;
 
-	@Bean
-	CommandLineRunner commandLineRunner() {
-		return args -> {
-		};
-	}
-
+/**
+ * Public event for other/payment service(s) consumption
+ * @param id
+ * @param description
+ */
+@ExternalEvent(routingKey = "payment.public.userCreated")
+public record UserCreated(UUID id, String description) {
 }

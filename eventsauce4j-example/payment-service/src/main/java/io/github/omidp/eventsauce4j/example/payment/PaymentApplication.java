@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.payment;
 
-import io.github.omidp.api.event.EventDispatcher;
+import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,10 +27,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-public class PaymentServiceApplication {
+public class PaymentApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PaymentServiceApplication.class, args);
+		SpringApplication.run(PaymentApplication.class, args);
 	}
 
 	@Bean

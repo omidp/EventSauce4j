@@ -16,30 +16,25 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.wallet;
 
-import io.github.omidp.api.event.EventDispatcher;
-import io.github.omidp.example.domain.event.UserCreated;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.util.UUID;
-
 @SpringBootApplication
 @EnableTransactionManagement
-public class UserServiceApplication {
+public class WalletApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(UserServiceApplication.class, args);
+		SpringApplication.run(WalletApplication.class, args);
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(EventDispatcher eventDispatcher) {
+	CommandLineRunner commandLineRunner() {
 		return args -> {
-			eventDispatcher.dispatch(new UserCreated(UUID.randomUUID(), "user created."));
 		};
 	}
 
