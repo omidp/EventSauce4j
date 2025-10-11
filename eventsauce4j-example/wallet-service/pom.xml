@@ -8,7 +8,7 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>io.eventsauce4j</groupId>
+	<groupId>io.github.omidp</groupId>
 	<artifactId>wallet-service</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<name>wallet-service</name>
@@ -51,7 +51,7 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>io.eventsauce4j</groupId>
+			<groupId>io.github.omidp</groupId>
 			<artifactId>eventsauce4j-jpa-starter</artifactId>
 			<version>${project.version}</version>
 		</dependency>

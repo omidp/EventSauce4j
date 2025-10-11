@@ -20,7 +20,7 @@ ___
 
 ```xml
 <dependency>
-  <groupId>io.eventsauce4j</groupId>
+  <groupId>io.github.omidp</groupId>
   <artifactId>eventsauce4j-jpa-starter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -29,7 +29,7 @@ ___
 ##### 1.2 Enable the starter
 
 ```java
-import io.eventsauce4j.starter.jpa.EnableJpaEventSauce4j;
+import io.github.omidp.starter.jpa.EnableJpaEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -40,7 +40,7 @@ public class Config {
   @Bean
   Inflector inflection() {
     return new ChainInflector(List.of(
-      new ExternalInflector("io.eventsauce4j.example.domain.event.external"),
+      new ExternalInflector("io.github.omidp.example.domain.event.external"),
       new AnnotationInflector(UserCreated.class.getPackageName()),
       new StaticInflector(Map.of(
         EmailSent.class.getName(), EmailSent.class
@@ -58,7 +58,7 @@ ___
 
 ```xml
 <dependency>
-	<groupId>io.eventsauce4j</groupId>
+	<groupId>io.github.omidp</groupId>
 	<artifactId>eventsauce4j-rabbitmq-starter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -67,7 +67,7 @@ ___
 ##### 2.2 Enable the starter
 
 ```java
-import io.eventsauce4j.starter.rabbitmq.EnableRabbitMqEventSauce4j;
+import io.github.omidp.starter.rabbitmq.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -78,7 +78,7 @@ public class Config {
   @Bean
   Inflector inflection() {
     return new ChainInflector(List.of(
-      new ExternalInflector("io.eventsauce4j.example.domain.event.external"),
+      new ExternalInflector("io.github.omidp.example.domain.event.external"),
       new AnnotationInflector(UserCreated.class.getPackageName()),
       new StaticInflector(Map.of(
         EmailSent.class.getName(), EmailSent.class

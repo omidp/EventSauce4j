@@ -106,7 +106,7 @@ public class UserConsumer implements MessageConsumer {
 
     @Override
     public void handle(Message message) {
-        if (message.getEvent() instanceof UserCreated uc) {
+        if (message.event() instanceof UserCreated uc) {
             log.info("User created: {}", uc);
             // Your business logic here
         }

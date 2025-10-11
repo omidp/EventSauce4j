@@ -503,13 +503,13 @@
 <h4 id="1-jpa-starter">1) JPA Starter<a class="headerlink" href="#1-jpa-starter" title="Permanent link">&para;</a></h4>
 <h5 id="11-add-the-dependency">1.1 Add the dependency<a class="headerlink" href="#11-add-the-dependency" title="Permanent link">&para;</a></h5>
 <pre><code class="language-xml">&lt;dependency&gt;
-  &lt;groupId&gt;io.eventsauce4j&lt;/groupId&gt;
+  &lt;groupId&gt;io.github.omidp&lt;/groupId&gt;
   &lt;artifactId&gt;eventsauce4j-jpa-starter&lt;/artifactId&gt;
   &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 <h5 id="12-enable-the-starter">1.2 Enable the starter<a class="headerlink" href="#12-enable-the-starter" title="Permanent link">&para;</a></h5>
-<pre><code class="language-java">import io.eventsauce4j.starter.jpa.EnableJpaEventSauce4j;
+<pre><code class="language-java">import io.github.omidp.starter.jpa.EnableJpaEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -520,7 +520,7 @@ public class Config {
   @Bean
   Inflector inflection() {
     return new ChainInflector(List.of(
-      new ExternalInflector(&quot;io.eventsauce4j.example.domain.event.external&quot;),
+      new ExternalInflector(&quot;io.github.omidp.example.domain.event.external&quot;),
       new AnnotationInflector(UserCreated.class.getPackageName()),
       new StaticInflector(Map.of(
         EmailSent.class.getName(), EmailSent.class
@@ -533,13 +533,13 @@ public class Config {
 <h4 id="2-rabbitmq-starter">2) RabbitMQ Starter<a class="headerlink" href="#2-rabbitmq-starter" title="Permanent link">&para;</a></h4>
 <h5 id="21-add-the-dependency">2.1 Add the dependency<a class="headerlink" href="#21-add-the-dependency" title="Permanent link">&para;</a></h5>
 <pre><code class="language-xml">&lt;dependency&gt;
-    &lt;groupId&gt;io.eventsauce4j&lt;/groupId&gt;
+    &lt;groupId&gt;io.github.omidp&lt;/groupId&gt;
     &lt;artifactId&gt;eventsauce4j-rabbitmq-starter&lt;/artifactId&gt;
     &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 <h5 id="22-enable-the-starter">2.2 Enable the starter<a class="headerlink" href="#22-enable-the-starter" title="Permanent link">&para;</a></h5>
-<pre><code class="language-java">import io.eventsauce4j.starter.rabbitmq.EnableRabbitMqEventSauce4j;
+<pre><code class="language-java">import io.github.omidp.starter.rabbitmq.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -550,7 +550,7 @@ public class Config {
   @Bean
   Inflector inflection() {
     return new ChainInflector(List.of(
-      new ExternalInflector(&quot;io.eventsauce4j.example.domain.event.external&quot;),
+      new ExternalInflector(&quot;io.github.omidp.example.domain.event.external&quot;),
       new AnnotationInflector(UserCreated.class.getPackageName()),
       new StaticInflector(Map.of(
         EmailSent.class.getName(), EmailSent.class
