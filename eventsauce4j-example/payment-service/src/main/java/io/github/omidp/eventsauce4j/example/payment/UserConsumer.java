@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.payment;
 
-import io.github.omidp.api.event.EventDispatcher;
-import io.github.omidp.api.message.Message;
-import io.github.omidp.api.message.MessageConsumer;
-import io.github.omidp.core.annotation.Consumer;
-import io.github.omidp.example.domain.event.BonusAcquired;
-import io.github.omidp.example.domain.event.PaymentUserCreated;
+
+import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
+import io.github.omidp.eventsauce4j.api.message.Message;
+import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
+import io.github.omidp.eventsauce4j.core.annotation.Consumer;
+import io.github.omidp.eventsauce4j.example.payment.domain.event.BonusAcquired;
+import io.github.omidp.eventsauce4j.example.payment.domain.event.PaymentUserCreated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package io.github.omidp.example.domain.event;
+package io.github.omidp.eventsauce4j.example.user.domain.event;
 
 import java.util.UUID;
 

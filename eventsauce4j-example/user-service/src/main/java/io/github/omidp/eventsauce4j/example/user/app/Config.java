@@ -16,16 +16,17 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.user.app;
 
-import io.github.omidp.api.event.Inflector;
-import io.github.omidp.core.inflector.AnnotationInflector;
-import io.github.omidp.core.inflector.ChainInflector;
-import io.github.omidp.core.inflector.ExternalInflector;
-import io.github.omidp.core.inflector.StaticInflector;
-import io.github.omidp.example.domain.event.EmailSent;
-import io.github.omidp.example.domain.event.UserCreated;
-import io.github.omidp.rabbitmq.EnableRabbitMqEventSauce4j;
+
+import io.github.omidp.eventsauce4j.api.event.Inflector;
+import io.github.omidp.eventsauce4j.core.inflector.AnnotationInflector;
+import io.github.omidp.eventsauce4j.core.inflector.ChainInflector;
+import io.github.omidp.eventsauce4j.core.inflector.ExternalInflector;
+import io.github.omidp.eventsauce4j.core.inflector.StaticInflector;
+import io.github.omidp.eventsauce4j.example.user.domain.event.EmailSent;
+import io.github.omidp.eventsauce4j.example.user.domain.event.UserCreated;
+import io.github.omidp.eventsauce4j.rabbitmq.starter.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

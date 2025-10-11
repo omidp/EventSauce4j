@@ -16,17 +16,12 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example.domain.event.external;
-
-import io.github.omidp.api.event.ExternalEvent;
+package io.github.omidp.eventsauce4j.example.payment.domain.event;
 
 import java.util.UUID;
 
 /**
- * Public event for other/payment service(s) consumption
- * @param id
- * @param description
+ * @author Omid Pourhadi
  */
-@ExternalEvent(routingKey = "payment.public.userCreated")
-public record UserCreated(UUID id, String description) {
+public record PaymentUserCreated(UUID id, String name) {
 }

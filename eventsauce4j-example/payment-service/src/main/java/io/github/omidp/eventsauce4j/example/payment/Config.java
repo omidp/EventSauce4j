@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example;
+package io.github.omidp.eventsauce4j.example.payment;
 
-import io.github.omidp.api.event.Inflector;
-import io.github.omidp.core.inflector.AnnotationInflector;
-import io.github.omidp.core.inflector.ChainInflector;
-import io.github.omidp.core.inflector.StaticInflector;
-import io.github.omidp.example.domain.event.BonusAcquired;
-import io.github.omidp.example.domain.event.PaymentUserCreated;
-import io.github.omidp.rabbitmq.EnableRabbitMqEventSauce4j;
+import io.github.omidp.eventsauce4j.api.event.Inflector;
+import io.github.omidp.eventsauce4j.core.inflector.AnnotationInflector;
+import io.github.omidp.eventsauce4j.core.inflector.ChainInflector;
+import io.github.omidp.eventsauce4j.core.inflector.StaticInflector;
+import io.github.omidp.eventsauce4j.example.payment.domain.event.BonusAcquired;
+import io.github.omidp.eventsauce4j.example.payment.domain.event.PaymentUserCreated;
+import io.github.omidp.eventsauce4j.rabbitmq.starter.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

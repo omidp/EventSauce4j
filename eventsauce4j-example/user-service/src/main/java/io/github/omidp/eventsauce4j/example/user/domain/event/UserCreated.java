@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-package io.github.omidp.example.domain.event;
+package io.github.omidp.eventsauce4j.example.user.domain.event;
 
-import io.github.omidp.api.event.Event;
+
+import io.github.omidp.eventsauce4j.api.event.Event;
 
 import java.util.UUID;
 
