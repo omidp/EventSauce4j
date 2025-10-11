@@ -22,7 +22,7 @@ ___
 <dependency>
   <groupId>io.github.omidp</groupId>
   <artifactId>eventsauce4j-jpa-starter</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${latest_stable_version}</version>
 </dependency>
 ```
 
@@ -60,7 +60,7 @@ ___
 <dependency>
 	<groupId>io.github.omidp</groupId>
 	<artifactId>eventsauce4j-rabbitmq-starter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${latest_stable_version}</version>
 </dependency>
 ```
 
