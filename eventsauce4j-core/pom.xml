@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-core</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-core</description>
+	<description>Implements the core event-sourcing engine, including event handling, and dispatch mechanisms.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-integration-test</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-integration-test</description>
+	<description>Contains shared integration test utilities and scenarios for verifying EventSauce4j components.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

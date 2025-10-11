@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-jackson</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-jackson</description>
+	<description>Provides Jackson JSON serialization support for EventSauce4j events and metadata.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

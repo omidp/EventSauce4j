@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-api</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-api</description>
+	<description>The core interfaces, events, and message abstractions for EventSauce4j.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

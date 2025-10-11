@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-jpa</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-jpa</description>
+	<description>Implements a JPA-backed event store and snapshot repository for EventSauce4j.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-rabbitmq</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-rabbitmq</description>
+	<description>Implements an EventSauce4j message dispatcher and subscriber using RabbitMQ for event distribution.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>

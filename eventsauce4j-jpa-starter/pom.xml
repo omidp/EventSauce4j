@@ -11,7 +11,8 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-jpa-starter</name>
 	<packaging>jar</packaging>
-	<description>eventsauce4j-jpa-starter</description>
+	<description>Spring Boot starter for the JPA module, simplifying EventSauce4j setup in Spring applications.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
 		<java.version>17</java.version>
