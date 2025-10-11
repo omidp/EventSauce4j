@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example;
+package io.github.omidp.example;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

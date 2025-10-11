@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example;
+package io.github.omidp.example;
 
-import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.api.message.Message;
-import io.eventsauce4j.api.message.MessageConsumer;
-import io.eventsauce4j.core.annotation.Consumer;
-import io.eventsauce4j.example.domain.event.EmailSent;
-import io.eventsauce4j.example.domain.event.UserCreated;
+import io.github.omidp.api.event.EventDispatcher;
+import io.github.omidp.api.message.Message;
+import io.github.omidp.api.message.MessageConsumer;
+import io.github.omidp.core.annotation.Consumer;
+import io.github.omidp.example.domain.event.EmailSent;
+import io.github.omidp.example.domain.event.UserCreated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class UserConsumer implements MessageConsumer {
 		if (message.event() instanceof UserCreated uc) {
 			log.info("user created : " + uc);
 			eventDispatcher.dispatch(new EmailSent(UUID.randomUUID(), "email sent"));
-			eventDispatcher.dispatch(new io.eventsauce4j.example.domain.event.external.UserCreated(uc.id(), uc.description()));
+			eventDispatcher.dispatch(new io.github.omidp.example.domain.event.external.UserCreated(uc.id(), uc.description()));
 		}
 		if (message.event() instanceof EmailSent es) {
 			log.info("email sent : " + es);

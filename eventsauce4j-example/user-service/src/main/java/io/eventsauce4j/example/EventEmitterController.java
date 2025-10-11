@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example;
+package io.github.omidp.example;
 
-import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.example.domain.event.UserCreated;
+import io.github.omidp.api.event.EventDispatcher;
+import io.github.omidp.example.domain.event.UserCreated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +38,7 @@ public class EventEmitterController {
 	@GetMapping("/emit")
 	public String emit(@RequestParam(value = "external", defaultValue = "true") boolean external) {
 		if (external) {
-			eventDispatcher.dispatch(new io.eventsauce4j.example.domain.event.external.UserCreated(UUID.randomUUID(), "user created."));
+			eventDispatcher.dispatch(new io.github.omidp.example.domain.event.external.UserCreated(UUID.randomUUID(), "user created."));
 		} else {
 			eventDispatcher.dispatch(new UserCreated(UUID.randomUUID(), "user created."));
 		}

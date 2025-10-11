@@ -16,10 +16,10 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example;
+package io.github.omidp.example;
 
-import io.eventsauce4j.api.event.EventDispatcher;
-import io.eventsauce4j.example.domain.event.UserCreated;
+import io.github.omidp.api.event.EventDispatcher;
+import io.github.omidp.example.domain.event.UserCreated;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

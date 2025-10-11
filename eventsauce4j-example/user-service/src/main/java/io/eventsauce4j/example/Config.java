@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-package io.eventsauce4j.example;
+package io.github.omidp.example;
 
-import io.eventsauce4j.api.event.Inflector;
-import io.eventsauce4j.core.inflector.AnnotationInflector;
-import io.eventsauce4j.core.inflector.ChainInflector;
-import io.eventsauce4j.core.inflector.ExternalInflector;
-import io.eventsauce4j.core.inflector.StaticInflector;
-import io.eventsauce4j.example.domain.event.EmailSent;
-import io.eventsauce4j.example.domain.event.UserCreated;
-import io.eventsauce4j.rabbitmq.EnableRabbitMqEventSauce4j;
+import io.github.omidp.api.event.Inflector;
+import io.github.omidp.core.inflector.AnnotationInflector;
+import io.github.omidp.core.inflector.ChainInflector;
+import io.github.omidp.core.inflector.ExternalInflector;
+import io.github.omidp.core.inflector.StaticInflector;
+import io.github.omidp.example.domain.event.EmailSent;
+import io.github.omidp.example.domain.event.UserCreated;
+import io.github.omidp.rabbitmq.EnableRabbitMqEventSauce4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -43,7 +43,7 @@ public class Config {
 	@Bean
 	Inflector inflection() {
 		return new ChainInflector(List.of(
-			new ExternalInflector("io.eventsauce4j.example.domain.event.external"),
+			new ExternalInflector("io.github.omidp.example.domain.event.external"),
 			new AnnotationInflector(UserCreated.class.getPackageName()),
 			new StaticInflector(Map.of(
 				EmailSent.class.getName(), EmailSent.class
