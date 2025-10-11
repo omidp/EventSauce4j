@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>io.github.omidp</groupId>
 		<artifactId>eventsauce4j</artifactId>
-		<version>0.0.2</version>
+		<version>0.0.3-SNAPSHOT</version>
 	</parent>
 	<groupId>io.github.omidp</groupId>
 	<artifactId>eventsauce4j-rabbitmq</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>eventsauce4j-rabbitmq</name>
 	<packaging>jar</packaging>
 	<description>eventsauce4j-rabbitmq</description>
