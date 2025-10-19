@@ -23,3 +23,7 @@ eventsauce4j:
     enabled: false
   rabbitmq:
     host: 127.0.0.1
+    queue: user.queue
+    routingKeys:
+      - io.github.omidp.eventsauce4j.example.user.domain.event.UserCreated
+      - io.github.omidp.eventsauce4j.example.user.domain.event.EmailSent

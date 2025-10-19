@@ -18,17 +18,14 @@
 
 package io.github.omidp.eventsauce4j.rabbitmq;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.api.message.MessageSerializer;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
-import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,11 +82,10 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 				);
 			ch.basicPublish(
 				rabbitMqConfiguration.getExchange(),
-				rabbitMqConfiguration.getRoutingKey(),
+				eventType,
 				messageProperties,
 				content.getBytes(StandardCharsets.UTF_8)
 			);
-
 			// wait for all outstanding acks (throws on nack/timeout)
 			ch.waitForConfirmsOrDie();
 			eventPublicationRepository.markAsPublished(msgId);

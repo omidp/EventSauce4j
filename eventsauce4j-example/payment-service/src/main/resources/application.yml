@@ -19,3 +19,7 @@ eventsauce4j:
     enabled: true
   rabbitmq:
     host: 127.0.0.1
+    queue: payment.queue
+    routingKeys:
+      - payment.public.userCreated
+      - io.github.omidp.eventsauce4j.example.payment.domain.event.BonusAcquired

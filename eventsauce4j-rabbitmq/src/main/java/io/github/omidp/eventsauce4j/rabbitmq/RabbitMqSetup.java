@@ -79,6 +79,8 @@ public class RabbitMqSetup {
 
 		// Durable, non-exclusive, not auto-delete
 		channel.queueDeclare(rabbitMqConfiguration.getQueue(), true, false, false, args);
-		channel.queueBind(rabbitMqConfiguration.getQueue(), rabbitMqConfiguration.getExchange(), rabbitMqConfiguration.getRoutingKey());
+		for (String routingKey : rabbitMqConfiguration.getRoutingKeys()) {
+			channel.queueBind(rabbitMqConfiguration.getQueue(), rabbitMqConfiguration.getExchange(), routingKey);
+		}
 	}
 }
