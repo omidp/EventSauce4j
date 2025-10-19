@@ -22,18 +22,12 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>io.github.omidp</groupId>
-			<artifactId>eventsauce4j-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>io.github.omidp</groupId>
-			<artifactId>eventsauce4j-core</artifactId>
+			<artifactId>eventsauce4j-jpa</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>io.github.omidp</groupId>
 			<artifactId>eventsauce4j-jackson</artifactId>
@@ -46,26 +40,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.rabbitmq</groupId>
-			<artifactId>amqp-client</artifactId>
-			<version>5.21.0</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 
 	</dependencies>
 

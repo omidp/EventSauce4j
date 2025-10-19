@@ -56,6 +56,13 @@ public interface EventPublication {
 		if (clz.isAnnotationPresent(ExternalEvent.class)) {
 			return clz.getAnnotation(ExternalEvent.class).routingKey();
 		}
+		if (clz.isAnnotationPresent(Event.class)) {
+			String routingKey = clz.getAnnotation(Event.class).routingKey();
+			if (routingKey == null || routingKey.isEmpty()) {
+				return clz.getName();
+			}
+			return routingKey;
+		}
 		return clz.getName();
 	}
 

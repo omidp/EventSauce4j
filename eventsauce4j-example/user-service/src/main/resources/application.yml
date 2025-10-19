@@ -20,5 +20,6 @@ eventsauce4j:
   outbox:
     lockName: user_outbox_lock
     delayInterval: 10 #seconds
+    enabled: false
   rabbitmq:
     host: 127.0.0.1

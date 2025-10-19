@@ -19,21 +19,11 @@
 package io.github.omidp.eventsauce4j.core.event;
 
 import io.github.omidp.eventsauce4j.api.message.Message;
-import org.springframework.context.ApplicationEvent;
 
 /**
  * @author Omid Pourhadi
  */
-public class EventMessage extends ApplicationEvent {
+public record EventMessage(Message message) {
 
-	private final Message message;
 
-	public EventMessage(Object source) {
-		super(source);
-		this.message = (Message) source;
-	}
-
-	public Message getMessage() {
-		return message;
-	}
 }

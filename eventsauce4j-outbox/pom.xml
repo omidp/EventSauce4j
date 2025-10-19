@@ -7,11 +7,11 @@
 		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>io.github.omidp</groupId>
-	<artifactId>eventsauce4j-jpa</artifactId>
+	<artifactId>eventsauce4j-outbox</artifactId>
 	<version>0.0.4-SNAPSHOT</version>
-	<name>eventsauce4j-jpa</name>
+	<name>eventsauce4j-outbox</name>
 	<packaging>jar</packaging>
-	<description>Implements a JPA-backed event store and snapshot repository for EventSauce4j.</description>
+	<description>Implements an EventSauce4j Outbox relayer.</description>
 	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
@@ -24,7 +24,13 @@
 
 		<dependency>
 			<groupId>io.github.omidp</groupId>
-			<artifactId>eventsauce4j-outbox</artifactId>
+			<artifactId>eventsauce4j-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.omidp</groupId>
+			<artifactId>eventsauce4j-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -33,6 +39,7 @@
 			<artifactId>eventsauce4j-jackson</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -44,10 +51,11 @@
 			<artifactId>spring-tx</artifactId>
 		</dependency>
 
+
 		<dependency>
-			<groupId>jakarta.persistence</groupId>
-			<artifactId>jakarta.persistence-api</artifactId>
-			<version>3.1.0</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
+			<optional>true</optional>
 		</dependency>
 
 	</dependencies>

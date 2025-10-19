@@ -25,7 +25,7 @@ package io.github.omidp.eventsauce4j.it;
 import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.jpa.starter.EnableJpaEventSauce4j;
-import io.github.omidp.eventsauce4j.core.EventMessage;
+import io.github.omidp.eventsauce4j.core.event.EventMessage;
 import io.github.omidp.eventsauce4j.core.EventSauce4jConfig;
 import io.github.omidp.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;

@@ -27,16 +27,16 @@ import io.github.omidp.eventsauce4j.api.event.MetaData;
 import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.DefaultEventPublication;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
+import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
 import jakarta.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -45,6 +45,8 @@ import java.util.function.Supplier;
  */
 @Transactional
 public class JpaEventPublicationRepository implements EventPublicationRepository {
+
+	private static final Logger log = LoggerFactory.getLogger(JpaEventPublicationRepository.class);
 
 	private final EventSerializer eventSerializer;
 	private final EntityManager entityManager;
@@ -78,7 +80,6 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 			.setParameter("status", Status.COMPLETED)
 			.setMaxResults(batchSize).getResultList()
 			.stream().map(this::convert)
-			.filter(Objects::nonNull)
 			.toList();
 	}
 
@@ -119,21 +120,19 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	}
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
-		Optional<Class<?>> inflectedClass = inflection.get().inflect(eventPublication.getRoutingKey());
-		if (inflectedClass.isEmpty()) {
-			return null;
-		}
 		return new DefaultEventPublication(new Message(
-			eventSerializer.deserialize(eventPublication.getSerializedEvent(), inflectedClass.get()),
-			toMetaData(eventPublication.getMetaData())
+			eventPublication.getSerializedEvent(),
+			toMetaData(eventPublication.getMetaData(), eventPublication.getRoutingKey())
 		), eventPublication.getId(), eventPublication.getPublicationDate());
 	}
 
-	private MetaData toMetaData(String metadata) {
+	private MetaData toMetaData(String metadata, String routingKey) {
 		try {
 			TypeReference<Map<String, Object>> typeRef
 				= new TypeReference<>() {};
-			return new MetaData(JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef));
+			Map<String, Object> meta = JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef);
+			meta.put("type", routingKey);
+			return new MetaData(meta);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

@@ -18,16 +18,9 @@
 
 package io.github.omidp.eventsauce4j.rabbitmq;
 
-import com.rabbitmq.client.Channel;
-import io.github.omidp.eventsauce4j.api.event.Inflector;
-import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
-import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.api.outbox.OutboxRelay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
@@ -37,48 +30,14 @@ public class RabbitMqOutboxRelay implements OutboxRelay {
 	private static final Logger log = LoggerFactory.getLogger(RabbitMqOutboxRelay.class);
 
 
-	private final RabbitMqSetup rabbitMqSetup;
-	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final OutboxRelay databaseOutboxRelay;
-	private final List<MessageConsumer> messageConsumers;
-	private final Inflector inflector;
-	private final EventPublicationRepository eventPublicationRepository;
 
-	public RabbitMqOutboxRelay(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfiguration, OutboxRelay databaseOutboxRelay, List<MessageConsumer> messageConsumers, Inflector inflector, EventPublicationRepository eventPublicationRepository) {
-		this.rabbitMqSetup = rabbitMqSetup;
-		this.rabbitMqConfiguration = rabbitMqConfiguration;
+	public RabbitMqOutboxRelay(OutboxRelay databaseOutboxRelay) {
 		this.databaseOutboxRelay = databaseOutboxRelay;
-		this.messageConsumers = messageConsumers;
-		this.inflector = inflector;
-		this.eventPublicationRepository = eventPublicationRepository;
-	}
-
-
-	public void initConsumer() {
-		try {
-			Channel channel = rabbitMqSetup.newConnection().createChannel();
-			// Fair dispatch / backpressure
-			int prefetch = 20;
-			channel.basicQos(prefetch);
-			boolean autoAck = false; // manual ack
-			log.debug(" [*] Waiting for messages...");
-			String consumerTag = "rmq-consumer-" + UUID.randomUUID();
-			channel.basicConsume(
-				rabbitMqConfiguration.getQueue(),
-				autoAck,
-				consumerTag,
-				new RabbitMqConsumer(channel, messageConsumers, inflector, eventPublicationRepository)
-			);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	@Override
 	public void publish() {
-		initConsumer();
 		databaseOutboxRelay.publish();
 	}
-
-
 }

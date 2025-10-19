@@ -18,12 +18,11 @@
 
 package io.github.omidp.eventsauce4j.core.consumer;
 
-import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.EventMessage;
-import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
-import org.springframework.context.ApplicationListener;
+import io.github.omidp.eventsauce4j.core.event.EventMessage;
+import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,32 +31,24 @@ import java.util.function.Supplier;
 /**
  * @author Omid Pourhadi
  */
-public class EventMessageConsumer implements ApplicationListener<EventMessage> {
+public class EventMessageConsumer {
 
 	private final List<MessageConsumer> messageConsumers;
 	private final Supplier<EventPublicationRepository> eventPublicationRepository;
 
-	public EventMessageConsumer(List<MessageConsumer> messageConsumers, Supplier<EventPublicationRepository> eventPublicationRepository) {
+	public EventMessageConsumer(List<MessageConsumer> messageConsumers,
+								Supplier<EventPublicationRepository> eventPublicationRepository) {
 		this.messageConsumers = messageConsumers;
 		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
-	@Override
-	public void onApplicationEvent(EventMessage event) {
+	@TransactionalEventListener(fallbackExecution = true)
+	public void onHandleEvent(EventMessage event) {
 		for (MessageConsumer messageConsumer : messageConsumers) {
-			messageConsumer.handle(event.getMessage());
-			eventPublicationRepository.get().markAsPublished(getHeaderId(event.getMessage()));
+			messageConsumer.handle(event.message());
+			eventPublicationRepository.get()
+				.markAsPublished(UUID.fromString(MetaDataFieldExtractorFunction.getId().apply(event.message().metaData()).get()));
 		}
-	}
-
-	UUID getHeaderId(Message message) {
-		return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
-			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
-	}
-
-	@Override
-	public boolean supportsAsyncExecution() {
-		return false;
 	}
 
 }

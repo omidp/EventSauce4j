@@ -5,7 +5,7 @@ spring:
     password: test
   jpa:
     open-in-view: false
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
@@ -16,5 +16,6 @@ eventsauce4j:
   outbox:
     lockName: payment_outbox_lock
     delayInterval: 10 #seconds
+    enabled: true
   rabbitmq:
     host: 127.0.0.1

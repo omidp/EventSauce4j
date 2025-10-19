@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.event;
+package io.github.omidp.eventsauce4j.outbox;
 
 import io.github.omidp.eventsauce4j.api.event.EventPublication;
 import io.github.omidp.eventsauce4j.api.event.Status;

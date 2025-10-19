@@ -32,12 +32,12 @@ import java.time.Instant;
  */
 public class JpaOutboxLock implements OutboxLock {
 
-	private static final Logger log = LoggerFactory.getLogger(DatabaseOutboxLock.class);
+	private static final Logger log = LoggerFactory.getLogger(JpaOutboxLock.class);
 
 	private final EntityManager entityManager;
 	private final String lockName;
 
-	public DatabaseOutboxLock(EntityManager entityManager, String lockName) {
+	public JpaOutboxLock(EntityManager entityManager, String lockName) {
 		this.entityManager = entityManager;
 		this.lockName = lockName;
 	}
@@ -46,7 +46,7 @@ public class JpaOutboxLock implements OutboxLock {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean acquireLock() {
 		try {
-			entityManager.persist(new JpaOutboxLock(lockName, Instant.now()));
+			entityManager.persist(new JpaOutboxLockEntity(lockName, Instant.now()));
 			return true;
 		} catch (Exception ignore) {
 			log.debug("outbox is locked by another process.");
@@ -57,6 +57,6 @@ public class JpaOutboxLock implements OutboxLock {
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void releaseLock() {
-		entityManager.createQuery("delete from JpaOutboxLock").executeUpdate();
+		entityManager.createQuery("delete from JpaOutboxLockEntity").executeUpdate();
 	}
 }

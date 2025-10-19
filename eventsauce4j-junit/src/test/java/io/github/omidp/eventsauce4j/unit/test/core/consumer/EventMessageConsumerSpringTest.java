@@ -1,4 +1,4 @@
-package io.github.omidp.eventsauce4j.core.consumer;
+package io.github.omidp.eventsauce4j.unit.test.core.consumer;
 
 import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
 import io.github.omidp.eventsauce4j.api.message.Message;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
-class EventMessageConsumerTest {
+class EventMessageConsumerSpringTest {
 
 	@Autowired
 	private EventDispatcher eventDispatcher;

@@ -1,4 +1,4 @@
-package io.github.omidp.eventsauce4j.core.consumer;
+package io.github.omidp.eventsauce4j.unit.test.core.consumer;
 
 import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
 
