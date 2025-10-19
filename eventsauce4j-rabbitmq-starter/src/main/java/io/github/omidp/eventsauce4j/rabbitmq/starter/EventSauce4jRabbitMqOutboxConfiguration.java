@@ -55,21 +55,20 @@ import java.time.Duration;
 @EnableConfigurationProperties({RabbitMqConfiguration.class})
 public class EventSauce4jRabbitMqOutboxConfiguration {
 
-
 	@Bean
 	OutboxRelay outboxRelay(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfig,
 							EventPublicationRepository eventPublicationRepository,
 							BackOffStrategy backOffStrategy,
 							RelayCommitStrategy relayCommitStrategy,
 							EntityManager em) {
-		var rmqDispatcher = new OutboxRelayer(
+		var rabbitmqRelayer = new OutboxRelayer(
 			eventPublicationRepository,
 			new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfig, rabbitMqSetup, eventPublicationRepository),
 			backOffStrategy,
 			relayCommitStrategy,
 			deadLetterQueue(em)
 		);
-		return new RabbitMqOutboxRelay(rmqDispatcher);
+		return new RabbitMqOutboxRelay(rabbitmqRelayer);
 	}
 
 	@Bean

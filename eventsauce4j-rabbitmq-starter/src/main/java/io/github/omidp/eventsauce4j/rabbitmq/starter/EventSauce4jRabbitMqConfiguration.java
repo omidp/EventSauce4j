@@ -19,7 +19,6 @@
 package io.github.omidp.eventsauce4j.rabbitmq.starter;
 
 import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
-import io.github.omidp.eventsauce4j.api.event.EventSerializer;
 import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
 import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
@@ -35,7 +34,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,15 +50,14 @@ public class EventSauce4jRabbitMqConfiguration {
 
 	private static final String PUBLICATION_REPO = "jpaEventPublicationRepository";
 
-
 	@Bean
 	EventDispatcher eventDispatcher(EventPublicationRepository eventPublicationRepository, MessageDecorator messageDecorator) {
 		return new SynchronousEventDispatcher(new OutboxMessageDispatcher(() -> eventPublicationRepository), messageDecorator);
 	}
 
 	@Bean(PUBLICATION_REPO)
-	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
+	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager) {
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager);
 	}
 
 	@Bean
@@ -75,7 +72,8 @@ public class EventSauce4jRabbitMqConfiguration {
 											 List<MessageConsumer> messageConsumers, Inflector inflector,
 											 EventPublicationRepository eventPublicationRepository) {
 		var consumer = new RabbitMqConsumerFactory(rabbitMqSetup, rabbitMqConfig, messageConsumers, inflector,
-			eventPublicationRepository, new JacksonEventSerializer());
+			eventPublicationRepository, new JacksonEventSerializer()
+		);
 		consumer.build();
 		return consumer;
 	}

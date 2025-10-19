@@ -25,5 +25,4 @@ import io.github.omidp.eventsauce4j.api.message.Message;
  */
 public record EventMessage(Message message) {
 
-
 }

@@ -25,5 +25,4 @@ import io.github.omidp.eventsauce4j.api.event.MetaData;
  */
 public record Message(Object event, MetaData metaData) {
 
-
 }

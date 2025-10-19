@@ -22,11 +22,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.omidp.eventsauce4j.api.event.EventPublication;
 import io.github.omidp.eventsauce4j.api.event.EventSerializer;
-import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.event.MetaData;
 import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
+import io.github.omidp.eventsauce4j.core.exception.EventSauce4jException;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
 import jakarta.persistence.EntityManager;
@@ -38,7 +39,6 @@ import java.time.Clock;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * @author Omid Pourhadi
@@ -50,12 +50,10 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 
 	private final EventSerializer eventSerializer;
 	private final EntityManager entityManager;
-	private final Supplier<Inflector> inflection;
 
-	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager, Supplier<Inflector> inflection) {
+	public JpaEventPublicationRepository(EventSerializer eventSerializer, EntityManager entityManager) {
 		this.eventSerializer = eventSerializer;
 		this.entityManager = entityManager;
-		this.inflection = inflection;
 	}
 
 	@Override
@@ -131,10 +129,11 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 			TypeReference<Map<String, Object>> typeRef
 				= new TypeReference<>() {};
 			Map<String, Object> meta = JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef);
-			meta.put("type", routingKey);
+			meta.put(MetaDataFieldExtractorFunction.ROUTING_KEY, routingKey);
 			return new MetaData(meta);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+			log.error("JsonProcessingException for " + routingKey,e);
+			throw new EventSauce4jException(e);
 		}
 	}
 }

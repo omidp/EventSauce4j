@@ -24,15 +24,12 @@ public class EventMessageConsumerTest {
 
 	private EventMessageConsumer sut;
 	private TestMessageConsumer messageConsumer;
-	private TestEventPublicationRepository eventPublicationRepository;
 
 	@BeforeEach
 	void setUp() {
 		this.messageConsumer = new TestMessageConsumer();
-		this.eventPublicationRepository = new TestEventPublicationRepository();
 		this.sut = new EventMessageConsumer(
-			List.of(messageConsumer),
-			() -> eventPublicationRepository
+			List.of(messageConsumer)
 		);
 	}
 
@@ -42,7 +39,5 @@ public class EventMessageConsumerTest {
 		var msg = new Message(new UserCreated(), new MetaData(Map.of("id", msgId)));
 		sut.onHandleEvent(new EventMessage(msg));
 		assertTrue(messageConsumer.getMessageList().contains(msg));
-		assertTrue(eventPublicationRepository.isPublished());
-		assertEquals(msgId, eventPublicationRepository.getId());
 	}
 }

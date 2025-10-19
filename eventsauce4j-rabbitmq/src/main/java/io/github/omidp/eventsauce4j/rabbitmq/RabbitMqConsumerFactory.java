@@ -1,6 +1,5 @@
 package io.github.omidp.eventsauce4j.rabbitmq;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
@@ -16,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -111,30 +108,6 @@ public class RabbitMqConsumerFactory {
 				// Send to DLX by rejecting (no requeue)
 				channel.basicNack(envelope.getDeliveryTag(), false, false);
 			}
-		}
-
-		private TypeReference<JsonMessage<?>> jsonMessageTypeReference(Class<?> inflectedClass) {
-			return new TypeReference<>() {
-				@Override
-				public Type getType() {
-					return new ParameterizedType() {
-						@Override
-						public Type[] getActualTypeArguments() {
-							return new Type[] {inflectedClass};
-						}
-
-						@Override
-						public Type getRawType() {
-							return JsonMessage.class;
-						}
-
-						@Override
-						public Type getOwnerType() {
-							return JsonMessage.class;
-						}
-					};
-				}
-			};
 		}
 	}
 

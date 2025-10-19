@@ -19,16 +19,11 @@
 package io.github.omidp.eventsauce4j.rabbitmq;
 
 import io.github.omidp.eventsauce4j.api.outbox.OutboxRelay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Omid Pourhadi
  */
 public class RabbitMqOutboxRelay implements OutboxRelay {
-
-	private static final Logger log = LoggerFactory.getLogger(RabbitMqOutboxRelay.class);
-
 
 	private final OutboxRelay databaseOutboxRelay;
 

@@ -19,7 +19,6 @@
 package io.github.omidp.eventsauce4j.jpa.starter;
 
 import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
-import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.core.consumer.SynchronousEventDispatcher;
@@ -31,7 +30,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -46,8 +44,8 @@ public class EventSauce4jJpaConfiguration {
 	private static final String PUBLICATION_REPO = "jpaEventPublicationRepository";
 
 	@Bean(PUBLICATION_REPO)
-	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
+	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager) {
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager);
 	}
 
 	@Bean

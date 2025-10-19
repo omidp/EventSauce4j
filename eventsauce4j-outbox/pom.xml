@@ -24,12 +24,6 @@
 
 		<dependency>
 			<groupId>io.github.omidp</groupId>
-			<artifactId>eventsauce4j-api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.github.omidp</groupId>
 			<artifactId>eventsauce4j-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>

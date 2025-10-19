@@ -25,6 +25,31 @@ import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 
 /**
+ * {@code SynchronousEventDispatcher} is the main component responsible for
+ * dispatching domain events synchronously within the application context.
+ * <p>
+ * It implements the {@link EventDispatcher} interface and delegates event processing
+ * to a configured {@link MessageDispatcher}, while enriching each event using a
+ * {@link MessageDecorator} before dispatching. This ensures that every dispatched
+ * {@link Message} contains the appropriate metadata and is processed immediately
+ * within the caller's thread.
+ * </p>
+ *
+ * <h3>Behavior</h3>
+ * <ul>
+ *   <li>Events are dispatched <b>synchronously</b> — the caller thread executes the dispatch logic.</li>
+ *   <li>Each event is wrapped in a {@link Message} object containing optional {@link MetaData}.</li>
+ *   <li>A {@link MessageDecorator} is applied before dispatch to allow enrichment
+ *       (e.g., adding timestamps, correlation IDs, or tracing headers).</li>
+ * </ul>
+ *
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * EventDispatcher dispatcher = new SynchronousEventDispatcher(messageDispatcher, messageDecorator);
+ * dispatcher.dispatch(new OrderCreatedEvent(orderId));
+ * }</pre>
+ *
  * @author Omid Pourhadi
  */
 public class SynchronousEventDispatcher implements EventDispatcher {

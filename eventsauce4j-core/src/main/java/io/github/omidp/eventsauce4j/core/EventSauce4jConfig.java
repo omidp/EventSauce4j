@@ -21,12 +21,10 @@ package io.github.omidp.eventsauce4j.core;
 import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
 import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
-import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.core.consumer.EventMessageConsumer;
 import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 import io.github.omidp.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,8 +50,8 @@ public class EventSauce4jConfig {
 	}
 
 	@Bean
-	EventMessageConsumer eventMessageConsumer(List<MessageConsumer> messageConsumers, ApplicationContext applicationContext) {
-		return new EventMessageConsumer(messageConsumers, () -> applicationContext.getBean(EventPublicationRepository.class));
+	EventMessageConsumer eventMessageConsumer(List<MessageConsumer> messageConsumers) {
+		return new EventMessageConsumer(messageConsumers);
 	}
 
 	@Bean

@@ -23,23 +23,23 @@ package io.github.omidp.eventsauce4j.api.event;
  */
 public enum Status {
 
-		/**
-		 * The event publication has been published initially.
-		 */
-		PUBLISHED,
+	/**
+	 * The event publication has been published initially.
+	 */
+	PUBLISHED,
 
-		/**
-		 * An event listener has picked up the publication and is processing it.
-		 */
-		PROCESSING,
+	/**
+	 * An event listener has picked up the publication and is processing it.
+	 */
+	PROCESSING,
 
-		/**
-		 * The processing of the publication has successfully completed.
-		 */
-		COMPLETED,
+	/**
+	 * The processing of the publication has successfully completed.
+	 */
+	COMPLETED,
 
-		/**
-		 * The processing ended up in a failure.
-		 */
-		FAILED;
-	}
+	/**
+	 * The processing ended up in a failure.
+	 */
+	FAILED;
+}
