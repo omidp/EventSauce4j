@@ -16,20 +16,35 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.relay;
+package io.github.omidp.eventsauce4j.jpa.outbox.lock;
 
-import io.github.omidp.eventsauce4j.api.event.EventPublication;
-import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.time.Instant;
 
 /**
  * @author Omid Pourhadi
  */
-public class MarkMessagesConsumedOnCommit implements RelayCommitStrategy {
-	@Override
-	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
-		for (EventPublication event : events) {
-			eventPublicationRepository.markAsCompleted(event.getIdentifier());
-		}
+@Entity
+@Table(name = "outbox_lock")
+public class JpaOutboxLockEntity {
+
+	@Id
+	@Column(name = "lock_name")
+	private String name;
+
+	@Column(name = "lock_at")
+	private Instant lockAt;
+
+	private JpaOutboxLockEntity() {
 	}
+
+	public JpaOutboxLockEntity(String name, Instant lockAt) {
+		this.name = name;
+		this.lockAt = lockAt;
+	}
+
 }

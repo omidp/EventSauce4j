@@ -16,14 +16,20 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.backoff;
+package io.github.omidp.eventsauce4j.outbox.relay;
+
+import io.github.omidp.eventsauce4j.api.event.EventPublication;
+import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
 
 /**
  * @author Omid Pourhadi
  */
-public class BackOffStrategyException extends RuntimeException{
-
-	public BackOffStrategyException(Throwable cause) {
-		super(cause);
+public class MarkMessagesConsumedOnCommit implements RelayCommitStrategy {
+	@Override
+	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
+		for (EventPublication event : events) {
+			eventPublicationRepository.markAsCompleted(event.getIdentifier());
+		}
 	}
 }

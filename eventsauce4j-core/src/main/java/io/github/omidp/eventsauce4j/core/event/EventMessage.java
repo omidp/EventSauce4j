@@ -16,20 +16,24 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.relay;
+package io.github.omidp.eventsauce4j.core.event;
 
-import io.github.omidp.eventsauce4j.api.event.EventPublication;
-import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
+import io.github.omidp.eventsauce4j.api.message.Message;
+import org.springframework.context.ApplicationEvent;
 
 /**
  * @author Omid Pourhadi
  */
-public class DeleteMessageOnCommit implements RelayCommitStrategy {
-	@Override
-	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
-		for (EventPublication event : events) {
-			eventPublicationRepository.delete(event.getIdentifier());
-		}
+public class EventMessage extends ApplicationEvent {
+
+	private final Message message;
+
+	public EventMessage(Object source) {
+		super(source);
+		this.message = (Message) source;
+	}
+
+	public Message getMessage() {
+		return message;
 	}
 }

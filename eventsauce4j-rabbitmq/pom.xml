@@ -41,7 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.github.omidp</groupId>
-			<artifactId>eventsauce4j-jpa</artifactId>
+			<artifactId>eventsauce4j-outbox</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

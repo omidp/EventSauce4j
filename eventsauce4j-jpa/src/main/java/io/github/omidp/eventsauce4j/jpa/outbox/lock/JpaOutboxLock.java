@@ -18,33 +18,45 @@
 
 package io.github.omidp.eventsauce4j.jpa.outbox.lock;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.github.omidp.eventsauce4j.api.outbox.lock.OutboxLock;
+import jakarta.persistence.EntityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
 /**
  * @author Omid Pourhadi
  */
-@Entity
-@Table(name = "outbox_lock")
-public class JpaOutboxLock {
+public class JpaOutboxLock implements OutboxLock {
 
-	@Id
-	@Column(name = "lock_name")
-	private String name;
+	private static final Logger log = LoggerFactory.getLogger(DatabaseOutboxLock.class);
 
-	@Column(name = "lock_at")
-	private Instant lockAt;
+	private final EntityManager entityManager;
+	private final String lockName;
 
-	private JpaOutboxLock() {
+	public DatabaseOutboxLock(EntityManager entityManager, String lockName) {
+		this.entityManager = entityManager;
+		this.lockName = lockName;
 	}
 
-	public JpaOutboxLock(String name, Instant lockAt) {
-		this.name = name;
-		this.lockAt = lockAt;
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public boolean acquireLock() {
+		try {
+			entityManager.persist(new JpaOutboxLock(lockName, Instant.now()));
+			return true;
+		} catch (Exception ignore) {
+			log.debug("outbox is locked by another process.");
+		}
+		return false;
 	}
 
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void releaseLock() {
+		entityManager.createQuery("delete from JpaOutboxLock").executeUpdate();
+	}
 }

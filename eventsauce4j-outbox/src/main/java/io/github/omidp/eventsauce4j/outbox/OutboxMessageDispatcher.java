@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.dispatcher;
+package io.github.omidp.eventsauce4j.outbox;
 
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.DefaultEventPublication;
+import io.github.omidp.eventsauce4j.core.event.DefaultEventPublication;
 import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
 
 import java.time.Instant;

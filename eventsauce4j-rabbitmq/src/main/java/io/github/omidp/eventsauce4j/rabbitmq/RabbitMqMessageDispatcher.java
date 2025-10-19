@@ -21,13 +21,12 @@ package io.github.omidp.eventsauce4j.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
 import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.api.message.MessageSerializer;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.github.omidp.eventsauce4j.core.event.IdExtractorFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,10 +58,7 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 
 	@Override
 	public void dispatch(Message message) {
-		if (message.event().getClass().isAnnotationPresent(ExternalEvent.class)) {
-			//only external messages can be dispatch
-			dispatchExternalMessage(message);
-		}
+		dispatchExternalMessage(message);
 	}
 
 	private void dispatchExternalMessage(Message message) {
@@ -73,7 +69,7 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 			ch.confirmSelect();
 			String eventType = message.event().getClass().getName();
 			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.event().getClass());
-			UUID msgId = getHeaderId(message);
+			UUID msgId = IdExtractorFunction.getId().apply(message.metaData());
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,
@@ -99,8 +95,5 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 		}
 	}
 
-	UUID getHeaderId(Message message) {
-		return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
-			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
-	}
+
 }
