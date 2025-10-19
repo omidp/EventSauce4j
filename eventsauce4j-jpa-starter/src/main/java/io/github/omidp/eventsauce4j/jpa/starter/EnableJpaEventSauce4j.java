@@ -19,6 +19,7 @@
 package io.github.omidp.eventsauce4j.jpa.starter;
 
 import io.github.omidp.eventsauce4j.core.EventSauce4jConfig;
+import io.github.omidp.eventsauce4j.outbox.config.OutboxSchedulingConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
@@ -33,7 +34,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({EventSauce4jConfig.class, EventSauce4jJpaAutoConfiguration.class, OutboxSchedulingConfig.class})
+@Import({EventSauce4jConfig.class, EventSauce4jJpaAutoConfiguration.class, EventSauce4jJpaOutboxConfiguration.class, OutboxSchedulingConfig.class})
 public @interface EnableJpaEventSauce4j {
 
 }

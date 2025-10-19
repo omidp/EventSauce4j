@@ -25,6 +25,8 @@ import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
  * @author Omid Pourhadi
  */
 public class NoOpMessageDecorator implements MessageDecorator {
+	public static MessageDecorator INSTANCE = new NoOpMessageDecorator();
+
 	@Override
 	public Message decorate(Message message) {
 		return message;

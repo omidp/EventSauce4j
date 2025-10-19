@@ -19,6 +19,7 @@
 package io.github.omidp.eventsauce4j.rabbitmq.starter;
 
 import io.github.omidp.eventsauce4j.core.EventSauce4jConfig;
+import io.github.omidp.eventsauce4j.outbox.config.OutboxSchedulingConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.Documented;
@@ -30,7 +31,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({EventSauce4jConfig.class, EventSauce4jRabbitMqAutoConfiguration.class, OutboxSchedulingConfig.class})
+@Import({EventSauce4jConfig.class, EventSauce4jRabbitMqAutoConfiguration.class, EventSauce4jRabbitMqOutboxConfiguration.class, OutboxSchedulingConfig.class})
 public @interface EnableRabbitMqEventSauce4j {
 
 }

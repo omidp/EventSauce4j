@@ -32,7 +32,6 @@ import java.util.UUID;
 @Entity
 public class JpaEventPublication extends JpaEvent {
 
-
 	private JpaEventPublication() {
 		super();
 	}
@@ -40,6 +39,5 @@ public class JpaEventPublication extends JpaEvent {
 	public JpaEventPublication(UUID id, Instant publicationDate, String serializedEvent, String routingKey, String metaData, Status status) {
 		super(id, publicationDate, serializedEvent, routingKey, metaData, status);
 	}
-
 
 }

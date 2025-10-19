@@ -16,14 +16,15 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.rabbitmq.starter;
+package io.github.omidp.eventsauce4j.outbox.config;
 
 import io.github.omidp.eventsauce4j.api.outbox.OutboxRelay;
 import io.github.omidp.eventsauce4j.api.outbox.lock.OutboxLock;
 import io.github.omidp.eventsauce4j.core.EventSauce4jCustomConfiguration;
-import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConsumer;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
@@ -34,14 +35,12 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static io.github.omidp.eventsauce4j.core.EventSauce4jConfig.OUTBOX_LOCK;
-import static io.github.omidp.eventsauce4j.core.EventSauce4jConfig.OUTBOX_RELAY;
-
 /**
  * @author Omid Pourhadi
  */
 @Configuration(proxyBeanMethods = false)
 @EnableScheduling
+@ConditionalOnBean({OutboxRelay.class, OutboxLock.class})
 public class OutboxSchedulingConfig implements SchedulingConfigurer, ApplicationContextAware, DisposableBean {
 
 	private ApplicationContext applicationContext;
@@ -53,9 +52,8 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		OutboxRelay outboxRelay = applicationContext.getBean(OutboxRelay.class, OUTBOX_RELAY);
-		OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, OUTBOX_LOCK);
-		RabbitMqConsumer rabbitMqConsumer = applicationContext.getBean(RabbitMqConsumer.class);
+		OutboxRelay outboxRelay = applicationContext.getBean(OutboxRelay.class);
+		OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class);
 		EventSauce4jCustomConfiguration eventSauce4jCustomConfiguration = applicationContext.getBean(EventSauce4jCustomConfiguration.class);
 		taskRegistrar.setScheduler(outboxTaskExecutor());
 		taskRegistrar.addTriggerTask(
@@ -64,7 +62,6 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 				try {
 					if (lockAcquired) {
 						outboxRelay.publish();
-						rabbitMqConsumer.consume();
 					}
 				} finally {
 					if (lockAcquired) {
@@ -89,7 +86,7 @@ public class OutboxSchedulingConfig implements SchedulingConfigurer, Application
 	@Override
 	public void destroy() throws Exception {
 		if (lockAcquired) {
-			OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class, OUTBOX_LOCK);
+			OutboxLock outboxLock = applicationContext.getBean(OutboxLock.class);
 			outboxLock.releaseLock();
 		}
 	}

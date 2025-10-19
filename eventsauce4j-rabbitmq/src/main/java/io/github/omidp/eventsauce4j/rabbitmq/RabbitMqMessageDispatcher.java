@@ -21,13 +21,11 @@ package io.github.omidp.eventsauce4j.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
-import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.api.message.MessageSerializer;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,25 +42,20 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 	private final MessageSerializer messageSerializer;
 	private final RabbitMqConfiguration rabbitMqConfiguration;
 	private final RabbitMqSetup rabbitMqSetup;
-	private final Inflector inflector;
 	private final EventPublicationRepository eventPublicationRepository;
 
 	public RabbitMqMessageDispatcher(MessageSerializer messageSerializer,
 									 RabbitMqConfiguration rabbitMqConfiguration,
-									 RabbitMqSetup rabbitMqSetup, Inflector inflector, EventPublicationRepository eventPublicationRepository) {
+									 RabbitMqSetup rabbitMqSetup, EventPublicationRepository eventPublicationRepository) {
 		this.messageSerializer = messageSerializer;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.rabbitMqSetup = rabbitMqSetup;
-		this.inflector = inflector;
 		this.eventPublicationRepository = eventPublicationRepository;
 	}
 
 	@Override
 	public void dispatch(Message message) {
-		if (message.event().getClass().isAnnotationPresent(ExternalEvent.class)) {
-			//only external messages can be dispatch
-			dispatchExternalMessage(message);
-		}
+		dispatchExternalMessage(message);
 	}
 
 	private void dispatchExternalMessage(Message message) {
@@ -72,24 +65,27 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 			// Enable confirms (simple & robust)
 			ch.confirmSelect();
 			String eventType = message.event().getClass().getName();
-			Class<?> inflectedClass = inflector.inflect(eventType).orElse(message.event().getClass());
-			UUID msgId = getHeaderId(message);
+			String content = messageSerializer.serialize(message.event());
+			if (String.class.getName().equals(eventType)) {
+				eventType = MetaDataFieldExtractorFunction.getRoutingKey().apply(message.metaData()).get();
+				content = message.event().toString();
+			}
+			UUID msgId = UUID.fromString(MetaDataFieldExtractorFunction.getId().apply(message.metaData()).get());
 			AMQP.BasicProperties messageProperties =
 				new AMQP.BasicProperties("application/json",
 					null,
 					message.metaData(),
 					2,
 					0, null, null, null,
-					msgId.toString(), null, inflectedClass.getName(), null,
+					msgId.toString(), null, eventType, null,
 					null, null
 				);
 			ch.basicPublish(
 				rabbitMqConfiguration.getExchange(),
-				rabbitMqConfiguration.getRoutingKey(),
+				eventType,
 				messageProperties,
-				messageSerializer.serialize(message).getBytes(StandardCharsets.UTF_8)
+				content.getBytes(StandardCharsets.UTF_8)
 			);
-
 			// wait for all outstanding acks (throws on nack/timeout)
 			ch.waitForConfirmsOrDie();
 			eventPublicationRepository.markAsPublished(msgId);
@@ -99,8 +95,5 @@ public class RabbitMqMessageDispatcher implements MessageDispatcher {
 		}
 	}
 
-	UUID getHeaderId(Message message) {
-		return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
-			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
-	}
+
 }

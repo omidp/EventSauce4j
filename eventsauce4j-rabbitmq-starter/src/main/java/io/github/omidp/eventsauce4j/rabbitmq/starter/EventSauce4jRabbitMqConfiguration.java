@@ -18,60 +18,47 @@
 
 package io.github.omidp.eventsauce4j.rabbitmq.starter;
 
+import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
 import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
-import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
+import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.api.outbox.Jitter;
-import io.github.omidp.eventsauce4j.api.outbox.OutboxRelay;
-import io.github.omidp.eventsauce4j.api.outbox.Sleeper;
-import io.github.omidp.eventsauce4j.api.outbox.backoff.BackOffStrategy;
-import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
-import io.github.omidp.eventsauce4j.api.outbox.lock.OutboxLock;
-import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
-import io.github.omidp.eventsauce4j.core.EventSauce4jCustomConfiguration;
-import io.github.omidp.eventsauce4j.core.dispatcher.MessageDispatcherChain;
-import io.github.omidp.eventsauce4j.core.outbox.backoff.ExponentialBackOffStrategy;
-import io.github.omidp.eventsauce4j.core.outbox.backoff.SimpleBackOffStrategy;
-import io.github.omidp.eventsauce4j.core.outbox.relay.DeleteMessageOnCommit;
-import io.github.omidp.eventsauce4j.core.outbox.relay.MarkMessagesConsumedOnCommit;
+import io.github.omidp.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
-import io.github.omidp.eventsauce4j.jpa.outbox.JpaEventPublication;
 import io.github.omidp.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
-import io.github.omidp.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
-import io.github.omidp.eventsauce4j.jpa.outbox.lock.DatabaseOutboxLock;
-import io.github.omidp.eventsauce4j.jpa.outbox.relay.DatabaseOutboxRelay;
+import io.github.omidp.eventsauce4j.outbox.OutboxMessageDispatcher;
 import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConfiguration;
-import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConsumer;
-import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqMessageDispatcher;
+import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConsumerFactory;
 import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqSetup;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.Duration;
 import java.util.List;
-
-import static io.github.omidp.eventsauce4j.core.EventSauce4jConfig.OUTBOX_LOCK;
-import static io.github.omidp.eventsauce4j.core.EventSauce4jConfig.OUTBOX_RELAY;
-import static io.github.omidp.eventsauce4j.core.EventSauce4jConfig.SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME;
 
 /**
  * @author Omid Pourhadi
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(havingValue = "RMQ", prefix = "eventsauce4j", name = "persistence", matchIfMissing = true)
-@AutoConfigurationPackage(basePackageClasses = JpaEventPublication.class)
+@AutoConfigurationPackage(basePackages = {"io.github.omidp.eventsauce4j.jpa.outbox"})
 @EnableConfigurationProperties({RabbitMqConfiguration.class})
 public class EventSauce4jRabbitMqConfiguration {
 
-	private static final String RMQ_MESSAGE_DISPATCHER = "rabbitMqMessageDispatcher";
 	private static final String PUBLICATION_REPO = "jpaEventPublicationRepository";
+
+	@Bean
+	EventDispatcher eventDispatcher(EventPublicationRepository eventPublicationRepository, MessageDecorator messageDecorator) {
+		return new SynchronousEventDispatcher(new OutboxMessageDispatcher(() -> eventPublicationRepository), messageDecorator);
+	}
+
+	@Bean(PUBLICATION_REPO)
+	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager) {
+		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager);
+	}
 
 	@Bean
 	RabbitMqSetup rabbitMqSetup(RabbitMqConfiguration config) {
@@ -80,72 +67,15 @@ public class EventSauce4jRabbitMqConfiguration {
 		return rabbitMqSetup;
 	}
 
-	@Bean(RMQ_MESSAGE_DISPATCHER)
-	MessageDispatcher rabbitMqMessageDispatcher(RabbitMqConfiguration rabbitMqConfiguration, RabbitMqSetup rabbitMqSetup, Inflector inflector,
-												@Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository) {
-		return new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfiguration, rabbitMqSetup, inflector, eventPublicationRepository);
-	}
-
 	@Bean
-	RabbitMqConsumer rabbitMqConsumer(List<MessageConsumer> messageConsumers, Inflector inflector, RabbitMqSetup rabbitMqSetup,
-									  RabbitMqConfiguration rabbitMqConfiguration,
-									  @Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository) {
-		return new RabbitMqConsumer(inflector, messageConsumers, rabbitMqConfiguration, rabbitMqSetup, eventPublicationRepository);
-	}
-
-	@Bean(PUBLICATION_REPO)
-	EventPublicationRepository jpaEventPublicationRepository(EntityManager entityManager, ApplicationContext ctx) {
-		return new JpaEventPublicationRepository(new JacksonEventSerializer(), entityManager, () -> ctx.getBean(Inflector.class));
-	}
-
-	@Bean(name = OUTBOX_RELAY)
-	OutboxRelay outboxRelay(EntityManager em,
-							@Qualifier(SYNCHRONOUS_EVENT_MESSAGE_DISPATCHER_NAME) MessageDispatcher synchronousEventMessageDispatcher,
-							@Qualifier(RMQ_MESSAGE_DISPATCHER) MessageDispatcher rabbitMqMessageDispatcher,
-							@Qualifier(PUBLICATION_REPO) EventPublicationRepository eventPublicationRepository,
-							RelayCommitStrategy relayCommitStrategy, BackOffStrategy backOffStrategy) {
-		return new DatabaseOutboxRelay(
-			eventPublicationRepository,
-			new MessageDispatcherChain(List.of(synchronousEventMessageDispatcher, rabbitMqMessageDispatcher)),
-			backOffStrategy,
-			relayCommitStrategy,
-			deadLetterQueue(em)
+	RabbitMqConsumerFactory rabbitMqConsumer(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfig,
+											 List<MessageConsumer> messageConsumers, Inflector inflector,
+											 EventPublicationRepository eventPublicationRepository) {
+		var consumer = new RabbitMqConsumerFactory(rabbitMqSetup, rabbitMqConfig, messageConsumers, inflector,
+			eventPublicationRepository, new JacksonEventSerializer()
 		);
-	}
-
-	@Bean
-	@ConditionalOnProperty(havingValue = "exponential", prefix = "eventsauce4j", name = "backoff")
-	BackOffStrategy exponentialBackOffStrategy(EventSauce4jCustomConfiguration config) {
-		return new ExponentialBackOffStrategy(config.getSimpleBackoffMaxRetries(), 2000, 2.0, 5000, Jitter.create(), Sleeper.create());
-	}
-
-	@Bean
-	@ConditionalOnProperty(havingValue = "simple", prefix = "eventsauce4j", name = "backoff", matchIfMissing = true)
-	BackOffStrategy simpleBackOffStrategy(EventSauce4jCustomConfiguration config) {
-		return new SimpleBackOffStrategy(config.getSimpleBackoffMaxRetries(), Duration.ofSeconds(config.getSimpleBackoffDelay()));
-	}
-
-	@Bean
-	@ConditionalOnProperty(havingValue = "true", prefix = "eventsauce4j", name = "archive", matchIfMissing = true)
-	RelayCommitStrategy markMessagesConsumedOnCommit() {
-		return new MarkMessagesConsumedOnCommit();
-	}
-
-	@Bean
-	@ConditionalOnProperty(havingValue = "false", prefix = "eventsauce4j", name = "archive")
-	RelayCommitStrategy deleteMessageOnCommit() {
-		return new DeleteMessageOnCommit();
-	}
-
-
-	@Bean
-	DeadLetter deadLetterQueue(EntityManager entityManager) {
-		return new JpaDeadLetter(entityManager, new JacksonEventSerializer());
-	}
-
-	@Bean(name = OUTBOX_LOCK)
-	OutboxLock outboxLock(EntityManager entityManager, EventSauce4jCustomConfiguration config) {
-		return new DatabaseOutboxLock(entityManager, config.getOutboxLockName());
+		consumer.build();
+		return consumer;
 	}
 
 }

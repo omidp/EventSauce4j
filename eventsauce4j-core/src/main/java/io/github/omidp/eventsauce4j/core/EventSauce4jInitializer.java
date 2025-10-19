@@ -20,7 +20,6 @@ package io.github.omidp.eventsauce4j.core;
 
 
 import io.github.omidp.eventsauce4j.core.annotation.Consumer;
-import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -38,9 +37,6 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (bean.getClass().isAnnotationPresent(ExternalEvent.class)) {
-			//TODO: events need routing
-		}
 		if (bean.getClass().isAnnotationPresent(Consumer.class)) {
 		}
 		return bean;

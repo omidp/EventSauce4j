@@ -19,6 +19,7 @@
 package io.github.omidp.eventsauce4j.jpa.outbox.dlq;
 
 import io.github.omidp.eventsauce4j.api.event.EventPublication;
+import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.MessageSerializer;
 import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import jakarta.persistence.EntityManager;
@@ -38,14 +39,14 @@ public class JpaDeadLetter implements DeadLetter {
 
 	@Override
 	public void process(EventPublication eventPublication) {
-		//TODO: Add inflection
-//		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
-//			eventPublication.getIdentifier(),
-//			eventPublication.getPublicationDate(),
-//			messageSerializer.serialize(eventPublication.getMessage().getEvent()),
-//			eventPublication.getRoutingKey(),
-//			messageSerializer.serialize(eventPublication.getMessage().getMetaData())
-//		);
-//		entityManager.persist(entity);
+		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
+			eventPublication.getIdentifier(),
+			eventPublication.getPublicationDate(),
+			messageSerializer.serialize(eventPublication.getMessage().event()),
+			eventPublication.getRoutingKey(),
+			messageSerializer.serialize(eventPublication.getMessage().event()),
+			Status.FAILED
+		);
+		entityManager.persist(entity);
 	}
 }

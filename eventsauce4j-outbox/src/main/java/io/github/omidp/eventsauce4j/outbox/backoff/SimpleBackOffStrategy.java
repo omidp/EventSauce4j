@@ -16,31 +16,26 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.backoff;
+package io.github.omidp.eventsauce4j.outbox.backoff;
 
-import io.github.omidp.eventsauce4j.api.outbox.Jitter;
 import io.github.omidp.eventsauce4j.api.outbox.Sleeper;
 import io.github.omidp.eventsauce4j.api.outbox.backoff.BackOffStrategy;
+
+import java.time.Duration;
 
 /**
  * @author Omid Pourhadi
  */
-public class ExponentialBackOffStrategy implements BackOffStrategy {
+public class SimpleBackOffStrategy implements BackOffStrategy {
 
 	private final int maxTries;
-	private final long initialDelayMs;
-	private final double base;
-	private final long maxDelayMs;
-	private final Jitter jitter;
+	private final Duration delay;
 	private final Sleeper sleeper;
 
-	public ExponentialBackOffStrategy(int maxTries, long initialDelayMs, double base, long maxDelayMs, Jitter jitter, Sleeper sleeper) {
+	public SimpleBackOffStrategy(int maxTries, Duration delay) {
 		this.maxTries = maxTries;
-		this.initialDelayMs = initialDelayMs;
-		this.base = base;
-		this.maxDelayMs = maxDelayMs;
-		this.jitter = jitter;
-		this.sleeper = sleeper;
+		this.delay = delay;
+		this.sleeper = Sleeper.create();
 	}
 
 	@Override
@@ -49,12 +44,8 @@ public class ExponentialBackOffStrategy implements BackOffStrategy {
 			throw new BackOffStrategyException(t);
 		}
 
-		long delay = Math.round(initialDelayMs * Math.pow(base, retries - 1));
-		delay = Math.min(maxDelayMs, delay);
-		delay = jitter.jitter(delay);
-
 		try {
-			sleeper.sleep(delay);
+			sleeper.sleep(delay.toMillis());
 		} catch (InterruptedException ie) {
 			Thread.currentThread().interrupt();
 			throw new BackOffStrategyException(ie); // propagate interruption

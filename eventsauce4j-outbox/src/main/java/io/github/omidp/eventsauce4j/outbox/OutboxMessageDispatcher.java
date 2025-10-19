@@ -16,13 +16,12 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.dispatcher;
+package io.github.omidp.eventsauce4j.outbox;
 
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.core.DefaultEventPublication;
-import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -41,12 +40,9 @@ public class OutboxMessageDispatcher implements MessageDispatcher {
 
 	@Override
 	public void dispatch(Message message) {
-		eventPublicationRepository.get().persist(new DefaultEventPublication(message, getHeaderId(message), Instant.now()));
-	}
-
-	UUID getHeaderId(Message message) {
-		return message.metaData().containsKey(IdGeneratorMessageDecorator.ID) ? UUID.fromString(message.metaData()
-			.get(IdGeneratorMessageDecorator.ID).toString()) : UUID.randomUUID();
+		eventPublicationRepository.get().persist(new DefaultEventPublication(message,
+			UUID.fromString(MetaDataFieldExtractorFunction.getId().apply(message.metaData()).get()), Instant.now()
+		));
 	}
 
 }

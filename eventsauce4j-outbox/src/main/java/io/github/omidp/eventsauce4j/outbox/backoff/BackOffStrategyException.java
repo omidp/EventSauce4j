@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.backoff;
+package io.github.omidp.eventsauce4j.outbox.backoff;
 
 /**
  * @author Omid Pourhadi

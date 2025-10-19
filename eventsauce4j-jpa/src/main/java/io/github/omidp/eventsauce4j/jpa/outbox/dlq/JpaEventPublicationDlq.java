@@ -33,7 +33,6 @@ import java.util.UUID;
 @Table(name = "event_publication_dlq")
 public class JpaEventPublicationDlq extends JpaEvent {
 
-
 	private JpaEventPublicationDlq() {
 		super();
 	}

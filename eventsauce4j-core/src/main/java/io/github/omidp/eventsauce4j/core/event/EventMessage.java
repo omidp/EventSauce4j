@@ -16,20 +16,13 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.outbox.relay;
+package io.github.omidp.eventsauce4j.core.event;
 
-import io.github.omidp.eventsauce4j.api.event.EventPublication;
-import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
-import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
+import io.github.omidp.eventsauce4j.api.message.Message;
 
 /**
  * @author Omid Pourhadi
  */
-public class MarkMessagesConsumedOnCommit implements RelayCommitStrategy {
-	@Override
-	public void commitMessage(EventPublicationRepository eventPublicationRepository, EventPublication... events) {
-		for (EventPublication event : events) {
-			eventPublicationRepository.markAsCompleted(event.getIdentifier());
-		}
-	}
+public record EventMessage(Message message) {
+
 }

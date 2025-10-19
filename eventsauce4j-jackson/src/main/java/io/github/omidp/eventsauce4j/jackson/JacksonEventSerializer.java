@@ -36,7 +36,7 @@ public class JacksonEventSerializer implements EventSerializer {
 		try {
 			return jsonMapper.writeValueAsString(event);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+			throw new io.github.omidp.eventsauce4j.jackson.JsonProcessingException(e);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class JacksonEventSerializer implements EventSerializer {
 		try {
 			return jsonMapper.readValue(payload, clz);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException(e);
+			throw new io.github.omidp.eventsauce4j.jackson.JsonProcessingException(e);
 		}
 	}
 

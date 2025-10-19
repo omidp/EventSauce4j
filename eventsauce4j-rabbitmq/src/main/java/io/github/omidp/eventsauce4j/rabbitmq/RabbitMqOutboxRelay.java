@@ -16,20 +16,23 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.core.annotation;
+package io.github.omidp.eventsauce4j.rabbitmq;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import io.github.omidp.eventsauce4j.api.outbox.OutboxRelay;
 
 /**
  * @author Omid Pourhadi
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
-public @interface Observer {
+public class RabbitMqOutboxRelay implements OutboxRelay {
 
+	private final OutboxRelay databaseOutboxRelay;
+
+	public RabbitMqOutboxRelay(OutboxRelay databaseOutboxRelay) {
+		this.databaseOutboxRelay = databaseOutboxRelay;
+	}
+
+	@Override
+	public void publish() {
+		databaseOutboxRelay.publish();
+	}
 }

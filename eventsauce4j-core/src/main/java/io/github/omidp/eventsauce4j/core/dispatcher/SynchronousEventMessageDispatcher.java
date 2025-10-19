@@ -18,10 +18,9 @@
 
 package io.github.omidp.eventsauce4j.core.dispatcher;
 
-import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
-import io.github.omidp.eventsauce4j.core.EventMessage;
+import io.github.omidp.eventsauce4j.core.event.EventMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -34,9 +33,7 @@ public class SynchronousEventMessageDispatcher implements MessageDispatcher, App
 
 	@Override
 	public void dispatch(Message message) {
-		if (!message.event().getClass().isAnnotationPresent(ExternalEvent.class)) {
-			applicationEventPublisher.publishEvent(new EventMessage(message));
-		}
+		applicationEventPublisher.publishEvent(new EventMessage(message));
 	}
 
 	@Override
