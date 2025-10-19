@@ -106,6 +106,8 @@ Management UI: http://localhost:15672 (user/pass guest).
 
 RabbitMQ settings (application.yml)
 
+Each service can maintain its own message queue, with messages routed according to their routeKey or event_type.
+
 ```yaml
 eventsauce4j:
   rabbitmq:
@@ -114,7 +116,10 @@ eventsauce4j:
     username: guest
     password: guest
     exchange: eventsauce4j.exchange
-    routingKey: eventsauce4j.key
+    queue: user.queue
+    routingKeys: 
+      - eventsauce4j.key
+      - event_type 
 ```
 
 #### Outbox settings
@@ -125,6 +130,8 @@ Use Spring properties to tune outbox publishing:
 
 `eventsauce4j.outbox.lockName` : lock name to isolate publishers per service
 
+`eventsauce4j.outbox.enabled` : You can choose to enable or disable the outbox layer for any service. However, even if disabled, the service can still receive events from an independent outbox-relayer or another service, helping to enhance overall performance.
+
 Example:
 
 ```yaml
@@ -132,6 +139,7 @@ eventsauce4j:
   outbox:
     delayInterval: 5 #seconds
     lockName: user-service-outbox-lock
+    enabled: false
 ```
 
 #### Working Example
