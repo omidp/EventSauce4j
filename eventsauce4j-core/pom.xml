@@ -12,8 +12,7 @@
 	<version>0.0.4-SNAPSHOT</version>
 	<name>eventsauce4j-core</name>
 	<packaging>jar</packaging>
-	<description>Implements the core event-sourcing engine, including event handling, and dispatch mechanisms.
-	</description>
+	<description>Implements the core event-sourcing engine, including event handling, and dispatch mechanisms.</description>
 	<url>https://github.com/omidp/eventsauce4j</url>
 
 	<properties>
@@ -44,18 +43,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
