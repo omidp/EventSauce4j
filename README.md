@@ -1,3 +1,6 @@
+[![Version](https://img.shields.io/badge/version-0.0.3-blue)](https://github.com/omidp/EventSauce4j/releases/tag/v0.0.3)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # EventSauce4j
 
 A lightweight, **event sourcing** toolkit for Java + Spring, inspired by (and conceptually aligned with) [EventSauce](https://eventsauce.io/).  
