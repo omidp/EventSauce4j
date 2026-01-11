@@ -1,6 +1,6 @@
 -- DROP TABLE event_publication;
 
-CREATE TABLE event_publication (
+CREATE TABLE IF NOT EXISTS event_publication (
 	id uuid NOT NULL,
 	completion_attempts int4 NOT NULL,
 	completion_date timestamptz(6) NULL,
@@ -15,7 +15,7 @@ CREATE TABLE event_publication (
 	CONSTRAINT event_publication_pkey PRIMARY KEY (id),
 	CONSTRAINT event_publication_status_check CHECK (((status)::text = ANY ((ARRAY['PUBLISHED'::character varying, 'PROCESSING'::character varying, 'COMPLETED'::character varying, 'FAILED'::character varying])::text[])))
 );
-CREATE INDEX event_publication_consumed_at_idx ON public.event_publication USING btree (consumed_at, status);
+CREATE INDEX IF NOT EXISTS event_publication_consumed_at_idx ON public.event_publication USING btree (consumed_at, status);
 
 
 -- DROP TABLE event_publication_dlq;

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>io.github.omidp</groupId>
+		<artifactId>eventsauce4j</artifactId>
+		<version>0.0.4-SNAPSHOT</version>
+	</parent>
+	<groupId>io.github.omidp</groupId>
+	<artifactId>eventsauce4j-jdbc</artifactId>
+	<version>0.0.4-SNAPSHOT</version>
+	<name>eventsauce4j-jdbc</name>
+	<packaging>jar</packaging>
+	<description>Implements a JDBC-backed event store and snapshot repository for EventSauce4j.</description>
+	<url>https://github.com/omidp/eventsauce4j</url>
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>io.github.omidp</groupId>
+			<artifactId>eventsauce4j-outbox</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.omidp</groupId>
+			<artifactId>eventsauce4j-jackson</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+
+
+	</dependencies>
+
+
+</project>
