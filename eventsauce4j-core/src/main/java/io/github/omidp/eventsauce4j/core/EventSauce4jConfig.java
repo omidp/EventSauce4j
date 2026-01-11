@@ -23,6 +23,7 @@ import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.message.MessageDispatcher;
 import io.github.omidp.eventsauce4j.core.consumer.EventMessageConsumer;
 import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.github.omidp.eventsauce4j.core.decorator.VersionMessageDecorator;
 import io.github.omidp.eventsauce4j.core.dispatcher.SynchronousEventMessageDispatcher;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,7 @@ public class EventSauce4jConfig {
 
 	@Bean
 	MessageDecorator messageDecorator() {
-		return new IdGeneratorMessageDecorator();
+		return new VersionMessageDecorator(new IdGeneratorMessageDecorator());
 	}
 
 	@Bean

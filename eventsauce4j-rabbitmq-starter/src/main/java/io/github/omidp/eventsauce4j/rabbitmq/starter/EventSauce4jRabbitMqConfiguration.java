@@ -23,9 +23,11 @@ import io.github.omidp.eventsauce4j.api.event.Inflector;
 import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
 import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
+import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import io.github.omidp.eventsauce4j.core.consumer.SynchronousEventDispatcher;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
+import io.github.omidp.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
 import io.github.omidp.eventsauce4j.outbox.OutboxMessageDispatcher;
 import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConfiguration;
 import io.github.omidp.eventsauce4j.rabbitmq.RabbitMqConsumerFactory;
@@ -70,12 +72,18 @@ public class EventSauce4jRabbitMqConfiguration {
 	@Bean
 	RabbitMqConsumerFactory rabbitMqConsumer(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfig,
 											 List<MessageConsumer> messageConsumers, Inflector inflector,
-											 EventPublicationRepository eventPublicationRepository) {
-		var consumer = new RabbitMqConsumerFactory(rabbitMqSetup, rabbitMqConfig, messageConsumers, inflector,
-			eventPublicationRepository, new JacksonEventSerializer()
+											 EventPublicationRepository eventPublicationRepository, DeadLetter deadLetter) {
+		var consumer = new RabbitMqConsumerFactory(
+			rabbitMqSetup, rabbitMqConfig, messageConsumers, inflector,
+			eventPublicationRepository, new JacksonEventSerializer(), deadLetter
 		);
 		consumer.build();
 		return consumer;
+	}
+
+	@Bean
+	DeadLetter deadLetterQueue(EntityManager entityManager) {
+		return new JpaDeadLetter(entityManager, new JacksonEventSerializer());
 	}
 
 }

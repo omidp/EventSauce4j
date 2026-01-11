@@ -18,25 +18,37 @@
 
 package io.github.omidp.eventsauce4j.core.decorator;
 
+import io.github.omidp.eventsauce4j.api.event.DomainEvent;
 import io.github.omidp.eventsauce4j.api.event.MetaData;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
  */
-public class IdGeneratorMessageDecorator implements MessageDecorator {
+public class VersionMessageDecorator implements MessageDecorator {
 
-	public static final String ID = "id";
+	public static final String VERSION = "version";
+
+	private final MessageDecorator messageDecorator;
+
+	public VersionMessageDecorator(MessageDecorator messageDecorator) {
+		this.messageDecorator = messageDecorator;
+	}
+
 
 	@Override
 	public Message decorate(Message message) {
-		Map<String, Object> metaData = new HashMap<>(message.metaData());
-		metaData.put(ID, UUID.randomUUID().toString());
-		return new Message(message.event(), new MetaData(metaData));
+		Message decorate = messageDecorator.decorate(message);
+		int version = 0;
+		if (decorate.event() instanceof DomainEvent de) {
+			version = de.version();
+		}
+		Map<String, Object> metaData = new HashMap<>(decorate.metaData());
+		metaData.put(VERSION, version);
+		return new Message(decorate.event(), new MetaData(metaData));
 	}
 }

@@ -21,6 +21,8 @@ import io.github.omidp.eventsauce4j.api.event.EventPublication;
 import io.github.omidp.eventsauce4j.api.event.MetaData;
 import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.Message;
+import io.github.omidp.eventsauce4j.core.decorator.IdGeneratorMessageDecorator;
+import io.github.omidp.eventsauce4j.core.decorator.VersionMessageDecorator;
 import io.github.omidp.eventsauce4j.it.OrderStarter;
 import io.github.omidp.eventsauce4j.jdbc.pgsql.JdbcEventPublicationRepository;
 import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
@@ -73,8 +75,10 @@ public class JdbcEventPublicationRepositoryIntegrationTest {
 
 	@Test
 	void eventPublicationRepositoryCanRetrieveBatch() {
-		eventPublicationRepository.persist(new DefaultEventPublication(new Message(new OrderStarter(UUID.randomUUID()), MetaData.emptyInstance()), UUID.randomUUID(), Instant.now()));
-		eventPublicationRepository.persist(new DefaultEventPublication(new Message(new OrderStarter(UUID.randomUUID()), MetaData.emptyInstance()), UUID.randomUUID(), Instant.now()));
+		var msg = new Message(new OrderStarter(UUID.randomUUID()), MetaData.emptyInstance());
+		var versionMessage = new VersionMessageDecorator(new IdGeneratorMessageDecorator()).decorate(msg);
+		eventPublicationRepository.persist(new DefaultEventPublication(versionMessage, UUID.randomUUID(), Instant.now()));
+		eventPublicationRepository.persist(new DefaultEventPublication(versionMessage, UUID.randomUUID(), Instant.now()));
 		List<EventPublication> actual = eventPublicationRepository.retrieveBatch(10);
 		assertEquals(2, actual.size());
 	}

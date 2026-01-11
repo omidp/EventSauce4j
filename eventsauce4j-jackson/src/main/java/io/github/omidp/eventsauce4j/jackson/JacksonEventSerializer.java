@@ -19,21 +19,27 @@
 package io.github.omidp.eventsauce4j.jackson;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.omidp.eventsauce4j.api.event.EventSerializer;
+
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Omid Pourhadi
  */
 public class JacksonEventSerializer implements EventSerializer {
 	private static JsonMapper jsonMapper = JsonMapper.builder()
-		.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 		.build();
 
 	@Override
 	public String serialize(Object event) {
 		try {
+			if (isJson(event)) {
+				return (String) event;
+			}
 			return jsonMapper.writeValueAsString(event);
 		} catch (JsonProcessingException e) {
 			throw new io.github.omidp.eventsauce4j.jackson.JsonProcessingException(e);
@@ -43,14 +49,40 @@ public class JacksonEventSerializer implements EventSerializer {
 	@Override
 	public <T> T deserialize(String payload, Class<T> clz) {
 		try {
-			return jsonMapper.readValue(payload, clz);
+			return (T) jsonMapper.readValue(payload, inferTypeRef(clz));
 		} catch (JsonProcessingException e) {
 			throw new io.github.omidp.eventsauce4j.jackson.JsonProcessingException(e);
 		}
 	}
 
-	public static JsonMapper JsonSerializer() {
-		return jsonMapper;
+	private <T> TypeReference<?> inferTypeRef(Class<T> clz){
+		if (clz.isAssignableFrom(String.class)) {
+			return new TypeReference<String>() {};
+		}
+		if (clz.isAssignableFrom(Map.class)) {
+			return new TypeReference<Map<String, Object>>() {};
+		}
+		if (clz.isAssignableFrom(List.class)) {
+			return new TypeReference<List<Object>>() {};
+		}
+		return new TypeReference<T>(){
+			@Override
+			public Type getType() {
+				return clz;
+			}
+		};
+	}
+
+	private boolean isJson(Object event) {
+		if (!(event instanceof String)) {
+			return false;
+		}
+		try {
+			jsonMapper.readTree((String) event);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }
