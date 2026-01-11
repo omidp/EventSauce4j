@@ -19,11 +19,13 @@
 package io.github.omidp.eventsauce4j.example.payment.domain.event;
 
 import io.github.omidp.eventsauce4j.api.event.DomainEvent;
+import io.github.omidp.eventsauce4j.core.event.conversion.Revision;
 
 import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
  */
+@Revision(value = 2)
 public record PaymentUserCreated(UUID id, String firstName, String lastName) {
 }

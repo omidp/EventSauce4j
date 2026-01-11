@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
+import static io.github.omidp.eventsauce4j.core.decorator.VersionMessageDecorator.VERSION;
+
 /**
  * @author Omid Pourhadi
  */
@@ -24,4 +26,10 @@ public interface MetaDataFieldExtractorFunction extends Function<MetaData, Optio
 		return metaData -> metaData.containsKey(ROUTING_KEY) ? Optional.of(metaData.get(ROUTING_KEY).toString())
 			: Optional.empty();
 	}
+
+	static MetaDataFieldExtractorFunction getVersion() {
+		return metaData -> metaData.containsKey(VERSION) ? Optional.of(metaData.get(VERSION).toString())
+			: Optional.empty();
+	}
+
 }

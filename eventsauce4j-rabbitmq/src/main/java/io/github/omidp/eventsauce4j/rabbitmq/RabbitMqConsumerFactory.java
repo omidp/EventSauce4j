@@ -12,6 +12,7 @@ import io.github.omidp.eventsauce4j.api.message.MessageConsumer;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
+import io.github.omidp.eventsauce4j.core.event.conversion.EventVersioning;
 import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * @author Omid Pourhadi
@@ -38,11 +40,12 @@ public class RabbitMqConsumerFactory {
 	private final EventPublicationRepository eventPublicationRepository;
 	private final EventSerializer eventSerializer;
 	private final DeadLetter deadLetter;
+	private final Supplier<EventVersioning> eventVersioning;
 
 	public RabbitMqConsumerFactory(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfiguration,
 								   List<MessageConsumer> messageConsumers, Inflector inflector,
 								   EventPublicationRepository eventPublicationRepository, EventSerializer eventSerializer,
-								   DeadLetter deadLetter) {
+								   DeadLetter deadLetter, Supplier<EventVersioning> eventVersioning) {
 		this.rabbitMqSetup = rabbitMqSetup;
 		this.rabbitMqConfiguration = rabbitMqConfiguration;
 		this.messageConsumers = messageConsumers;
@@ -50,6 +53,7 @@ public class RabbitMqConsumerFactory {
 		this.eventPublicationRepository = eventPublicationRepository;
 		this.eventSerializer = eventSerializer;
 		this.deadLetter = deadLetter;
+		this.eventVersioning = eventVersioning;
 	}
 
 	public void build() {
@@ -98,9 +102,15 @@ public class RabbitMqConsumerFactory {
 						clz -> {
 							String content = new String(body, StandardCharsets.UTF_8);
 							log.debug(" [x] Received: " + content);
-							Object event = eventSerializer.deserialize(content, clz);
+							var metaData = new MetaData(headers);
+
+							Object event = eventVersioning.get().getEventAsObject(
+								content, clz, metaData,
+								(payload, type) -> eventSerializer.deserialize(payload, type)
+							);
+
 							for (MessageConsumer messageConsumer : messageConsumers) {
-								var message = new Message(event, new MetaData(headers));
+								var message = new Message(event, metaData);
 								messageConsumer.handle(message);
 								eventPublicationRepository.markAsCompleted(
 									UUID.fromString(MetaDataFieldExtractorFunction.getId().apply(message.metaData()).get()));
@@ -119,7 +129,7 @@ public class RabbitMqConsumerFactory {
 				var metaData = new MetaData(headers);
 				String content = new String(body, StandardCharsets.UTF_8);
 				var id = UUID.fromString(MetaDataFieldExtractorFunction.getId().apply(metaData).get());
-				var event = new DefaultEventPublication(new Message(content, metaData), id, Instant.now()){
+				var event = new DefaultEventPublication(new Message(content, metaData), id, Instant.now()) {
 					@Override
 					public String getRoutingKey() {
 						return MetaDataFieldExtractorFunction.getRoutingKey().apply(metaData).get();

@@ -25,6 +25,8 @@ import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 /**
  * @author Omid Pourhadi
  */
@@ -42,7 +44,7 @@ public class JpaDeadLetter implements DeadLetter {
 	@Override
 	public void process(EventPublication eventPublication) {
 		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
-			eventPublication.getIdentifier(),
+			UUID.randomUUID(),
 			eventPublication.getPublicationDate(),
 			messageSerializer.serialize(eventPublication.getMessage().event()),
 			eventPublication.getRoutingKey(),

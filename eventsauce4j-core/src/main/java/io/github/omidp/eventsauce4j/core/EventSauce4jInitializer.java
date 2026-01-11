@@ -20,24 +20,50 @@ package io.github.omidp.eventsauce4j.core;
 
 
 import io.github.omidp.eventsauce4j.core.annotation.Consumer;
+import io.github.omidp.eventsauce4j.core.event.conversion.EventVersioning;
+import io.github.omidp.eventsauce4j.core.event.conversion.Upcaster;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Omid Pourhadi
  */
-public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitializingSingleton, ApplicationContextAware, PriorityOrdered {
+public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitializingSingleton, ApplicationContextAware, PriorityOrdered, BeanFactoryAware {
 
 	private ApplicationContext applicationContext;
+	private BeanFactory beanFactory;
+	private Map<Type, Upcaster> typeUpcasterMap = new HashMap<>();
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (bean.getClass().isAnnotationPresent(Consumer.class)) {
+		}
+		if (bean instanceof Upcaster<?>) {
+			Type[] genericInterfaces = bean.getClass().getGenericInterfaces();
+			for (Type genericInterface : genericInterfaces) {
+				if (genericInterface instanceof ParameterizedType) {
+					ParameterizedType paramType = (ParameterizedType) genericInterface;
+					if (paramType.getRawType().getTypeName().equals(Upcaster.class.getName())) {
+						Type actualType = paramType.getActualTypeArguments()[0];
+						typeUpcasterMap.put(actualType, (Upcaster) bean);
+					}
+				}
+			}
 		}
 		return bean;
 	}
@@ -54,5 +80,13 @@ public class EventSauce4jInitializer implements BeanPostProcessor, SmartInitiali
 
 	@Override
 	public void afterSingletonsInstantiated() {
+		if(this.beanFactory instanceof ConfigurableBeanFactory configurableBeanFactory){
+			configurableBeanFactory.registerSingleton(EventVersioning.class.getName() + "_EventSauce4j", new EventVersioning(typeUpcasterMap));
+		}
+	}
+
+	@Override
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		this.beanFactory = beanFactory;
 	}
 }

@@ -25,6 +25,7 @@ import io.github.omidp.eventsauce4j.api.message.MessageDecorator;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import io.github.omidp.eventsauce4j.core.consumer.SynchronousEventDispatcher;
+import io.github.omidp.eventsauce4j.core.event.conversion.EventVersioning;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.jpa.outbox.JpaEventPublicationRepository;
 import io.github.omidp.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
@@ -36,6 +37,7 @@ import jakarta.persistence.EntityManager;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -72,10 +74,12 @@ public class EventSauce4jRabbitMqConfiguration {
 	@Bean
 	RabbitMqConsumerFactory rabbitMqConsumer(RabbitMqSetup rabbitMqSetup, RabbitMqConfiguration rabbitMqConfig,
 											 List<MessageConsumer> messageConsumers, Inflector inflector,
-											 EventPublicationRepository eventPublicationRepository, DeadLetter deadLetter) {
+											 EventPublicationRepository eventPublicationRepository,
+											 DeadLetter deadLetter, ApplicationContext applicationContext) {
 		var consumer = new RabbitMqConsumerFactory(
 			rabbitMqSetup, rabbitMqConfig, messageConsumers, inflector,
-			eventPublicationRepository, new JacksonEventSerializer(), deadLetter
+			eventPublicationRepository, new JacksonEventSerializer(), deadLetter,
+			()->applicationContext.getBean(EventVersioning.class)
 		);
 		consumer.build();
 		return consumer;
