@@ -18,8 +18,6 @@
 
 package io.github.omidp.eventsauce4j.jpa.outbox;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.omidp.eventsauce4j.api.event.EventPublication;
 import io.github.omidp.eventsauce4j.api.event.EventSerializer;
 import io.github.omidp.eventsauce4j.api.event.MetaData;
@@ -27,8 +25,6 @@ import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
-import io.github.omidp.eventsauce4j.core.exception.EventSauce4jException;
-import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
@@ -118,22 +114,13 @@ public class JpaEventPublicationRepository implements EventPublicationRepository
 	}
 
 	private EventPublication convert(JpaEventPublication eventPublication) {
+		Map<String, Object> headers = eventSerializer.deserialize(eventPublication.getMetaData(), Map.class);
+		headers.put(MetaDataFieldExtractorFunction.ROUTING_KEY, eventPublication.getRoutingKey());
 		return new DefaultEventPublication(new Message(
 			eventPublication.getSerializedEvent(),
-			toMetaData(eventPublication.getMetaData(), eventPublication.getRoutingKey())
+			new MetaData(headers)
 		), eventPublication.getId(), eventPublication.getPublicationDate());
 	}
 
-	private MetaData toMetaData(String metadata, String routingKey) {
-		try {
-			TypeReference<Map<String, Object>> typeRef
-				= new TypeReference<>() {};
-			Map<String, Object> meta = JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef);
-			meta.put(MetaDataFieldExtractorFunction.ROUTING_KEY, routingKey);
-			return new MetaData(meta);
-		} catch (JsonProcessingException e) {
-			log.error("JsonProcessingException for " + routingKey,e);
-			throw new EventSauce4jException(e);
-		}
-	}
+
 }

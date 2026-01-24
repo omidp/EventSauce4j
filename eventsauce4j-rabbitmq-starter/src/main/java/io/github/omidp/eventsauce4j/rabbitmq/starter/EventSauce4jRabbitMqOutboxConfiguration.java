@@ -28,7 +28,6 @@ import io.github.omidp.eventsauce4j.api.outbox.lock.OutboxLock;
 import io.github.omidp.eventsauce4j.api.outbox.relay.RelayCommitStrategy;
 import io.github.omidp.eventsauce4j.core.EventSauce4jCustomConfiguration;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
-import io.github.omidp.eventsauce4j.jpa.outbox.dlq.JpaDeadLetter;
 import io.github.omidp.eventsauce4j.jpa.outbox.lock.JpaOutboxLock;
 import io.github.omidp.eventsauce4j.outbox.OutboxRelayer;
 import io.github.omidp.eventsauce4j.outbox.backoff.ExponentialBackOffStrategy;
@@ -60,13 +59,13 @@ public class EventSauce4jRabbitMqOutboxConfiguration {
 							EventPublicationRepository eventPublicationRepository,
 							BackOffStrategy backOffStrategy,
 							RelayCommitStrategy relayCommitStrategy,
-							EntityManager em) {
+							DeadLetter deadLetter) {
 		var rabbitmqRelayer = new OutboxRelayer(
 			eventPublicationRepository,
 			new RabbitMqMessageDispatcher(new JacksonEventSerializer(), rabbitMqConfig, rabbitMqSetup, eventPublicationRepository),
 			backOffStrategy,
 			relayCommitStrategy,
-			deadLetterQueue(em)
+			deadLetter
 		);
 		return new RabbitMqOutboxRelay(rabbitmqRelayer);
 	}
@@ -93,12 +92,6 @@ public class EventSauce4jRabbitMqOutboxConfiguration {
 	@ConditionalOnProperty(havingValue = "false", prefix = "eventsauce4j", name = "archive")
 	RelayCommitStrategy deleteMessageOnCommit() {
 		return new DeleteMessageOnCommit();
-	}
-
-
-	@Bean
-	DeadLetter deadLetterQueue(EntityManager entityManager) {
-		return new JpaDeadLetter(entityManager, new JacksonEventSerializer());
 	}
 
 

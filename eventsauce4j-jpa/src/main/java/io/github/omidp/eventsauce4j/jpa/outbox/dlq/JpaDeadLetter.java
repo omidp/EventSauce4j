@@ -23,10 +23,14 @@ import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.MessageSerializer;
 import io.github.omidp.eventsauce4j.api.outbox.dlq.DeadLetter;
 import jakarta.persistence.EntityManager;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
  */
+@Transactional
 public class JpaDeadLetter implements DeadLetter {
 
 	private final EntityManager entityManager;
@@ -40,11 +44,11 @@ public class JpaDeadLetter implements DeadLetter {
 	@Override
 	public void process(EventPublication eventPublication) {
 		JpaEventPublicationDlq entity = new JpaEventPublicationDlq(
-			eventPublication.getIdentifier(),
+			UUID.randomUUID(),
 			eventPublication.getPublicationDate(),
 			messageSerializer.serialize(eventPublication.getMessage().event()),
 			eventPublication.getRoutingKey(),
-			messageSerializer.serialize(eventPublication.getMessage().event()),
+			messageSerializer.serialize(eventPublication.getMessage().metaData()),
 			Status.FAILED
 		);
 		entityManager.persist(entity);

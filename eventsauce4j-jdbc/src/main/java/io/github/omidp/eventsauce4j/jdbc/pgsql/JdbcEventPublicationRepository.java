@@ -18,8 +18,6 @@
 
 package io.github.omidp.eventsauce4j.jdbc.pgsql;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.omidp.eventsauce4j.api.event.EventPublication;
 import io.github.omidp.eventsauce4j.api.event.EventSerializer;
 import io.github.omidp.eventsauce4j.api.event.MetaData;
@@ -27,8 +25,6 @@ import io.github.omidp.eventsauce4j.api.event.Status;
 import io.github.omidp.eventsauce4j.api.message.Message;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.core.event.MetaDataFieldExtractorFunction;
-import io.github.omidp.eventsauce4j.core.exception.EventSauce4jException;
-import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.outbox.DefaultEventPublication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,22 +130,12 @@ public class JdbcEventPublicationRepository implements EventPublicationRepositor
 
 		@Override
 		public EventPublication mapRow(ResultSet rs, int rowNum) throws SQLException {
-			var message = new Message(rs.getString("serialized_event"), toMetaData(rs.getString("meta_data"), rs.getString("routing_key")));
+			Map<String, Object> headers = eventSerializer.deserialize(rs.getString("meta_data"), Map.class);
+			headers.put(MetaDataFieldExtractorFunction.ROUTING_KEY, rs.getString("routing_key"));
+			var message = new Message(rs.getString("serialized_event"), new MetaData(headers));
 			return new DefaultEventPublication(message, rs.getObject("id", UUID.class), rs.getTimestamp("publication_date").toInstant());
 		}
 
-		private MetaData toMetaData(String metadata, String routingKey) {
-			try {
-				TypeReference<Map<String, Object>> typeRef
-					= new TypeReference<>() {};
-				Map<String, Object> meta = JacksonEventSerializer.JsonSerializer().readValue(metadata, typeRef);
-				meta.put(MetaDataFieldExtractorFunction.ROUTING_KEY, routingKey);
-				return new MetaData(meta);
-			} catch (JsonProcessingException e) {
-				log.error("JsonProcessingException for " + routingKey, e);
-				throw new EventSauce4jException(e);
-			}
-		}
 	}
 
 }
