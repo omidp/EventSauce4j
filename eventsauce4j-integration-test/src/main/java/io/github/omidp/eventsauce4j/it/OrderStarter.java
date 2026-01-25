@@ -18,10 +18,13 @@
 
 package io.github.omidp.eventsauce4j.it;
 
+import io.github.omidp.eventsauce4j.api.event.ExternalEvent;
+
 import java.util.UUID;
 
 /**
  * @author Omid Pourhadi
  */
+@ExternalEvent(routingKey = "order.start")
 public record OrderStarter(UUID id) {
 }

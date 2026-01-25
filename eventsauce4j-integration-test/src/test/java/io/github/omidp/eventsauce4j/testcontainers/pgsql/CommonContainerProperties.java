@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.testcontainers;
+package io.github.omidp.eventsauce4j.testcontainers.pgsql;
 
 import java.time.Duration;
 

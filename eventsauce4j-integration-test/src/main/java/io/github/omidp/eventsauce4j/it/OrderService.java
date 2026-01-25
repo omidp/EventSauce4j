@@ -19,12 +19,12 @@
 package io.github.omidp.eventsauce4j.it;
 
 import io.github.omidp.eventsauce4j.api.event.EventDispatcher;
-import io.github.omidp.eventsauce4j.core.annotation.Consumer;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Omid Pourhadi
  */
-@Consumer
+@Component
 public class OrderService {
 
 	private final EventDispatcher eventDispatcher;

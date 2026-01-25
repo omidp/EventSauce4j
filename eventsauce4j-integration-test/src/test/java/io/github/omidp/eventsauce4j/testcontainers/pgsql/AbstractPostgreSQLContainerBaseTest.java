@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.testcontainers;
+package io.github.omidp.eventsauce4j.testcontainers.pgsql;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-public abstract class AbstractContainerBaseTest {
+public abstract class AbstractPostgreSQLContainerBaseTest {
 
 	public static final PostgreSQLContainer POSTGRESQL_CONTAINER;
 

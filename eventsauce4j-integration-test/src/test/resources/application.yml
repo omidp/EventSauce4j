@@ -12,3 +12,18 @@ spring:
       hibernate:
         ddl-auto: update
         dialect: org.hibernate.dialect.H2Dialect
+
+eventsauce4j:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    exchange: test.exchange
+    queue: test.queue
+    routingKeys:
+      - test.key
+  outbox:
+    delayInterval: 2 #seconds
+    lockName: test-outbox-lock
+    enabled: true

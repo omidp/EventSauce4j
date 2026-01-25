@@ -20,7 +20,7 @@ package io.github.omidp.eventsauce4j.jdbc;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.jdbc.pgsql.JdbcEventPublicationRepository;
-import io.github.omidp.eventsauce4j.testcontainers.AbstractContainerBaseTest;
+import io.github.omidp.eventsauce4j.testcontainers.pgsql.AbstractPostgreSQLContainerBaseTest;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.DatabaseInitializationMode;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
@@ -51,10 +51,10 @@ public class JdbcTestConfig {
 	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName(AbstractContainerBaseTest.POSTGRESQL_CONTAINER.getDriverClassName());
-		dataSource.setUrl(AbstractContainerBaseTest.POSTGRESQL_CONTAINER.getJdbcUrl());
-		dataSource.setUsername(AbstractContainerBaseTest.POSTGRESQL_CONTAINER.getUsername());
-		dataSource.setPassword(AbstractContainerBaseTest.POSTGRESQL_CONTAINER.getPassword());
+		dataSource.setDriverClassName(AbstractPostgreSQLContainerBaseTest.POSTGRESQL_CONTAINER.getDriverClassName());
+		dataSource.setUrl(AbstractPostgreSQLContainerBaseTest.POSTGRESQL_CONTAINER.getJdbcUrl());
+		dataSource.setUsername(AbstractPostgreSQLContainerBaseTest.POSTGRESQL_CONTAINER.getUsername());
+		dataSource.setPassword(AbstractPostgreSQLContainerBaseTest.POSTGRESQL_CONTAINER.getPassword());
 		return dataSource;
 	}
 
