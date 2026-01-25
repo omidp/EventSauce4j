@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.tc;
+package io.github.omidp.eventsauce4j.testcontainers;
 
 public class PostgreSQLProperties extends CommonContainerProperties {
     static final String BEAN_NAME_EMBEDDED_POSTGRESQL = "embeddedPostgreSql";

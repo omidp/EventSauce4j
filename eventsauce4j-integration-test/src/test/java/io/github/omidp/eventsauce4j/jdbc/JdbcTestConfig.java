@@ -20,7 +20,7 @@ package io.github.omidp.eventsauce4j.jdbc;
 import io.github.omidp.eventsauce4j.api.outbox.EventPublicationRepository;
 import io.github.omidp.eventsauce4j.jackson.JacksonEventSerializer;
 import io.github.omidp.eventsauce4j.jdbc.pgsql.JdbcEventPublicationRepository;
-import io.github.omidp.eventsauce4j.tc.AbstractContainerBaseTest;
+import io.github.omidp.eventsauce4j.testcontainers.AbstractContainerBaseTest;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.DatabaseInitializationMode;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;

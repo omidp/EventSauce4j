@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.github.omidp.eventsauce4j.tc;
+package io.github.omidp.eventsauce4j.testcontainers;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
